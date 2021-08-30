@@ -16,7 +16,7 @@ const routes = [
     component: Logs
   },
   {
-    path: '/logs/history/:vesselID',
+    path: '/logs/history/:id',
     name: 'Detail',
     component: Detail
     // route level code-splitting

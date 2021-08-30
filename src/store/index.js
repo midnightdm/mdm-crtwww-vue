@@ -1,7 +1,8 @@
 import { createStore } from 'vuex'
-import firestore from './firebaseApp.js'
+import firebase from './firebaseApp.js'
+import { doc, getDoc, setDoc, onSnapshot, collection, query, where } from 'firebase/firestore'
 
-const db = firestore
+const db = firebase
 
 // The shared state object that any vue component can get access to.
 // Has some placeholders that we’ll use further on!
@@ -11,33 +12,40 @@ const db = firestore
 
 const moduleA = {
   state: () => ({ 
-      passagesList: [] 
+      passagesList: [
+        {
+          date: "August 6, 2021",
+          id: "338075432",
+          image: "https:// www.clintonrivertraffic.com/vessels/jpg/338075432",
+          name: "MV Warioto",
+          type: "towing" 
+        }
+      ] 
   }),
   actions: {
-    fetchPassagesList({ commit }) {
-      var passagesRef = db.collection('Passages');
-      var document = passagesRef.doc("All");
+    async fetchPassagesList({ commit }) {
+      const passagesAllRef = doc(db, 'Passages', 'All');
+      const document = await getDoc(passagesAllRef);
       var plObj, key, listArr = [], tmpArr = {},  nameArr = [], idx = 0, nKey, nObj, i;
-      document.get().then((doc) => {
-        if(doc.exists) {
-          plObj = doc.data();
-          console.log("plObj", plObj);
-          for(key in plObj) {
-            nKey = plObj[key].name;
-            nObj = plObj[key];
-            nameArr.push(nKey);
-            tmpArr[nKey] = nObj;
-          }
-          nameArr.sort();
-          for(i=0; i<nameArr.length; i++) {
-            nKey = nameArr[i];
-            nObj = tmpArr[nKey];
-            nObj.localIndex = i;
-            listArr.push(nObj);
-          }
-          commit("setPassagesList", listArr)  
+      //document.get().then((doc) => {
+      if(document.exists()) {
+        plObj = document.data();
+        //console.log("plObj", plObj);
+        for(key in plObj) {
+          nKey = plObj[key].name;
+          nObj = plObj[key];
+          nameArr.push(nKey);
+          tmpArr[nKey] = nObj;
         }
-      });
+        nameArr.sort();
+        for(i=0; i<nameArr.length; i++) {
+          nKey = nameArr[i];
+          nObj = tmpArr[nKey];
+          nObj.localIndex = i;
+          listArr.push(nObj);
+        }
+        commit("setPassagesList", listArr)  
+      }     
     }
   },
   mutations: {
