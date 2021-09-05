@@ -102,11 +102,11 @@ const moduleA = {
   state: () => ({ 
       passagesList: [
         {
-          date: "August 6, 2021",
+          date: "",
           id: "338075432",
-          image: "https:// www.clintonrivertraffic.com/vessels/jpg/338075432",
-          name: "MV Warioto",
-          type: "towing" 
+          image: "",
+          name: "Vessels Loading... ",
+          type: "" 
         }
       ],
       
