@@ -27,7 +27,7 @@
 export default {
   created: function () {
     this.$store.dispatch("fetchPassagesList")
-  },
+  }
 }
 </script>
 <style>
@@ -98,4 +98,6 @@ h1 {
     line-height: 1;
     
   }
+
+ 
 </style>
