@@ -20,5 +20,9 @@ window.postMessage({
     vueDetected: true
   }, '*');
 
-app.mount('#app');
+// app.mount('#app');
     
+
+new Vue({
+  render: h => h(App),
+}).$mount('#app');
