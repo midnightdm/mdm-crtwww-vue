@@ -25,7 +25,8 @@
     "@vue/compiler-sfc": "^3.0.0",
     "postcss": "^8.1.0",
     "sass": "^1.39.0",
-    "sass-loader": "^10.2.0"
+    "sass-loader": "^10.2.0",
+    "vue-cli-plugin-vuetify": "~2.4.2"
   },
   "browserslist": [
     "> 1%",
