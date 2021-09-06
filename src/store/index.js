@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 import firebase from './firebaseApp.js'
 import { doc, getDoc } from 'firebase/firestore'
 // onSnapshot, collection, query, where
+import { format, lastDayOfMonth, startOfYesterday, endOfYesterday, setHours } from 'date-fns'
 
 const db = firebase
 
@@ -27,6 +28,50 @@ class Vessel {
   }
 }
 
+class Ranges {
+  constructor() {
+    var now = new Date();
+    var nowSt = Math.floor( now.getTime()/1000 );
+    var month = now.getMonth();
+    var self = this;
+    this.today = {
+      lo: now,
+      hi: nowSt
+    };
+    this.today.lo.setHours(0);
+    this.today.lo = Math.floor(this.today.lo.getTime() / 1000);
+    
+    this.yesterday = {
+      lo: startOfYesterday(),
+      hi: endOfYesterday()
+    };
+    this.yesterday.lo = Math.floor(this.yesterday.lo.getTime()/1000)
+    this.yesterday.hi = Math.floor(this.yesterday.hi.getTime()/1000)
+
+    this.past24 = {
+      lo: nowSt - (24*60*60),
+      hi: nowSt
+    };
+    this.past7 = {
+      lo: nowSt - (7*24*60*60),
+      hi: nowSt
+    };
+    this.thisMonth = {
+      lo: now,
+      hi: nowSt
+    };
+    this.thisMonth.lo.setDate(1);
+    this.thisMonth.lo = Math.floor( this.thisMonth.lo.getTime()/1000 );
+
+    this.lastMonth = {
+      lo: now,
+      hi: lastDayOfMonth(now.setMonth(month-1))
+    };
+    this.lastMonth.lo.setMonth(month-1);
+    this.lastMonth.lo = Math.floor( this.lastMonth.lo.getTime()/1000 );
+    this.lastMonth.hi = Math.floor( this.lastMonth.hi.getTime()/1000 );
+  }
+}
 //Object initialization & update functions
 
 function updateVesselHistory(dat) {
@@ -126,8 +171,23 @@ const moduleA = {
           bravo:   [{date: new Date(), dir: "images/uparr.png"}], 
           charlie: [{date: new Date(), dir: "images/uparr.png"}], 
           delta:   [{date: new Date(), dir: "images/uparr.png"}]} 
-      }
-  }),
+      },
+
+      ranges: new Ranges(),
+
+      monthCache: [
+        {
+          data: "2021-06-30",
+          passageDirection: "upriver",
+          passengeEvents: [],
+          passageMarkerAlphaTS: 16251229514,
+          passageMarkerBravoTS: 16251229514,
+          passageMarkerCharlieTS: 16251229514,
+          passageMarkerDeltaTS: 16251229514,
+          passageVesselID: 366961530  
+        }
+      ]
+    }),   
   actions: {
     async fetchPassagesList({ commit }) {
       const passagesAllRef = doc(db, 'Passages', 'All');
@@ -159,8 +219,7 @@ const moduleA = {
       //367668810
       const vesselRef = doc(db, 'Vessels', docKey)
       const document = await getDoc(vesselRef)
-      var str = JSON.stringify(document.data(), null, 2)
-      
+            
       if(document.exists()) {
         console.log("Data: ", document.data())
         var data = document.data()
@@ -169,8 +228,51 @@ const moduleA = {
       } else {
         console.log("Data not found!")
       }
+    },
+
+    async fetchCurrentMonth({ commit } ) {
+      let thisMonthObj = new Date()
+      let yr = thisMonthObj.getFullYear()
+      let mo = thisMonthObj.getMonth()
+      let lm = mo == 0 ? 11 : mo-1; //Last Month 
+      let thisMonthKey = format(new Date(yr, mo), "yyyyMM")
+      let lastMonthKey = format(new Date(yr, lm), "yyyyMM")
+      const vesselRef1 = doc(db, 'Passages', lastMonthKey)
+      const vesselRef2 = doc(db, 'Passages', thisMonthKey)
+      const document1 = await getDoc(vesselRef1)
+      const document2 = await getDoc(vesselRef2)
+      var vessels = [], lmData, tmData, vkey, dkey, found = false;
+      //Put lastMonth & thisMonth passage in 1 vessels array
+      if(document1.exists()) {
+        lmData = document1.data()  
+        for(dkey in lmData) {
+          for(vkey in lmData[dkey]) {
+            vessels.push(lmData[dkey][vkey])
+          }
+        }
+        found = true;
+      }
+      if(document2.exists()) {
+        tmData = document2.data()
+        for(dkey in tmData) {
+          for(vkey in tmData[dkey]) {
+            vessels.push(tmData[dkey][vkey])
+          }
+        }
+        found = true;
+      }
+      if(found) {
+        //Sort by passageMarkerCharlieTS
+        vessels.sort( (a,b) => a.markerPassageCharlieTS < b.markerPassageCharlieTS ? -1 : 1)
+        console.log("Vessels Passage Array: ", vessels)
+        commit('setMonthCache', vessels)
+      } else {
+        console.log("No Passages found for "+lastMonthKey+" "+thisMonthKey)
+      }
+
     }
   },
+
 
   mutations: {
     setPassagesList(state, val) {
@@ -178,7 +280,11 @@ const moduleA = {
     },
     setHistoryCache(state, payload) {
       state.historyCache = payload
-    } 
+    },
+    setMonthCache(state, payload) {
+      console.log("Ranges: ", state.ranges)
+      state.monthCache = payload
+    }
   },
 
   getters : { 
@@ -188,10 +294,44 @@ const moduleA = {
     getAlpha: state => state.historyCache.vesselPassages.alpha,
     getBravo: state => state.historyCache.vesselPassages.bravo,
     getCharlie: state => state.historyCache.vesselPassages.charlie,
-    getDelta: state => state.historyCache.vesselPassages.delta
-  }
+    getDelta: state => state.historyCache.vesselPassages.delta,
+    dd: () => { return format(new Date(), "dd")},
+    ymd: () => { return format(new Date(), "yyyy-mm-dd") },
+    getToday: (state) => {
+      return state.monthCache.filter( (item) => {
+        return item.passageMarkerCharlieTS > state.ranges.today.lo && item.passageMarkerCharlieTS < state.ranges.today.hi
+      })
+    },
+    getYesterday: (state) => {
+      return state.monthCache.filter( (item) => {
+        return item.passageMarkerCharlieTS > state.ranges.yesterday.lo && item.passageMarkerCharlieTS < state.ranges.yesterday.hi
+      })
+    },
+    getPast24: (state) => {
+      return state.monthCache.filter( (item) => {
+        return item.passageMarkerCharlieTS > state.ranges.past24.lo && item.passageMarkerCharlieTS < state.ranges.past24.hi
+      })
+    },
+    getPast7: (state) => {
+      return state.monthCache.filter( (item) => {
+        return item.passageMarkerCharlieTS > state.ranges.past7.lo && item.passageMarkerCharlieTS < state.ranges.past7.hi
+      })
+    },
+    getLastMonth: (state) => {
+      return state.monthCache.filter( (item) => {
+        return item.passageMarkerCharlieTS > state.ranges.lastMonth.lo && item.passageMarkerCharlieTS < state.ranges.lastMonth.hi
+      })
+    },
+    getThisMonth: (state) => {
+      return state.monthCache.filter( (item) => {
+        return item.passageMarkerCharlieTS > state.ranges.thisMonth.lo && item.passageMarkerCharlieTS < state.ranges.thisMonth.hi
+      })
+    },
+    getRanges: state => { return state.ranges.past7.lo }   
+  }    
+}
 
- }
+ 
 
 const moduleB = {
   state: () => ({  }),
