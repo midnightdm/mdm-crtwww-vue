@@ -4,6 +4,7 @@ import App from './App.vue'
 import CrtLogo from '@/components/CrtLogo.vue'
 import router from './router'
 import store from './store'
+import vuetify from './plugins/vuetify'
 
 
 //register components
@@ -20,9 +21,11 @@ window.postMessage({
     vueDetected: true
   }, '*');
 
-// app.mount('#app');
-    
+app.mount('#app');
 
+/*
 new Vue({
-  render: h => h(App),
+  vuetify,
+  render: h => h(App)
 }).$mount('#app');
+*/

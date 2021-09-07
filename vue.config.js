@@ -7,5 +7,9 @@ module.exports = {
                 args[0].title = "Clinton River Traffic Logs";
                 return args;
             })
-    }
+    },
+
+    transpileDependencies: [
+      'vuetify'
+    ]
 }
