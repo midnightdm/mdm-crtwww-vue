@@ -1,15 +1,30 @@
 <template>
 <div id="main" class="past7">
-    <h1>This is the Past 7 Days page</h1>
-<h4>Day is {{ this.$store.getters.dd }} </h4>
+    <h1>{{this.$store.getters.getPast7.length}} Vessel Passage<span v-if='this.$store.getters.getPast7.length != 1'>s</span> in the Past 7 Days</h1>
+    <h4>{{ this.formattedRange }}</h4>
+<ul class="vessels-list" v-for="vessel in this.$store.getters.getPast7" :key="vessel.vesselID">
+ <li>
+    <div class="shipBox tableBlock">
+      <img class="shipBox" :src="vessel.vesselImageUrl" width="200" />
+    </div>
+    <div class="tableBlock">
+      
+      <h4 class="title">{{ vessel.vesselName }}</h4>
+      <img class="icon" v-if='vessel.passageDirection=="upriver"' src='@/assets/images/uparr.png' alt='Upriver indicator' height="25"/>
+      <img class="icon" v-if='vessel.passageDirection=="downriver"' src='@/assets/images/dwnarr.png' alt='Downriver indicator' height="25"/>
+      <span class="adjacent"> {{vessel.passageDirection}}</span>
+    </div>
 
-<ul v-for="vessel in this.$store.getters.getPast7" :key="vessel.vesselID">
-  <li>
-    <div>{{ vessel.date }}</div>
-    <div>{{ vessel.passageDirection}}</div>
-    <div>{{ vessel.vesselName}}</div>
-    <img :src="vessel.vesselImageUrl" />
-    
+    <div class="tableBlock">
+      <h4>{{vessel.alphaDO.toLocaleDateString() }}</h4>
+      <p><span class="label">BRIDGE :</span> {{ vessel.charlieDO.toLocaleTimeString() }}</p>
+      <p><span class="label">LOCK 13:</span> {{ vessel.bravoDO.toLocaleTimeString() }}</p>
+    </div>
+
+    <div class="tableBlock holder">
+      <router-link class="pill" :to="{ name: 'Detail', params: { id: vessel.passageVesselID}}">History</router-link>
+    </div>
+   
   </li>
 </ul>
 
@@ -17,11 +32,89 @@
 </template>
 
 <script>
-import { format } from 'date-fns'
+import format from 'date-fns/format'
 
 export default {
   created: function () {
     this.$store.dispatch("fetchCurrentMonth")
-  }
+  },
+  computed: {
+    formattedRange() {
+      return "Range is "+
+      format(this.$store.state.a.ranges.past7.lo*1000, 'h:mmaaa eeee, LLL Mo') +
+      " to " +
+      format(this.$store.state.a.ranges.past7.hi*1000, 'h:mmaaa eeee, LLL Mo')
+
+    }
+  }  
 }
 </script>
+
+<style>
+img.vessel {
+    height: 150px;
+  
+}
+  
+  
+ul.vessels-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  list-style: none;
+  margin: 2px;
+  padding: 2px; 
+  background-color:rgb(207, 241, 240);
+}  
+  
+.label {
+  font-weight: 500;
+}  
+
+h4.title {
+  margin-bottom: 45px;
+}
+    
+  .tableBlock {
+    width: 220px;
+    padding: 1px;
+  }
+
+.icon {
+  transform: translateY(10px);
+  padding: 5px;
+  
+}
+
+.shipBoxData {
+  background-color: white;
+  opacity: .5;
+  font-weight: 600;
+  transform: translateY(-30px);
+  padding-left: 5px;
+}
+
+.pill {
+  background-color: #ddd;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 16px;
+  
+}
+
+.holder {
+  display:flex; 
+  align-items: center;
+}
+
+.pill:hover {
+  background-color: #f1f1f1;
+}
+
+</style>

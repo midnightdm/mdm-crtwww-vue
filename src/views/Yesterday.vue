@@ -1,16 +1,30 @@
 <template>
   <div id="main" class="yesterday">
-    <h1>This is the Yesterday page</h1>
-<h4>Day is {{ this.$store.getters.dd }} </h4>
-
-<ul class="vessels-list" v-for="vessel in this.$store.getters.getYesterday" :key="vessel.vesselID">
+    <h1>{{this.$store.getters.getYesterday.length}} Passage<span v-if='this.$store.getters.getYesterday.length != 1'>s</span>  Yesterday</h1>
+    <h4>{{ this.formattedRange }}</h4>
+<ul class="vessels-list" v-for="vessel in this.$store.getters.getYesterday" :key="vessel.passageVesselID">
   <li>
-    router-link :to="{ name: 'Detail', params: { id: vessel.vesselID}}">
-    <h4>{{ vessel.vesselName}}</h4>
-    <div>{{ vessel.date }}</div>
-    <div>{{ vessel.passageDirection}}</div>
-    <div></div>
-    <img :src="vessel.vesselImageUrl" />
+    <div class="shipBox tableBlock">
+      <img class="shipBox" :src="vessel.vesselImageUrl" width="200" />
+    </div>
+    <div class="tableBlock">
+      
+      <h4 class="title">{{ vessel.vesselName }}</h4>
+      <img class="icon" v-if='vessel.passageDirection=="upriver"' src='@/assets/images/uparr.png' alt='Upriver indicator' height="25"/>
+      <img class="icon" v-if='vessel.passageDirection=="downriver"' src='@/assets/images/dwnarr.png' alt='Downriver indicator' height="25"/>
+      <span class="adjacent"> {{vessel.passageDirection}}</span>
+    </div>
+
+    <div class="tableBlock">
+      <h4>{{vessel.alphaDO.toLocaleDateString() }}</h4>
+      <p><span class="label">BRIDGE :</span> {{ vessel.charlieDO.toLocaleTimeString() }}</p>
+      <p><span class="label">LOCK 13:</span> {{ vessel.bravoDO.toLocaleTimeString() }}</p>
+    </div>
+
+    <div class="tableBlock holder">
+      <router-link class="pill" :to="{ name: 'Detail', params: { id: vessel.passageVesselID}}">History</router-link>
+    </div>
+   
   </li>
 </ul>
 
@@ -18,11 +32,20 @@
 </template>
 
 <script>
-import { format } from 'date-fns'
+import  format from 'date-fns/format'
 
 export default {
   created: function () {
     this.$store.dispatch("fetchCurrentMonth")
+  }, 
+  computed: {
+    formattedRange() {
+      return "Range is "+
+      format(this.$store.state.a.ranges.yesterday.lo*1000, 'h:mmaaa eeee, LLL do') +
+      " to " +
+      format(this.$store.state.a.ranges.yesterday.hi*1000, 'h:mmaaa eeee, LLL do')
+
+    }
   }
 }
 </script>
@@ -31,62 +54,67 @@ export default {
 img.vessel {
     height: 150px;
   
-  }
+}
   
   
-  ul .vessels-list {
-      display: flex;
-      list-style: none;
-      margin: 2px;
-      padding: 2px;
+ul.vessels-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  list-style: none;
+  margin: 2px;
+  padding: 2px; 
+}  
+  
+.label {
+  font-weight: 500;
+}  
+
+h4.title {
+  margin-bottom: 45px;
+}
     
-  }  
-  
-  div .img-container {
-    display:flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-  
-  }
-  
-  .img-container img {
-    float: left;
-  }
-    
-  .shipBox img{
-    cursor: grab;
-    height: 150px;
+  .tableBlock {
+    width: 200px;
+    background-color:rgb(207, 241, 240);
+    padding: 20px;
   }
 
-  .shipBoxData {
-    background-color: white;
-    opacity: .5;
-    font-weight: 600;
-    transform: translateY(-30px);
-    padding-left: 5px;
-  }
-
-
-
-  ul.vessels-list li {
-      list-style: none;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      float: left;
-      margin: 2px;
-      padding: 5px;
-      font-family: sans-serif;
-      font-size: 12pt;
-      letter-spacing: 2px;  
-      border: 5px;
-      border-color: #31363e; 
-  }
+.icon {
+  transform: translateY(10px);
+  padding: 5px;
   
-  ul.vessels-list li h4 {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    line-height: 1;
-    
-  }
+}
+
+.shipBoxData {
+  background-color: white;
+  opacity: .5;
+  font-weight: 600;
+  transform: translateY(-30px);
+  padding-left: 5px;
+}
+
+.pill {
+  background-color: #ddd;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 16px;
+  
+}
+
+.holder {
+  display:flex; 
+  align-items: center;
+}
+
+.pill:hover {
+  background-color: #f1f1f1;
+}
 
 </style>

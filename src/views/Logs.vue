@@ -92,12 +92,7 @@ h1 {
       border-color: #31363e; 
   }
   
-  ul.vessels-list li h4 {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    line-height: 1;
-    
-  }
+
 
  
 </style>

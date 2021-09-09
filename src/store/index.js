@@ -151,12 +151,12 @@ const moduleA = {
           id: "338075432",
           image: "",
           name: "Vessels Loading... ",
-          type: "" 
+          type: "default" 
         }
       ],
       
       historyCache: {      
-        vesselBuilt: "---",
+        vesselBuilt: "default",
         vesselCallSign: "---",
         vesselDraft: "---",
         vesselHasImage: 1,
@@ -178,7 +178,7 @@ const moduleA = {
       monthCache: [
         {
           data: "2021-06-30",
-          passageDirection: "upriver",
+          passageDirection: "default",
           passengeEvents: [],
           passageMarkerAlphaTS: 16251229514,
           passageMarkerBravoTS: 16251229514,
@@ -189,29 +189,31 @@ const moduleA = {
       ]
     }),   
   actions: {
-    async fetchPassagesList({ commit }) {
-      const passagesAllRef = doc(db, 'Passages', 'All');
-      const document = await getDoc(passagesAllRef);
-      var plObj, key, listArr = [], tmpArr = {},  nameArr = [], idx = 0, nKey, nObj, i;
-      //document.get().then((doc) => {
-      if(document.exists()) {
-        plObj = document.data();
-        //console.log("plObj", plObj);
-        for(key in plObj) {
-          nKey = plObj[key].name;
-          nObj = plObj[key];
-          nameArr.push(nKey);
-          tmpArr[nKey] = nObj;
-        }
-        nameArr.sort();
-        for(i=0; i<nameArr.length; i++) {
-          nKey = nameArr[i];
-          nObj = tmpArr[nKey];
-          nObj.localIndex = i;
-          listArr.push(nObj);
-        }
-        commit("setPassagesList", listArr)  
-      }     
+    async fetchPassagesList({ commit, state }) {
+      if(state.passagesList[0].type==="default") {
+        const passagesAllRef = doc(db, 'Passages', 'All');
+        const document = await getDoc(passagesAllRef);
+        var plObj, key, listArr = [], tmpArr = {},  nameArr = [], idx = 0, nKey, nObj, i;
+        //document.get().then((doc) => {
+        if(document.exists()) {
+          plObj = document.data();
+          //console.log("plObj", plObj);
+          for(key in plObj) {
+            nKey = plObj[key].name;
+            nObj = plObj[key];
+            nameArr.push(nKey);
+            tmpArr[nKey] = nObj;
+          }
+          nameArr.sort();
+          for(i=0; i<nameArr.length; i++) {
+            nKey = nameArr[i];
+            nObj = tmpArr[nKey];
+            nObj.localIndex = i;
+            listArr.push(nObj);
+          }
+          commit("setPassagesList", listArr)  
+        }     
+      }
     },
 
     async fetchPassageHistory({ commit }, vesselID) {
@@ -230,7 +232,11 @@ const moduleA = {
       }
     },
 
-    async fetchCurrentMonth({ commit } ) {
+    async fetchCurrentMonth({ commit, state } ) {
+      //Check whether cache is alraeady set to prevent reloading
+      if(state.monthCache[0].passageDirection !=="default") {
+        return;
+      }
       let thisMonthObj = new Date()
       let yr = thisMonthObj.getFullYear()
       let mo = thisMonthObj.getMonth()
@@ -247,6 +253,10 @@ const moduleA = {
         lmData = document1.data()  
         for(dkey in lmData) {
           for(vkey in lmData[dkey]) {
+            lmData[dkey][vkey]['alphaDO']   = new Date( lmData[dkey][vkey].passageMarkerAlphaTS * 1000)
+            lmData[dkey][vkey]['bravoDO']   = new Date( lmData[dkey][vkey].passageMarkerBravoTS * 1000)
+            lmData[dkey][vkey]['charlieDO'] = new Date( lmData[dkey][vkey].passageMarkerCharlieTS * 1000)
+            lmData[dkey][vkey]['deltaDO']   = new Date( lmData[dkey][vkey].passageMarkerDeltaTS * 1000)
             vessels.push(lmData[dkey][vkey])
           }
         }
@@ -256,6 +266,11 @@ const moduleA = {
         tmData = document2.data()
         for(dkey in tmData) {
           for(vkey in tmData[dkey]) {
+            
+            tmData[dkey][vkey]['alphaDO']   = new Date( tmData[dkey][vkey].passageMarkerAlphaTS * 1000)
+            tmData[dkey][vkey]['bravoDO']   = new Date( tmData[dkey][vkey].passageMarkerBravoTS * 1000)
+            tmData[dkey][vkey]['charlieDO'] = new Date( tmData[dkey][vkey].passageMarkerCharlieTS * 1000)
+            tmData[dkey][vkey]['deltaDO']   = new Date( tmData[dkey][vkey].passageMarkerDeltaTS * 1000)
             vessels.push(tmData[dkey][vkey])
           }
         }
