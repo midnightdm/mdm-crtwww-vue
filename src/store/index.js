@@ -39,6 +39,8 @@ class Ranges {
       hi: nowSt
     };
     this.today.lo.setHours(0);
+    this.today.lo.setMinutes(0);
+    this.today.lo.setSeconds(0);
     this.today.lo = Math.floor(this.today.lo.getTime() / 1000);
     
     this.yesterday = {
@@ -98,39 +100,35 @@ function updateVesselHistory(dat) {
     charlie: [  ],
     delta: [  ]
   };
-  var i, k, objKey, dir, keysArr = [];
+  var i, k, objKey, dir, dateArr = [];
   for(objKey in dat.vesselPassages) {
     //Sort passages by dated keys before putting into waypoints
-    if(dat.vesselPassages[objKey].passageMarkerAlphaTS==null && 
-      dat.vesselPassages[objKey].passageMarkerBravoTS==null &&
-      dat.vesselPassages[objKey].passageMarkerCharlieTS==null &&
-      dat.vesselPassages[objKey].passageMarkerDeltaTS==null)
+    if(dat.vesselPassages[objKey].passageMarkerCharlieTS==null)
     {
       console.log("Skipping null passage "+objKey);
       continue;
     } else {
-      keysArr.push(objKey)
+      dateArr.push(dat.vesselPassages[objKey])
     }
   }
-  keysArr.sort();
-  for(i=0; i<keysArr.length; i++) {
-    k = keysArr[i];
-    dir = dat.vesselPassages[k].passageDirection=="upriver" ? "up" : "down";
+  dateArr.sort((a,b) => parseInt(a.passageMarkerCharlieTS) < parseInt(b.passageMarkerCharlieTS) ? -1 : 1);
+  for(i=0; i<dateArr.length; i++) {
+    dir = dateArr[i].passageDirection=="upriver" ? "up" : "down";
     waypoints.alpha[i] = {
-      date: new Date(dat.vesselPassages[k].passageMarkerAlphaTS*1000),
+      date: new Date(dateArr[i].passageMarkerAlphaTS*1000),
       dir: dir
     };
     waypoints.bravo[i] = {
-      date: new Date(dat.vesselPassages[k].passageMarkerBravoTS*1000),
+      date: new Date(dateArr[i].passageMarkerBravoTS*1000),
       dir: dir
     }
     waypoints.charlie[i] = {
-      date : new Date(dat.vesselPassages[k].passageMarkerCharlieTS*1000),
+      date : new Date(dateArr[i].passageMarkerCharlieTS*1000),
       dir: dir
     };
 
     waypoints.delta[i] = {
-      date: new Date(dat.vesselPassages[k].passageMarkerDeltaTS*1000),
+      date: new Date(dateArr[i].passageMarkerDeltaTS*1000),
       dir: dir
     }
   }
@@ -278,7 +276,7 @@ const moduleA = {
       }
       if(found) {
         //Sort by passageMarkerCharlieTS
-        vessels.sort( (a,b) => a.markerPassageCharlieTS < b.markerPassageCharlieTS ? -1 : 1)
+        vessels.sort( (a,b) => parseInt(a.passageMarkerCharlieTS) < parseInt(b.passageMarkerCharlieTS) ? -1 : 1)
         console.log("Vessels Passage Array: ", vessels)
         commit('setMonthCache', vessels)
       } else {

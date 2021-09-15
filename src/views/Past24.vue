@@ -1,6 +1,6 @@
 <template>
   <div id="main" class="past24">
-    <h1>{{this.$store.getters.getYesterday.length}} Vessel Passage<span v-if='this.$store.getters.getPast7.length != 1'>s</span> in the Past 24 Hours</h1>
+    <h1>{{this.$store.getters.getPast24.length}} Vessel Passage<span v-if='this.$store.getters.getPast24.length != 1'>s</span> in the Past 24 Hours</h1>
 <h4>{{ this.formattedRange }}</h4>
 
 <ul class="vessels-list" v-for="vessel in this.$store.getters.getPast24" :key="vessel.vesselID">
@@ -54,37 +54,35 @@ export default {
 <style>
 img.vessel {
     height: 150px;
-  
 }
   
   
 ul.vessels-list li {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: center;
   list-style: none;
   margin: 2px;
   padding: 2px; 
 }  
   
 .label {
-  font-weight: 500;
+  font-weight: bolder;
 }  
 
 h4.title {
-  margin-bottom: 45px;
+  margin-bottom: 25px;
 }
     
-  .tableBlock {
-    width: 200px;
-    background-color:rgb(207, 241, 240);
-    padding: 20px;
-  }
+.tableBlock {
+  min-width: 220px;
+  background-color:rgb(207, 241, 240);
+  padding: 20px;
+}
 
 .icon {
   transform: translateY(10px);
   padding: 5px;
-  
 }
 
 .shipBoxData {

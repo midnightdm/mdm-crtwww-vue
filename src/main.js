@@ -4,6 +4,9 @@ import App from './App.vue'
 import CrtLogo from '@/components/CrtLogo.vue'
 import router from './router'
 import store from './store'
+import WaveUI from 'wave-ui'
+import 'wave-ui/dist/wave-ui.css'
+
 
 
 
@@ -13,7 +16,8 @@ const registerComponents = (app) => {
 }
 
 const app = createApp(App).use(router).use(store);
-
+new WaveUI(app, {
+});
 registerComponents(app);
 
 window.postMessage({

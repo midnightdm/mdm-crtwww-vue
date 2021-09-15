@@ -7,8 +7,7 @@
     <div class="shipBox tableBlock">
       <img class="shipBox" :src="vessel.vesselImageUrl" width="200" />
     </div>
-    <div class="tableBlock">
-      
+    <div class="tableBlock"> 
       <h4 class="title">{{ vessel.vesselName }}</h4>
       <img class="icon" v-if='vessel.passageDirection=="upriver"' src='@/assets/images/uparr.png' alt='Upriver indicator' height="25"/>
       <img class="icon" v-if='vessel.passageDirection=="downriver"' src='@/assets/images/dwnarr.png' alt='Downriver indicator' height="25"/>
@@ -17,6 +16,7 @@
 
     <div class="tableBlock">
       <h4>{{vessel.alphaDO.toLocaleDateString() }}</h4>
+      <br/>
       <p><span class="label">BRIDGE :</span> {{ vessel.charlieDO.toLocaleTimeString() }}</p>
       <p><span class="label">LOCK 13:</span> {{ vessel.bravoDO.toLocaleTimeString() }}</p>
     </div>
@@ -53,37 +53,35 @@ export default {
 <style>
 img.vessel {
     height: 150px;
-  
 }
   
   
 ul.vessels-list li {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: center;
   list-style: none;
   margin: 2px;
   padding: 2px; 
 }  
   
 .label {
-  font-weight: 500;
+  font-weight: bolder;
 }  
 
 h4.title {
-  margin-bottom: 45px;
+  margin-bottom: 25px;
 }
     
-  .tableBlock {
-    width: 200px;
-    background-color:rgb(207, 241, 240);
-    padding: 20px;
-  }
+.tableBlock {
+  min-width: 220px;
+  background-color:rgb(207, 241, 240);
+  padding: 20px;
+}
 
 .icon {
   transform: translateY(10px);
   padding: 5px;
-  
 }
 
 .shipBoxData {
