@@ -38,7 +38,7 @@ export default {
                 <li><a class="nav-link" :href="urlAlerts">ALERTS</a></li>
                 <li><a class="nav-link" :href="urlLive">LIVE</a></li>
                 <li><router-link :to="{name: 'Logs'}" class="nav-link selected" >LOGS</router-link></li>
-                <li><a class="nav-link" :href="urlManage">MANAGE</a></li>
+                <li><router-link :to="{name: 'Manage'}" class="nav-link">MANAGE</router-link></li>
                 <li><a class="nav-link" :href="urlVideo">VIDEO</a></li>
             </ul>
         </div>

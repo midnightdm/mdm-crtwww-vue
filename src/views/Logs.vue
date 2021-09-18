@@ -1,4 +1,12 @@
 <template>
+  <ul class="nav2">
+    <li class="nav-link"><router-link :to="{name: 'Today'}">Today</router-link></li>
+    <li class="nav-link"><router-link :to="{name: 'Past24'}">Past 24 Hours</router-link></li> |
+    <li class="nav-link"><router-link :to="{name: 'Yesterday'}">Yesterday</router-link></li>
+    <li class="nav-link"><router-link :to="{name: 'Past7'}">Past 7 Days</router-link></li>
+    <li class="nav-link"><router-link :to="{name: 'ThisMonth'}">This Month</router-link></li>
+    <li class="nav-link"><router-link :to="{name: 'LastMonth'}">Last Month</router-link></li>
+    </ul>
   <div id="main" class="logs">
       <h1>List of Vessels Logged</h1>
     <p>The transponder-equipped vessels below passed Clinton most recently on the date shown. Select a vessel to view all its passages.</p>
@@ -12,7 +20,8 @@
             <div class="shipBoxData">
                 <span>{{vessel.date}}</span>
             </div>
-          </div></router-link>
+          </div>
+          </router-link>
         </li>    
       </ul>  
     </template>
