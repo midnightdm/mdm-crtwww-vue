@@ -7,7 +7,7 @@ import Past24 from '../views/Past24.vue'
 import ThisMonth from '../views/ThisMonth.vue'
 import Today from '../views/Today.vue'
 import Yesterday from '../views/Yesterday.vue'
-import Manage from '..views/Manage.vue'
+
 
 
 const routes = [
