@@ -1,7 +1,7 @@
 <template>
   <main class="text-center">
     <h1>MANAGE NOTIFICATIONS</h1>
-    <p>On this browser push notifications are <span id="status" class="badge rounded-pill bg-warning text-dark"><?php echo $status;?></span></p>
+    <p>On this browser push notifications are <span id="status" class="badge rounded-pill bg-warning text-dark">was php $status</span></p>
     <p><button class="pushtoglbtn" disabled>Enable Push</button>
     <button class="sendpushbtn">Send Notification</button></p>
   <script defer src="../js/manage.js"></script>
