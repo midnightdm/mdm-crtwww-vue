@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import WaveUI from 'wave-ui'
 import 'wave-ui/dist/wave-ui.css'
+import '..assets/manage'
 
 
 
