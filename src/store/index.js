@@ -157,7 +157,6 @@ function urlB64ToUint8Array(base64String) {
 
 
 
-
 // The shared state object that any vue component can get access to.
 // Has some placeholders that we’ll use further on!
 const moduleA = {
