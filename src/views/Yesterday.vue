@@ -45,6 +45,18 @@ import  format from 'date-fns/format'
 export default {
   created: function () {
     this.$store.dispatch("fetchCurrentMonth")
+  },
+  data: function() {
+    return {
+      logoImgUrl: process.env.VUE_APP_BASE_URL+'/images/logo-towboat2.png',
+      logoImgAlt: 'The logo image shows a tow boat pushing 9 barges.',
+      urlAbout: process.env.VUE_APP_BASE_URL+'/about',
+      urlAlerts: process.env.VUE_APP_BASE_URL+'/alerts',
+      urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
+      urlManage: process.env.VUE_APP_BASE_URL+'/manage',
+      urlVideo: process.env.VUE_APP_BASE_URL+'/video',
+      slate: 'LOGS'
+    }
   }, 
   computed: {
     formattedRange() {
