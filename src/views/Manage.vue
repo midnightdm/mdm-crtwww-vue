@@ -4,7 +4,7 @@
     <p>On this browser push notifications are <span id="status" class="badge rounded-pill bg-warning text-dark">was php $status</span></p>
     <p><button class="pushtoglbtn" disabled>Enable Push</button>
     <button class="sendpushbtn">Send Notification</button></p>
-  <script defer src="../js/manage.js"></script>
+  
   <div style="margin: auto; width: 35em; align: center; background-color: #dccce0; padding: 1em; border-spacing: 5px;">
     <h3>Subscribed Events</h3>
 
