@@ -206,11 +206,13 @@ const moduleA = {
       ]
     }),   
   actions: {
+    /*  Old Version
     async fetchPassagesList({ commit, state }) {
       if(state.passagesList[0].type==="default") {
         const passagesAllRef = doc(db, 'Passages', 'All');
-        const document = await getDoc(passagesAllRef);
         var plObj, key, listArr = [], tmpArr = {},  nameArr = [], idx = 0, nKey, nObj, i;
+        const document = await getDoc(passagesAllRef);
+
         //document.get().then((doc) => {
         if(document.exists()) {
           plObj = document.data();
@@ -230,6 +232,37 @@ const moduleA = {
           }
           commit("setPassagesList", listArr)  
         }     
+      }
+    },
+        New Method Below
+    */
+    async fetchPassagesList({ commit, state }) {
+      if(state.passagesList[0].type==="default") {
+        const passagesAllRef = doc(db, 'Passages', 'All');
+        var plObj, key, listArr = [], tmpArr = {},  nameArr = [], idx = 0, nKey, nObj, i;
+        //const document;
+        await getDoc(passagesAllRef).then(
+          (document) => {
+            if(document.exists()) {
+              plObj = document.data();
+              //console.log("plObj", plObj);
+              for(key in plObj) {
+                nKey = plObj[key].name;
+                nObj = plObj[key];
+                nameArr.push(nKey);
+                tmpArr[nKey] = nObj;
+              }
+              nameArr.sort();
+              for(i=0; i<nameArr.length; i++) {
+                nKey = nameArr[i];
+                nObj = tmpArr[nKey];
+                nObj.localIndex = i;
+                listArr.push(nObj);
+              }
+              commit("setPassagesList", listArr)  
+            }     
+        });
+        
       }
     },
 
