@@ -1,46 +1,43 @@
 <template>
- <ul class="nav2">
-    <li class="nav-link"><router-link :to="{name: 'Today'}">Today</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'Past24'}">Past 24 Hours</router-link></li> |
-    <li class="nav-link"><router-link :to="{name: 'Yesterday'}">Yesterday</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'Past7'}">Past 7 Days</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'ThisMonth'}">This Month</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'LastMonth'}">Last Month</router-link></li>
-    </ul>
-  <div id="main" class="today">
+ <LogsSubMenu></LogsSubMenu>
+ <div id="main" class="today">
 <h1>{{this.$store.getters.getToday.length}} Vessel Passage<span v-if='this.$store.getters.getYesterday.length != 1'>s</span> Today</h1>
 <h4>{{ this.formattedRange }}</h4>
-<ul class="vessels-list" v-for="vessel in this.$store.getters.getToday" :key="vessel.vesselID">
- <li>
-    <div class="shipBox tableBlock">
-      <img class="shipBox" :src="vessel.vesselImageUrl" width="200" />
-    </div>
-    <div class="tableBlock">
-      
-      <h4 class="title">{{ vessel.vesselName }}</h4>
-      <img class="icon" v-if='vessel.passageDirection=="upriver"' src='@/assets/images/uparr.png' alt='Upriver indicator' height="25"/>
-      <img class="icon" v-if='vessel.passageDirection=="downriver"' src='@/assets/images/dwnarr.png' alt='Downriver indicator' height="25"/>
-      <span class="adjacent"> {{vessel.passageDirection}}</span>
-    </div>
+<main>
+  <ul class="vessels-list" v-for="vessel in this.$store.getters.getToday" :key="vessel.vesselID">
+  <li>
+      <div class="shipBox tableBlock">
+        <img class="shipBox" :src="vessel.vesselImageUrl" width="200" />
+      </div>
+      <div class="tableBlock">
+        
+        <h4 class="title">{{ vessel.vesselName }}</h4>
+        <img class="icon" v-if='vessel.passageDirection=="upriver"' src='@/assets/images/uparr.png' alt='Upriver indicator' height="25"/>
+        <img class="icon" v-if='vessel.passageDirection=="downriver"' src='@/assets/images/dwnarr.png' alt='Downriver indicator' height="25"/>
+        <span class="adjacent"> {{vessel.passageDirection}}</span>
+      </div>
 
-    <div class="tableBlock">
-      <h4>{{vessel.alphaDO.toLocaleDateString() }}</h4>
-      <p><span class="label">BRIDGE :</span> {{ vessel.charlieDO.toLocaleTimeString() }}</p>
-      <p><span class="label">LOCK 13:</span> {{ vessel.bravoDO.toLocaleTimeString() }}</p>
-    </div>
+      <div class="tableBlock">
+        <h4>{{vessel.alphaDO.toLocaleDateString() }}</h4>
+        <br/>
+        <p><span class="label">LOCK 13:</span> <span class="value">{{ vessel.bravoDO.toLocaleTimeString() }}</span></p>
+        <p><span class="label">BRIDGE :</span> <span class="value">{{ vessel.charlieDO.toLocaleTimeString() }}</span></p>
 
-    <div class="tableBlock holder">
-      <router-link class="pill" :to="{ name: 'Detail', params: { id: vessel.passageVesselID}}">History</router-link>
-    </div>
-   
-  </li>
-</ul>
+      </div>
 
+      <div class="tableBlock holder">
+        <router-link class="pill btn" :to="{ name: 'Detail', params: { id: vessel.passageVesselID}}">History</router-link>
+      </div>
+    
+    </li>
+  </ul>
+</main>
   </div>
 </template>
 
 <script>
 import { format } from 'date-fns'
+import LogsSubMenu from '@/components/LogsSubMenu.vue'
 
 export default {
   created: function () {
@@ -66,6 +63,9 @@ export default {
       format(this.$store.state.a.ranges.today.hi*1000, 'h:mmaaa eeee, LLL do')
 
     }
+  },
+  components: {
+    LogsSubMenu
   }
 }
 </script>
@@ -86,8 +86,13 @@ ul.vessels-list li {
 }  
   
 .label {
+  float: left;
   font-weight: bolder;
-}  
+}
+
+.value {
+  float: right;
+}
 
 h4.title {
   margin-bottom: 25px;
@@ -129,6 +134,10 @@ h4.title {
 .holder {
   display:flex; 
   align-items: center;
+}
+
+.btn {
+  transform: translateX(35px);
 }
 
 .pill:hover {

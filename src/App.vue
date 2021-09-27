@@ -13,11 +13,16 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  line-height: 18pt;
+  line-height: normal;
 }
 
 #main {
   position: relative;
+}
+
+main {
+  width: 80%;
+  margin: 20px auto 20px auto;
 }
 
 .nav2 {

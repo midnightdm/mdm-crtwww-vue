@@ -1,16 +1,9 @@
 <template>
- <ul class="nav2">
-    <li class="nav-link"><router-link :to="{name: 'Today'}">Today</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'Past24'}">Past 24 Hours</router-link></li> |
-    <li class="nav-link"><router-link :to="{name: 'Yesterday'}">Yesterday</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'Past7'}">Past 7 Days</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'ThisMonth'}">This Month</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'LastMonth'}">Last Month</router-link></li>
-  </ul>
+ <LogsSubMenu></LogsSubMenu>
   <div id="main" class="lastMonth">
     <h1>{{this.$store.getters.getLastMonth.length}} Vessel Passage<span v-if='this.$store.getters.getYesterday.length != 1'>s</span>  Last Month</h1>
 <h4>{{ this.formattedRange }}</h4>
-
+<main>
 <ul class="vessels-list" v-for="vessel in this.$store.getters.getLastMonth" :key="vessel.vesselID">
  <li>
     <div class="shipBox tableBlock">
@@ -26,22 +19,24 @@
 
     <div class="tableBlock">
       <h4>{{vessel.alphaDO.toLocaleDateString() }}</h4>
-      <p><span class="label">BRIDGE :</span> {{ vessel.charlieDO.toLocaleTimeString() }}</p>
-      <p><span class="label">LOCK 13:</span> {{ vessel.bravoDO.toLocaleTimeString() }}</p>
+      <br/>
+      <p><span class="label">LOCK 13:</span> <span class="value">{{ vessel.bravoDO.toLocaleTimeString() }}</span></p>
+      <p><span class="label">BRIDGE :</span> <span class="value">{{ vessel.charlieDO.toLocaleTimeString() }}</span></p>
     </div>
 
     <div class="tableBlock holder">
-      <router-link class="pill" :to="{ name: 'Detail', params: { id: vessel.passageVesselID}}">History</router-link>
+      <router-link class="pill btn" :to="{ name: 'Detail', params: { id: vessel.passageVesselID}}">History</router-link>
     </div>
    
   </li>
 </ul>
-
+</main>
   </div>
 </template>
 
 <script>
 import { format } from 'date-fns'
+import LogsSubMenu from '@/components/LogsSubMenu.vue'
 
 export default {
   created: function () {
@@ -68,6 +63,9 @@ export default {
       format(this.$store.state.a.ranges.lastMonth.hi*1000, 'h:mmaaa eeee, LLL do')
 
     }
+  },
+  components: {
+    LogsSubMenu
   }
 }
 </script>
@@ -83,22 +81,27 @@ ul.vessels-list li {
   flex-wrap: wrap;
   justify-content: center;
   list-style: none;
-  margin: 2px;
-  padding: 2px; 
+  margin: 4px;
+  padding: 4px; 
 }  
   
 .label {
   font-weight: bolder;
+  float: left;
 }  
+
+.value {
+  float:right;
+}
 
 h4.title {
   margin-bottom: 25px;
 }
     
 .tableBlock {
-  min-width: 220px;
+  min-width: 225px;
   background-color:rgb(207, 241, 240);
-  padding: 20px;
+  padding: 10px;
 }
 
 .icon {
@@ -131,6 +134,10 @@ h4.title {
 .holder {
   display:flex; 
   align-items: center;
+}
+
+.btn {
+  transform: translateX(35px);
 }
 
 .pill:hover {

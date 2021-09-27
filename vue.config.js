@@ -1,5 +1,8 @@
 //vue.config.js
 module.exports = {
+    configureWebpack: {
+        devtool: 'source-map'
+    },
     chainWebpack: config => {
         config
             .plugin('html')

@@ -7,8 +7,13 @@ import { format, lastDayOfMonth, startOfYesterday, endOfYesterday, setHours } fr
 
 const db = firebase
 
-//Object Class defintion
-class Vessel {
+/* * * * * * * * * * * * * *
+ *
+ *  Object Class defintions
+ *  used in the Store
+ * 
+ * * * * * * * * * * * * * */
+ class Vessel {
   constructor() {
     this.localIndex          = null;
     this.vesselID            = null;
@@ -74,7 +79,21 @@ class Ranges {
     this.lastMonth.hi = Math.floor( this.lastMonth.hi.getTime()/1000 );
   }
 }
-//Object initialization & update functions
+
+
+class SubListItem { 
+  constructor() {
+    this.key;
+    this.title;
+    this.description;
+    this.image
+  }
+}
+
+/* * * * * * * * * * * * * * * * * 
+ * Initilization & update function  definitions 
+ *
+ */
 
 function updateVesselHistory(dat) {
   var o;           
@@ -137,6 +156,9 @@ function updateVesselHistory(dat) {
   return o;            
 }
 
+
+
+
 /* * * * * * * * * * * * * * *
 *  Function definitions used by manage page
 */
@@ -155,8 +177,204 @@ function urlB64ToUint8Array(base64String) {
   return outputArray;
 }
 
+/** 
+ *  Probably Relocate some of these functions to Manage.vue for
+ *  page specific events rather than being here in the store.
+ */
+
+function subscribeUser() {
+  const applicationServerKey = urlB64ToUint8Array(process.env.MDM_VKEY_PUB);
+  swRegistration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: applicationServerKey
+  })
+  .then(function(subscription) {
+    console.log('User is subscribed.');
+    isSubscribed = true;
+    getSubList()
+    updateBtn();  
+    //Delay to ensure userID is set. Couldn't figure how to get promise to work here.
+    setTimeout(()=>{ deviceRef.doc(vm.userID).set( {subscription: {is_enabled: true}}, {merge: true});} , 2000 );   
+  })
+  .catch(function(err) {
+    console.log('Failed to subscribe the user: ', err);
+    updateBtn();
+  });
+}
+
+function initialiseUI() {
+  //Review for rework, move event handlers
+  pushButton.addEventListener('click', function() {
+    pushButton.disabled = true;
+    if (isSubscribed) {
+      unsubscribeUser();
+    } else {
+      subscribeUser();
+    }
+  });
+// Set the initial subscription value
+  swRegistration.pushManager.getSubscription()
+  .then(function(subscription) {
+    isSubscribed = !(subscription === null);
+
+    if (isSubscribed) {
+      console.log('User IS subscribed.');
+      //Get list of subscribed events
+      getSubList();
+    } else {
+      console.log('User is NOT subscribed.');
+    }
+
+    updateBtn();
+  });
+}
+
+function updateBtn() {
+  //Review for Vue component integration
+  if (Notification.permission === 'denied') {
+    pushButton.textContent = 'Push Messaging Blocked';
+    pushButton.disabled = true;
+    statusTxt.textContent = 'Blocked';
+    updateSubscriptionOnServer(null);
+    return;
+  }
+
+  if (isSubscribed) {
+    pushButton.textContent = 'Disable Push';
+    statusTxt.textContent = 'Enabled';
+  } else {
+    pushButton.textContent = 'Enable Push';
+    statusTxt.textContent = 'Disabled';
+  }
+  pushButton.disabled = false;
+}
 
 
+function unsubscribeUser() {
+  swRegistration.pushManager.getSubscription()
+  .then(function(subscription) {
+    if (subscription) {
+      return subscription.unsubscribe();
+    }
+  }).catch(function(error) {
+    console.log('Error unsubscribing', error);
+  }).then(function() {
+    deviceRef.doc(vm.userID).set( {subscription: {is_enabled: false}}, {merge: true});
+    console.log('User is unsubscribed.');
+    isSubscribed = false;
+    vm.subListActual = [];
+    updateBtn();
+    updateSubListActualView();
+    
+  });
+}
+
+
+/**
+ * This has db tasks and can work here, but update for v9 firestore
+ */
+function getSubList() {
+  navigator.serviceWorker.ready
+  .then(serviceWorkerRegistration => serviceWorkerRegistration.pushManager.getSubscription())
+  .then(subscription => {
+      if (!subscription) {
+          alert('Please enable push notifications');
+          return;
+      }
+
+      //Login annonymously to firebase auth and get unique uid
+      firebase.auth().signInAnonymously().catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+      
+        if (errorCode === 'auth/operation-not-allowed') {
+          alert('You must enable Anonymous auth in the Firebase Console.');
+        } else {
+          console.error(error);
+        }
+      })
+      .then((userObj)=> {
+          //Use returned user object's uid to get or create new db document
+          console.log("Returned userObj: ",userObj);
+          vm.userID = userObj.user.uid;   
+          if(vm.userID==null) { alert("Error generating a UUID.  Try again later."); }     
+      
+          let document = deviceRef.doc(vm.userID);
+          /*   BLOCK START                 */
+          document.onSnapshot((snapshot) => {
+            console.log('snapshot exists? ', snapshot.exists, snapshot.data());
+            if(!snapshot.exists) {
+              user = { 
+                events: [],
+                subscription: {
+                  auth:  btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('auth')))),
+                  endpoint: subscription.endpoint,
+                  is_enabled: isSubscribed,
+                  p256dh: btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('p256dh')))) 
+                }
+              };             
+              deviceRef.doc(vm.userID).set(user)         
+                .then(() => {
+                  deviceRef.doc(vm.userID).onSnapshot((snapshot)  => {
+                    user = snapshot.data();
+                    console.log("New user created. Snapshot: ", user);
+                  })
+                });
+                
+            } else {
+              user = snapshot.data();
+              console.log('user: ', user);
+            }
+            vm.subListActual = [];
+            user.subscription.is_enabled = isSubscribed;
+            user.events.forEach(loadSubListActual);
+            updateSubListActualView(); 
+            
+          });  //End of document.onSnapshot()
+          
+          /**
+           *  BLOCK END
+           */
+                 
+      }); //End of then ((userObj)=>)
+
+  }); //End of then(subscription)=>
+
+
+} //End of get subList()
+
+
+function loadSubListActual(tird, srcIdx, srcArray) { //This function used by getSubList()
+  //console.log('scrVal: ', tird, '\n srcIdx: ', srcIdx, '\n scrArray: ', srcArray, '\n');
+  let item = vm.subListAvail.find(o => o.key === tird);
+  vm.subListActual.push(item);
+}
+
+/**
+ * Definately a page specific function for Manage.vue
+ * 
+ */
+function updateSubListActualView() {
+  let none = document.getElementById('actualNone');
+  let ol = document.getElementById('actualOL');
+  if(vm.subListActual.length > 0) {
+    
+    let li = "";
+    for(let i=0; i<vm.subListActual.length; i++) {
+      li += '<li><span>'+ vm.subListActual[i].title + '</span> '
+       +'<button id="remBtn'+vm.subListActual[i].key +'" onclick="removeActualEvent(\''+vm.subListActual[i].key+'\')">Delete</button> '
+       +'<button id="revBtn'+vm.subListActual[i].key +'" onclick="reviewActualEvent(\''+vm.subListActual[i].key+'\')" '
+       + 'data-bs-toggle="modal" data-bs-target="#subscribedModal">Review</button>\n   </li>';
+    }
+    ol.innerHTML = li;
+    none.style.visibility = "hidden";
+  } else {
+    none.style.visibility = "visible";
+    ol.innerHTML = "";
+  }
+  
+}
 
 // The shared state object that any vue component can get access to.
 // Has some placeholders that we’ll use further on!

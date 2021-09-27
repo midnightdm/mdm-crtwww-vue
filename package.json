@@ -26,9 +26,10 @@
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
+    "@vue/devtools": "^5.3.4",
     "postcss": "^8.1.0",
     "sass": "^1.39.0",
-    "sass-loader": "^10.2.0"    
+    "sass-loader": "^10.2.0"
   },
   "browserslist": [
     "> 1%",

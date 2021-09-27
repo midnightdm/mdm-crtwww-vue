@@ -1,17 +1,10 @@
 <template>
-  <ul class="nav2">
-    <li class="nav-link"><router-link :to="{name: 'Today'}">Today</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'Past24'}">Past 24 Hours</router-link></li> |
-    <li class="nav-link"><router-link :to="{name: 'Yesterday'}">Yesterday</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'Past7'}">Past 7 Days</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'ThisMonth'}">This Month</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'LastMonth'}">Last Month</router-link></li>
-    </ul>
+ <LogsSubMenu></LogsSubMenu>
   <div id="main" class="logs">
       <h1>List of Vessels Logged</h1>
     <p>The transponder-equipped vessels below passed Clinton most recently on the date shown. Select a vessel to view all its passages.</p>
-    
-      <ul class="vessels-list" v-for="vessel in this.$store.state.a.passagesList" :key="vessel.id">
+      <div v-if=" this.$store.state.a.passagesList[0].type != 'loading'">
+        <ul class="vessels-list" v-for="vessel in this.$store.state.a.passagesList" :key="vessel.id">
         <li>
         <router-link :to="{ name: 'Detail', params: { id: vessel.id }}"><h4>{{ vessel.name}}</h4>
           <div class="shipBox">
@@ -23,9 +16,15 @@
           </router-link>
         </li>    
       </ul>  
+    </div>  
+    <div v-else>
+      <h1>LOADING VESSELS ...</h1>
+    </div>  
   </div>
 </template>
 <script>
+import LogsSubMenu from '@/components/LogsSubMenu.vue'
+
 export default {
   created: function () {
     this.$store.dispatch("fetchPassagesList")
@@ -42,13 +41,20 @@ export default {
       slate: 'LOGS'
     }
   },
+  components: {
+    LogsSubMenu
+  }
 }
 </script>
 <style>
+.logs {
+  width: 80%;
+  margin: 20px auto;
+}
+
 h1 {  
     font-family: sans-serif;
     font-size: 20pt;
-    line-height: 0.5;
     white-space: normal;
   }
   

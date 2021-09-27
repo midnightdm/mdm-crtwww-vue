@@ -1,3 +1,4 @@
+import devtools from '@vue/devtools'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import App from './App.vue'
@@ -6,7 +7,14 @@ import router from './router'
 import store from './store'
 import WaveUI from 'wave-ui'
 import 'wave-ui/dist/wave-ui.css'
-//import './assets/manage'
+
+
+/*
+if (process.env.NODE_ENV === 'development') {
+  devtools.connect()
+}
+*/
+
 
 
 

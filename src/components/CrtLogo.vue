@@ -37,7 +37,7 @@ export default {
                 <li><a class="nav-link" :href="urlAbout">ABOUT</a></li>
                 <li><a class="nav-link" :href="urlAlerts">ALERTS</a></li>
                 <li><a class="nav-link" :href="urlLive">LIVE</a></li>
-                <li><router-link :to="{name: 'Logs'}" class="nav-link selected" >LOGS</router-link></li>
+                <li><router-link :to="{name: 'Logs'}" class="nav-link" >LOGS</router-link></li>
                 <li><router-link :to="{name: 'Manage'}" class="nav-link">MANAGE</router-link></li>
                 <li><a class="nav-link" :href="urlVideo">VIDEO</a></li>
             </ul>
@@ -130,7 +130,7 @@ export default {
    border: none; 
  }
  
- .nav li a.selected {
+ .nav li a.selected, .nav li .router-link-active {
    background: white;
    color: red;
   

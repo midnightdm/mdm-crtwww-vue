@@ -1,11 +1,9 @@
 <template>
-  <div id="main" class="detail">
+  <LogsSubMenu></LogsSubMenu>
+  <div class="detail">
     
 <h2><span>{{ this.$store.getters.getVesselName }}</span> Passages</h2>
 <p>This log shows the direction and time this vessel passed each of the waypoints tracked by the Clinton River Traffic website.</p>
-
-<!-- -->
-
 <table>
 <tr>
     <th class="labelColumn">Waypoint</th>
@@ -88,12 +86,15 @@
 </template>
 
 <script>
-
+import LogsSubMenu from '@/components/LogsSubMenu.vue'
 
 export default {
   props: ['id'],
   created: function () {
     this.$store.dispatch("fetchPassageHistory", this.id)
+  },
+  components: {
+    LogsSubMenu
   }
 
 }
@@ -101,7 +102,12 @@ export default {
 </script>
 
 <style>
-  
+  .detail {
+    transform: translateY(40px);
+    width: 80%;
+    margin: 20px auto;
+    padding: 15px 15px 15px 15px;
+  }
   table.dataColumn th, table.dataColumn td {
     padding: 5px;
     height: 20px;
