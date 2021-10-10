@@ -40,7 +40,7 @@
 
     <br/>
   </div>
-  <div class="boxb">
+  <div class="boxb boxc">
   Consider where along the river you like to watch riverboats. Choose one marker a few miles above your spot for downriver notices. Pick another below your spot for upriver notices. "Passenger" events will trigger less often than the "Any" vessel events which occur many times daily.
   
   </div>
@@ -130,7 +130,7 @@ export default {
       fsAuth: getAuth(),
       isSubscribed: false,
       authEnc: null,
-      user: {},
+      user: null,
       pbIsDisabled: true,
       pbLabel: 'Enable Push',
       statusTxt: 'Disabled',
@@ -172,6 +172,7 @@ export default {
         //this.unsubscribeUser();
       } else {
         this.pbLabel = 'Enable Push';
+        this.pbIsDisabled = false;
         this.statusTxt = 'Disabled';
         //this.subscribeUser();
       }
@@ -198,14 +199,28 @@ export default {
         applicationServerKey: applicationServerKey
       })
       .then( (subscription) => {
+        //this.getSubList();
         console.log('User is subscribed.');
         this.isSubscribed = true;
-        this.getSubList()
         this.updateBtn();  
         //Delay to ensure userID is set. Couldn't figure how to get promise to work here.
-        setTimeout(()=>{ setDoc(this.deviceRef,  {subscription: {is_enabled: true}}, {merge: true});} , 2000 );   
+        let auth = btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('auth'))));
+        let p246dh = btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('p256dh'))));
+        this.user = {
+          alertMethod: "notification",
+          alertTestRequest: false,
+          alertTestedTS: null,
+          events: [],
+          subscription: {
+            auth:  auth,
+            endpoint: subscription.endpoint,
+            is_enabled: this.isSubscribed,
+            p256dh: p246dh 
+          }
+        }
+        setDoc(this.deviceRef, this.user, {merge:true})
       })
-      .catch(function(err) {
+      .catch( (err) => {
         console.log('Failed to subscribe the user: ', err);
         this.updateBtn();
       });//
@@ -234,7 +249,8 @@ export default {
       }).catch( (error)  => {
         console.log('Error unsubscribing', error);
       }).then( () => {
-        setDoc(this.deviceRef, {subscription: {is_enabled: false}}, {merge: true} );
+
+        setDoc(this.deviceRef, {subscription: {is_enabled: false}}, {merge:true});
         console.log('User is unsubscribed.');
         this.isSubscribed = false;
         this.mm.subListActual = [];
@@ -273,25 +289,38 @@ export default {
             onSnapshot(this.deviceRef, 
               (doc) => {
                 //Done each time db updates
-                this.user = doc.data()
+                this.user = doc.data();
+                console.log("doc.data()", this.user);
                 this.mm.subListActual = [];
-                this.user.events.forEach(this.loadSubListActual);
+                if(Array.isArray(this.user.events) && this.user.events.length) {
+                  this.user.events.forEach(this.loadSubListActual);
+                }  
               }, 
               () => {
-                //Done if no snapshot returned
-                this.user = {
+                let user = {
                   alertMethod: "notification",
                   alertTestRequest: false,
                   alertTestedTS: null,
                   events: [],
                   subscription: {
-                    auth:  btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('auth')))),
+                    auth:  "",
                     endpoint: subscription.endpoint,
-                    is_enabled: this.isSubscribed,
-                    p256dh: btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('p256dh')))) 
+                    is_enabled: false,
+                    p256dh: "" 
                   }
                 };
-                setDoc(this.deviceRef, this.user) 
+                setDoc(this.deviceRef, {
+                  alertMethod: "notification",
+                  alertTestRequest: false,
+                  alertTestedTS: null,
+                  events: [],
+                  subscription: {
+                    auth:  "",
+                    endpoint: subscription.endpoint,
+                    is_enabled: false,
+                    p256dh: "" 
+                  }
+                })
             })
           })              
       }); 
@@ -327,7 +356,7 @@ export default {
     subscribeToEvent() {
       console.log("subListSelection =", this.mm.subListSelection.key);
       this.user.events.push(this.mm.subListSelection.key);
-      updateDoc(this.deviceRef, {events: this.user.events} )
+      setDoc(this.deviceRef, {events: this.user.events} , {merge:true})
       console.log('subscribeToEvent()');
       this.getSelection();
     },
@@ -385,5 +414,8 @@ li {
   padding: 1em;
 }
 
+.boxb.boxc {
+  text-align: justify;
+}
 </style>
 
