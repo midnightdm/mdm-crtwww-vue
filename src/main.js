@@ -9,22 +9,17 @@ import WaveUI from 'wave-ui'
 import 'wave-ui/dist/wave-ui.css'
 
 
-/*
-if (process.env.NODE_ENV === 'development') {
-  devtools.connect()
-}
-*/
-
-
-
 
 
 //register components
 const registerComponents = (app) => { 
   app.component('CrtLogo', CrtLogo);
 }
+//Added 10/16/21 to attempt subpage routing fix
+const history = require('connect-history-api-fallback')
 
-const app = createApp(App).use(router).use(store);
+
+const app = createApp(App).use(router).use(store).use('/', history());
 new WaveUI(app, {
 });
 registerComponents(app);
