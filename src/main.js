@@ -16,10 +16,10 @@ const registerComponents = (app) => {
   app.component('CrtLogo', CrtLogo);
 }
 //Added 10/16/21 to attempt subpage routing fix
-const history = require('connect-history-api-fallback')
+//const history = require('connect-history-api-fallback')
 
 
-const app = createApp(App).use(router).use(store).use('/', history());
+const app = createApp(App).use(router).use(store);
 new WaveUI(app, {
 });
 registerComponents(app);
