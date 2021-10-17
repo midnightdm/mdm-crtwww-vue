@@ -1,0 +1,135 @@
+<template>
+ <LogsSubMenu></LogsSubMenu>
+  <div id="main" class="yesterday">
+    <h1>{{this.$store.getters.getYesterday.length}} Passage<span v-if='this.$store.getters.getYesterday.length != 1'>s</span>  Yesterday</h1>
+    <h4>{{ this.formattedRange }}</h4>
+    <main>
+      <ul class="vessels-list" v-for="vessel in this.$store.getters.getYesterday" :key="vessel.passageVesselID">
+        <li>
+          <div class="shipBox tableBlock">
+            <img class="shipBox" :src="vessel.vesselImageUrl" width="200" />
+          </div>
+          <div class="tableBlock">
+            
+            <h4 class="title">{{ vessel.vesselName }}</h4>
+            <img class="icon" v-if='vessel.passageDirection=="upriver"' src='@/assets/images/uparr.png' alt='Upriver indicator' height="25"/>
+            <img class="icon" v-if='vessel.passageDirection=="downriver"' src='@/assets/images/dwnarr.png' alt='Downriver indicator' height="25"/>
+            <span class="adjacent"> {{vessel.passageDirection}}</span>
+          </div>
+
+          <div class="tableBlock">
+            <h4>{{vessel.alphaDO.toLocaleDateString() }}</h4>
+           <br>/
+            <p><span class="label">LOCK 13:</span> <span class="value">{{ vessel.bravoDO.toLocaleTimeString() }}</span></p>
+            <p><span class="label">BRIDGE :</span> <span class="value">{{ vessel.charlieDO.toLocaleTimeString() }}</span></p>
+          </div>
+
+          <div class="tableBlock holder">
+            <router-link class="pill btn" :to="{ name: 'Detail', params: { id: vessel.passageVesselID}}">History</router-link>
+          </div>
+        
+        </li>
+      </ul>
+    </main>
+  </div>
+</template>
+
+<script>
+import  format from 'date-fns/format'
+import LogsSubMenu from '@/components/LogsSubMenu.vue'
+
+export default {
+  created: function () {
+    this.$store.dispatch("fetchCurrentMonth")
+  },
+  
+  computed: {
+    formattedRange() {
+      return "Range is "+
+      format(this.$store.state.a.ranges.yesterday.lo*1000, 'h:mmaaa eeee, LLL do') +
+      " to " +
+      format(this.$store.state.a.ranges.yesterday.hi*1000, 'h:mmaaa eeee, LLL do')
+
+    }
+  },
+  components: {
+    LogsSubMenu
+  }
+}
+</script>
+
+<style>
+img.vessel {
+    height: 150px;
+}
+  
+  
+ul.vessels-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style: none;
+  margin: 2px;
+  padding: 2px; 
+}  
+  
+.label {
+  float: left;
+  font-weight: bolder;
+}  
+
+.value {
+  float:right;
+}
+
+h4.title {
+  margin-bottom: 25px;
+}
+    
+.tableBlock {
+  min-width: 220px;
+  background-color:rgb(207, 241, 240);
+  padding: 20px;
+}
+
+.icon {
+  transform: translateY(10px);
+  padding: 5px;
+}
+
+.shipBoxData {
+  background-color: white;
+  opacity: .5;
+  font-weight: 600;
+  transform: translateY(-30px);
+  padding-left: 5px;
+}
+
+.pill {
+  background-color: #ddd;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 16px;
+  
+}
+
+.holder {
+  display:flex; 
+  align-items: center;
+}
+
+.btn {
+  transform: translateX(35px);
+}
+
+.pill:hover {
+  background-color: #f1f1f1;
+}
+
+</style>

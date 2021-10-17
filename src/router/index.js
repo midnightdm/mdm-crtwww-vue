@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Logs from '../views/Logs.vue'
-import Detail from '../views/Detail.vue'
-import LastMonth from '../views/LastMonth.vue'
-import Past7 from '../views/Past7.vue'
-import Past24 from '../views/Past24.vue'
-import ThisMonth from '../views/ThisMonth.vue'
-import Today from '../views/Today.vue'
-import Yesterday from '../views/Yesterday.vue'
-import Manage from '../views/Manage.vue'
+import Logs from '../views/logs/Logs.vue'
+import Detail from '../views/logs/Detail.vue'
+import LastMonth from '../views/logs/LastMonth.vue'
+import Past7 from '../views/logs/Past7.vue'
+import Past24 from '../views/logs/Past24.vue'
+import ThisMonth from '../views/logs/ThisMonth.vue'
+import Today from '../views/logs/Today.vue'
+import Yesterday from '../views/logs/Yesterday.vue'
+import Manage from '../views/alerts/Manage.vue'
 
 
 
