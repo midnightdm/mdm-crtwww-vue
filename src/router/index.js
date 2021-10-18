@@ -9,9 +9,42 @@ import Today from '../views/logs/Today.vue'
 import Yesterday from '../views/logs/Yesterday.vue'
 import Manage from '../views/alerts/Manage.vue'
 
+import AddVess from '../views/admin/AddVess.vue'
+import AdminLogin from '../views/admin/AdminLogin.vue'
+import AllVess from '../views/admin/AllVess.vue'
+import PassVess from '../views/admin/PassVess.vue'
+import Subscribers from '../views/admin/Subscribers.vue'
+import Msg404 from '../views/Msg404.vue'
+
+//import store from '../store/index.js'
 
 
 const routes = [
+  {
+    path: '/admin/login',
+    name: 'Login',
+    component: AdminLogin
+  },
+  {
+    path: '/admin/add',
+    name: 'Add',
+    component: AddVess
+  },
+  {
+    path: '/admin/all',
+    name: 'All',
+    component: AllVess
+  },
+  {
+    path: '/admin/passenger',
+    name: 'Passenger',
+    component: PassVess
+  },
+  {
+    path: '/admin/subscribers',
+    name: 'Subscribers',
+    component: Subscribers
+  },
   {
     path: '/logs',
     name: 'Logs',
@@ -61,6 +94,16 @@ const routes = [
     path: '/manage',
     name: 'Manage',
     component: Manage
+  },
+  {
+    path: '/msg404',
+    name: 'Msg404',
+    component: Msg404
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: 'Msg404',
+    componant: Msg404
   }
 ]
 
@@ -69,5 +112,15 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  //redirects to login page if not logged in for specified pages
+  const adminPages = ['/admin', '/admin/all', '/admin/add', '/admin/passenger', '/admin/subscribers', '/admin/logout'];
+  const authRequired = adminPages.includes(to.path);
+  //const loggedIn = this.$store.state.a.currentUser.isLoggedIn;
+
+  if(authRequired ) {
+    return next('/admin/login');
+  }
+})
 
 export default router

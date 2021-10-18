@@ -421,7 +421,11 @@ const moduleA = {
           passageMarkerDeltaTS: 16251229514,
           passageVesselID: 366961530  
         }
-      ]
+      ],
+      currentUser: {
+        cred: null,
+        isLoggedIn: false
+      }
     }),   
   actions: {
     /*  Old Version
