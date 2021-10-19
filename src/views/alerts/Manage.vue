@@ -57,7 +57,7 @@
     {{ mm.subListSelection.title }} 
   </template>
 <div class="modal-body">
-  <img id="vm-image" class="river-map" :src="publicPath + mm.subListSelection.image" height="600" alt="Map image of river showing boat icon at edge of target area"/><br>
+  <img id="vm-image" class="river-map" :src="imagePath + mm.subListSelection.image" height="600" alt="Map image of river showing boat icon at edge of target area"/><br>
   <div class="description" id="vm-description">{{ mm.subListSelection.description }}</div>
 </div>
   <template #actions>
@@ -80,7 +80,7 @@
     {{ mm.actListSelection.title }} 
   </template>
 <div class="modal-body">
-  <img id="vm-image" class="river-map" :src="publicPath + mm.actListSelection.image" height="600" alt="Map image of river showing boat icon at edge of target area"/><br>
+  <img id="vm-image" class="river-map" :src="imagePath + mm.actListSelection.image" height="600" alt="Map image of river showing boat icon at edge of target area"/><br>
   <div class="description" id="vm-description">{{ mm.actListSelection.description }}</div>
 </div>
   <template #actions>
@@ -124,6 +124,7 @@ export default {
     return {
       applicationServerPublicKey: process.env.VUE_APP_MDM_VKEY,
       publicPath: process.env.BASE_URL,
+      imagePath:  process.env.VUE_APP_IMG_URL,
       swRegistration: "",
       db: firebase,
       mm: new ManageModel(),
