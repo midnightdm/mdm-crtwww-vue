@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { getUserState } from '@/store/firebaseApp.js'
+
 import Logs from '../views/logs/Logs.vue'
 import Detail from '../views/logs/Detail.vue'
 import LastMonth from '../views/logs/LastMonth.vue'
@@ -11,50 +13,61 @@ import Manage from '../views/alerts/Manage.vue'
 
 import AddVess from '../views/admin/AddVess.vue'
 import AdminLogin from '../views/admin/AdminLogin.vue'
-import AllVess from '../views/admin/AllVess.vue'
-import PassVess from '../views/admin/PassVess.vue'
-import Subscribers from '../views/admin/Subscribers.vue'
+import AdminVessels from '../views/admin/AdminVessels.vue'
+import AdminDetail from '../views/admin/AdminDetail.vue'
+import Subscriptions from '../views/admin/Subscriptions.vue'
 import Msg404 from '../views/Msg404.vue'
 
-//import store from '../store/index.js'
 
 
 const routes = [
   {
     path: '/admin/login',
     name: 'Login',
-    component: AdminLogin
+    component: AdminLogin,
+    
+  },
+  {
+    path: '/admin',
+    redirect: '/admin/vessels'
   },
   {
     path: '/admin/add',
     name: 'Add',
-    component: AddVess
+    component: AddVess,
+    meta: { requiresAuth: true }
   },
   {
-    path: '/admin/all',
-    name: 'All',
-    component: AllVess
+    path: '/admin/vessels',
+    name: 'AdminVessels',
+    component: AdminVessels,
+    meta: { requiresAuth: true }
   },
   {
-    path: '/admin/passenger',
-    name: 'Passenger',
-    component: PassVess
+    path: '/admin/detail/:vesselID',
+    name: 'AdminDetail',
+    props: true,
+    component: AdminDetail,
+    meta: { requiresAuth: true }
   },
   {
-    path: '/admin/subscribers',
-    name: 'Subscribers',
-    component: Subscribers
+    path: '/admin/subscriptions',
+    name: 'Subscriptions',
+    component: Subscriptions,
+    meta: { requiresAuth: true }
   },
   {
     path: '/logs',
     name: 'Logs',
-    component: Logs
+    component: Logs,
+ 
   },
   {
     path: '/logs/history/:id',
     name: 'Detail',
     props: true,
-    component: Detail
+    component: Detail,
+    
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -63,64 +76,78 @@ const routes = [
   {
     path: '/logs/lastmonth',
     name: 'LastMonth',
-    component: LastMonth
+    component: LastMonth,
+    
   },
   {
     path: '/logs/past7',
     name: 'Past7',
-    component: Past7
+    component: Past7,
+    
   },
   {
     path: '/logs/past24',
     name: 'Past24',
-    component: Past24
+    component: Past24,
+    
   },
   {
     path: '/logs/thismonth',
     name: 'ThisMonth',
-    component: ThisMonth
+    component: ThisMonth,
+    
   },
   {
     path: '/logs/today',
     name: 'Today',
-    component: Today
+    component: Today,
+    
   },
   {
     path: '/logs/yesterday',
     name: 'Yesterday',
-    component: Yesterday
+    component: Yesterday,
+    
   },
   {
     path: '/manage',
     name: 'Manage',
-    component: Manage
+    component: Manage,
+    
   },
   {
     path: '/msg404',
     name: 'Msg404',
-    component: Msg404
+    component: Msg404,
+    
   },
+  
   {
-    path: "/:catchAll(.*)",
-    name: 'Msg404',
-    componant: Msg404
+    path: '/:catchAll(.*)*',
+    redirect: '/msg404',
   }
+  
 ]
+
 
 const router = createRouter({
   history: createWebHistory(),
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  //redirects to login page if not logged in for specified pages
-  const adminPages = ['/admin', '/admin/all', '/admin/add', '/admin/passenger', '/admin/subscribers', '/admin/logout'];
-  const authRequired = adminPages.includes(to.path);
-  //const loggedIn = this.$store.state.a.currentUser.isLoggedIn;
+router.beforeEach( async (to, from, next) => {
+  //redirects to login page if not logged in for admin pages specified in router meta data
+  const isAuth = await getUserState()
+  const requiresAuth   = to.matched.some(record => record.meta.requiresAuth)
+  //const requiresUnauth = to.matched.some(record => record.meta.requiresUnauth)
 
-  if(authRequired ) {
-    return next('/admin/login');
+  if(requiresAuth && !isAuth) {
+    next('/admin/login')
+  } else {
+    next()
   }
+
 })
+
 
 export default router

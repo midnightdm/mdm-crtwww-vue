@@ -11,8 +11,12 @@ export default {
       urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
       urlManage: process.env.VUE_APP_BASE_URL+'/manage',
       urlVideo: process.env.VUE_APP_BASE_URL+'/video',
-      slate: 'LOGS'
   
+    }
+  },
+  computed: {
+    slate () {
+      return this.$store.state.a.slate
     }
   },
   name: 'CrtLogo',

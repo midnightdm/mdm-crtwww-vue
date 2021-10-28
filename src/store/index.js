@@ -1,11 +1,11 @@
 import { createStore } from 'vuex'
 //import { mapGetters } from 'vuex'
-import firebase from './firebaseApp.js'
-import { doc, getDoc } from 'firebase/firestore'
+import { firestore } from './firebaseApp.js'
+import { doc, getDoc, getDocs, collection } from 'firebase/firestore'
 // onSnapshot, collection, query, where
 import { format, lastDayOfMonth, startOfYesterday, endOfYesterday, setHours } from 'date-fns'
 
-const db = firebase
+const db = firestore
 
 /* * * * * * * * * * * * * *
  *
@@ -379,7 +379,8 @@ function updateSubListActualView() {
 // The shared state object that any vue component can get access to.
 // Has some placeholders that we’ll use further on!
 const moduleA = {
-  state: () => ({ 
+  state: () => ({
+      slate: "", 
       passagesList: [
         {
           date: "",
@@ -428,36 +429,7 @@ const moduleA = {
       }
     }),   
   actions: {
-    /*  Old Version
-    async fetchPassagesList({ commit, state }) {
-      if(state.passagesList[0].type==="default") {
-        const passagesAllRef = doc(db, 'Passages', 'All');
-        var plObj, key, listArr = [], tmpArr = {},  nameArr = [], idx = 0, nKey, nObj, i;
-        const document = await getDoc(passagesAllRef);
 
-        //document.get().then((doc) => {
-        if(document.exists()) {
-          plObj = document.data();
-          //console.log("plObj", plObj);
-          for(key in plObj) {
-            nKey = plObj[key].name;
-            nObj = plObj[key];
-            nameArr.push(nKey);
-            tmpArr[nKey] = nObj;
-          }
-          nameArr.sort();
-          for(i=0; i<nameArr.length; i++) {
-            nKey = nameArr[i];
-            nObj = tmpArr[nKey];
-            nObj.localIndex = i;
-            listArr.push(nObj);
-          }
-          commit("setPassagesList", listArr)  
-        }     
-      }
-    },
-        New Method Below
-    */
     async fetchPassagesList({ commit, state }) {
       if(state.passagesList[0].type==="default") {
         const passagesAllRef = doc(db, 'Passages', 'All');
@@ -571,6 +543,9 @@ const moduleA = {
     setMonthCache(state, payload) {
       console.log("Ranges: ", state.ranges)
       state.monthCache = payload
+    },
+    setSlate(state, val) {
+      state.slate = val
     }
   },
 
@@ -621,10 +596,59 @@ const moduleA = {
  
 
 const moduleB = {
-  state: () => ({  }),
-  mutations: {  },
-  actions: {  },
-  getters: {  }
+  //This module for Admin pages
+  state: () => ({
+    adminUser: false,
+    subscribedEventsList: [],
+    vesselsList: []
+  }),
+  mutations: { 
+    saveAdminCredentials(state, payload) {
+      state.adminUser = payload
+      console.log('saveAdminCredentials: ', state.adminUser)
+    }
+  },
+  actions: {
+    async fetchAllSubscribedEvents({ commit, state }) {
+      const udSnapshot = await getDocs(collection(db, "user_devices"))
+      udSnapshot.forEach( (doc) => {
+        let data = doc.data()
+        let events = data.events
+        let obj =  null
+        events.forEach((event) => {
+          //Increment counter if event in array already
+          if( obj = state.subscribedEventsList.find( ({name}) => name === event) ) {
+            obj.count++  
+          //Otherwise add event to array
+          } else {
+            let ab = {name: event, count: 1 }
+            state.subscribedEventsList.push(ab);
+          }          
+        })        
+      })
+      state.subscribedEventsList.sort( (a,b) => a.name < b.name ? -1 : 1)     
+    },
+
+    async fetchAllVessels({ commit, state }) {
+      const vessSnapshot = await getDocs(collection(db, 'Vessels'))
+      let index = 0
+      vessSnapshot.forEach( (doc) => {
+        let data = doc.data()
+        data['index'] = index++
+        state.vesselsList.push(data) 
+      })
+      state.vesselsList.sort( (a,b) => a.vesselName < b.vesselName ? -1 : 1)
+    },
+
+
+  },
+  getters: {
+    getVesselDetail: (state) => (vesselID) => {
+      return state.vesselsList.filter( (item) => {
+        return item.vesselID == vesselID
+      })
+    },
+  }
 }
 
 const moduleC = {

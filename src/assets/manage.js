@@ -1,11 +1,11 @@
 import ManageModel from '@/assets/classes/ManageModel.js'
-import firebase from '@/store/firebaseApp.js'
+import { firestore } from '@/store/firebaseApp.js'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { getAuth, signInAnonymously } from "firebase/auth";
 
 
 //Declare globals
-const db = firebase
+const db = firestore
 const mm = new ManageModel();
 const fsAuth = getAuth();
 //OLD: const deviceRef = db.collection('user_devices');

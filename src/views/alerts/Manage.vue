@@ -5,7 +5,7 @@
 {{statusTxt}}</w-tag></p>
     <p><button v-if="isSubscribed" @click="unsubscribeUser()" class="pushtoglbtn" v-bind:disabled='pbIsDisabled'>{{pbLabel}}</button>
     <button  v-else @click="subscribeUser()"  class="pushtoglbtn" v-bind:disabled='pbIsDisabled'>{{pbLabel}}</button>&nbsp; 
-    <button class="sendpushbtn"> Send Notification</button></p>
+    </p>
   
   <div class="boxa">
     <h3>Subscribed Events</h3>
@@ -96,7 +96,7 @@
 <script>
 import ManageModel from '@/assets/classes/ManageModel.js'
 //import 'material-design-icons/iconfont/material-icons.css'
-import firebase from '@/store/firebaseApp.js'
+import { firestore } from '@/store/firebaseApp.js'
 import { doc, getDoc, setDoc, updateDoc, arrayRemove, onSnapshot } from 'firebase/firestore'
 import { getAuth, signInAnonymously } from "firebase/auth";
 export default {
@@ -126,7 +126,7 @@ export default {
       publicPath: process.env.BASE_URL,
       imagePath:  process.env.VUE_APP_IMG_URL,
       swRegistration: "",
-      db: firebase,
+      db: firestore,
       mm: new ManageModel(),
       fsAuth: getAuth(),
       isSubscribed: false,
@@ -284,7 +284,9 @@ export default {
             this.mm.userID = userObj.user.uid;   
             if(this.mm.userID==null) { 
               alert("Error generating a UUID.  Try again later.");
-            }     
+            } else {
+              console.log('this.mm.userID=',this.mm.userID);
+            }    
             this.deviceRef = doc(this.db, 'user_devices', this.mm.userID);
             /*   BLOCK START                 */
             onSnapshot(this.deviceRef, 
@@ -293,9 +295,11 @@ export default {
                 this.user = doc.data();
                 console.log("doc.data()", this.user);
                 this.mm.subListActual = [];
-                if(Array.isArray(this.user.events) && this.user.events.length) {
-                  this.user.events.forEach(this.loadSubListActual);
-                }  
+                if(this.user !== undefined) {
+                  if(Array.isArray(this.user.events) && this.user.events.length) {
+                    this.user.events.forEach(this.loadSubListActual);
+                  }  
+                } 
               }, 
               () => {
                 let user = {
