@@ -1,9 +1,30 @@
+<template>
+    <div class="logo-container">
+        <h1>clinton<span>river</span>traffic</h1>
+        <img :src="logoImgUrl" :alt="logoImgAlt" :title="logoImgAlt" class="logo-img">
+        <div id="mbbg" class="hasNav">
+            <!-- hidden checkbox is used as click reciever -->
+            <input type="checkbox" />    
+            <!--    Some spans to act as a hamburger. -->
+            <span></span>
+            <span></span>
+            <span></span>
+            <ul id="menu" class="nav">
+                <li><a class="nav-link" :href="urlAbout">ABOUT</a></li>
+                <li><router-link :to="{name: 'AlertsAll'}" class="nav-link" exact>ALERTS</router-link></li>
+                <li><a class="nav-link" :href="urlLive">LIVE</a></li>
+                <li><router-link :to="{name: 'Logs'}" class="nav-link" >LOGS</router-link></li>
+                <li><a class="nav-link" :href="urlVideo">VIDEO</a></li>
+            </ul>
+        </div>
+        <div id="title_slate">{{ slate }}</div>
+  </div>
+</template>
 
 <script>
 export default {
   data: function() {
     return {
-
       logoImgUrl: process.env.VUE_APP_BASE_URL+'/images/logo-towboat2.png',
       logoImgAlt: 'The logo image shows a tow boat pushing 9 barges.',
       urlAbout: process.env.VUE_APP_BASE_URL+'/about',
@@ -25,31 +46,6 @@ export default {
 }
 
 </script>
-
-<template>
-    <div class="logo-container">
-        <h1>clinton<span>river</span>traffic</h1>
-        <img :src="logoImgUrl" :alt="logoImgAlt" class="logo-img">
-        <div id="mbbg" class="hasNav">
-            <!-- hidden checkbox is used as click reciever -->
-            <input type="checkbox" />    
-            <!--    Some spans to act as a hamburger. -->
-            <span></span>
-            <span></span>
-            <span></span>
-            <ul id="menu" class="nav">
-                <li><a class="nav-link" :href="urlAbout">ABOUT</a></li>
-                <li><a class="nav-link" :href="urlAlerts">ALERTS</a></li>
-                <li><a class="nav-link" :href="urlLive">LIVE</a></li>
-                <li><router-link :to="{name: 'Logs'}" class="nav-link" >LOGS</router-link></li>
-                <li><router-link :to="{name: 'Manage'}" class="nav-link">MANAGE</router-link></li>
-                <li><a class="nav-link" :href="urlVideo">VIDEO</a></li>
-            </ul>
-        </div>
-        <div id="title_slate">{{ slate }}</div>
-  </div>
-</template>
-
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>

@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 //import { mapGetters } from 'vuex'
 import { firestore } from './firebaseApp.js'
-import { doc, getDoc, getDocs, collection } from 'firebase/firestore'
+import { doc, getDoc, getDocs, setDoc, collection, onSnapshot, query, where } from 'firebase/firestore'
 // onSnapshot, collection, query, where
 import { format, lastDayOfMonth, startOfYesterday, endOfYesterday, setHours } from 'date-fns'
 
@@ -477,7 +477,7 @@ const moduleA = {
     },
 
     async fetchCurrentMonth({ commit, state } ) {
-      //Check whether cache is alraeady set to prevent reloading
+      //Check whether cache is already set to prevent reloading
       if(state.monthCache[0].passageDirection !=="default") {
         return;
       }
@@ -599,13 +599,27 @@ const moduleB = {
   //This module for Admin pages
   state: () => ({
     adminUser: false,
+    adminMsg: false,
+    adminFormChanged: false,
+    adminFormSaved: false,
     subscribedEventsList: [],
-    vesselsList: []
+    vesselsList: [
+      {
+        vesselID: "000",
+        vesselName: "Loading..."
+      }
+    ]
+
   }),
   mutations: { 
-    saveAdminCredentials(state, payload) {
-      state.adminUser = payload
-      console.log('saveAdminCredentials: ', state.adminUser)
+    SAVE_ADMIN_CREDENTIALS(state, value) {
+      state.adminUser = value
+    },
+    SET_ADMIN_FORM_CHANGED(state, value) {
+      state.adminFormChanged = value
+    },
+    SET_ADMIN_FORM_SAVED(state, value) {
+      state.adminFormSaved = payload
     }
   },
   actions: {
@@ -630,15 +644,42 @@ const moduleB = {
     },
 
     async fetchAllVessels({ commit, state }) {
-      const vessSnapshot = await getDocs(collection(db, 'Vessels'))
-      let index = 0
-      vessSnapshot.forEach( (doc) => {
-        let data = doc.data()
-        data['index'] = index++
-        state.vesselsList.push(data) 
+      if(state.vesselsList[0].vesselID !=="000") {
+        return;
+      }
+      const q = query(collection(db, 'Vessels'), where('vesselID', '!=', false))
+      const vessSnapshot = onSnapshot(q, (querySnapshot) => { 
+        var tempList = []   
+        querySnapshot.forEach( (ret) => {
+          let data = ret.data()
+          let index = 0
+          data['index'] = index++
+          data['vesselRecordAddedDate'] = format(new Date(parseInt(data.vesselRecordAddedTS)*1000), "iii MMM d, yyyy")
+          tempList.push(data) 
+        })
+        tempList.sort( (a,b) => a.vesselName < b.vesselName ? -1 : 1)
+        state.vesselsList = tempList
       })
-      state.vesselsList.sort( (a,b) => a.vesselName < b.vesselName ? -1 : 1)
     },
+    fetchAdminMsg({ commit, state }) {
+      if(state.adminMsg != false) {
+        return
+      }
+      const passSnapshot = onSnapshot(doc(db, 'Passages', 'Admin'), (item) => {
+        state.adminMsg = item.data()
+      })
+    },
+    saveAdminCredentials: ({commit, state} , value) => {
+      commit('SAVE_ADMIN_CREDENTIALS', value)
+      console.log('saveAdminCredentials: ', state.adminUser)
+      return state.adminUser
+    },
+    setAdminFormChanged: ({commit, state}, value) => {
+      commit('SET_ADMIN_FORM_CHANGED', value)
+    },
+    setAdminFormSaved: ({commit, state}, value) => {
+      commit('SET_ADMIN_FORM_SAVED', value)
+    }
 
 
   },
@@ -647,6 +688,27 @@ const moduleB = {
       return state.vesselsList.filter( (item) => {
         return item.vesselID == vesselID
       })
+    },
+    getVesselsPassengerOnly: (state) => {
+      return state.vesselsList.filter( (item) => {
+        return item.vesselType.includes("assenger")
+      })
+    },
+    getVesselsSortAdded: (state) => {
+      let tempList = []
+      state.vesselsList.forEach( (item) => {
+        tempList.push(item)
+      })
+      tempList.sort( (a,b) => a.vesselRecordAddedTS > b.vesselRecordAddedTS ? -1 : 1)
+      return tempList      
+    },
+    getVesselsSortMMSI: (state) => {
+      let tempList = []
+      state.vesselsList.forEach( (item) => {
+        tempList.push(item)
+      })  
+      tempList.sort( (a,b) => a.vesselID < b.vesselID ? -1 : 1)
+      return tempList 
     },
   }
 }

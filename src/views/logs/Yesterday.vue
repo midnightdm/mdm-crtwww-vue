@@ -42,7 +42,9 @@ export default {
   created: function () {
     this.$store.dispatch("fetchCurrentMonth")
   },
-  
+  beforeUpdate() {
+    this.$store.commit('setSlate', 'LOGS')
+  },
   computed: {
     formattedRange() {
       return "Range is "+

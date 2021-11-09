@@ -120,6 +120,9 @@ export default {
       this.pbLabel = 'Push Not Supported';
     }
   },
+  beforeUpdate() {
+    this.$store.commit('setSlate', 'ALERTS')
+  },
   data: function() {
     return {
       applicationServerPublicKey: process.env.VUE_APP_MDM_VKEY,

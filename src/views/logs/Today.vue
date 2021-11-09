@@ -43,6 +43,9 @@ export default {
   created: function () {
     this.$store.dispatch("fetchCurrentMonth")
   },
+  beforeUpdate() {
+    this.$store.commit('setSlate', 'LOGS')
+  },
   data: function() {
     return {
       logoImgUrl: process.env.VUE_APP_BASE_URL+'/images/logo-towboat2.png',

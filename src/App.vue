@@ -74,7 +74,8 @@ main {
     color: #e7e3d9;
     border: none;   
 }
-  
+
+.nav2 li a.router-link-active,
 .nav2 li a.router-link-exact-active {
     background: white;
     color: red;

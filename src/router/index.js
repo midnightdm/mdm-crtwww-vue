@@ -9,13 +9,20 @@ import Past24 from '../views/logs/Past24.vue'
 import ThisMonth from '../views/logs/ThisMonth.vue'
 import Today from '../views/logs/Today.vue'
 import Yesterday from '../views/logs/Yesterday.vue'
-import Manage from '../views/alerts/Manage.vue'
+
 
 import AddVess from '../views/admin/AddVess.vue'
 import AdminLogin from '../views/admin/AdminLogin.vue'
 import AdminVessels from '../views/admin/AdminVessels.vue'
 import AdminDetail from '../views/admin/AdminDetail.vue'
 import Subscriptions from '../views/admin/Subscriptions.vue'
+
+import AlertsAll from '../views/alerts/AlertsAll.vue'
+import AlertsPass from '../views/alerts/AlertsPass.vue'
+import AlertsWatch from '../views/alerts/AlertsWatch'
+import Manage from '../views/alerts/Manage.vue'
+import Waypoint from '../views/alerts/Waypoint.vue'
+
 import Msg404 from '../views/Msg404.vue'
 
 
@@ -35,21 +42,24 @@ const routes = [
     path: '/admin/add',
     name: 'Add',
     component: AddVess,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: '/admin/vessels',
     name: 'AdminVessels',
     component: AdminVessels,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '/admin/vessels/:vesselID',
+        name: 'AdminDetail',
+        props: true,
+        component: AdminDetail,
+        meta: { requiresAuth: true }
+      }
+    ]
   },
-  {
-    path: '/admin/detail/:vesselID',
-    name: 'AdminDetail',
-    props: true,
-    component: AdminDetail,
-    meta: { requiresAuth: true }
-  },
+  
   {
     path: '/admin/subscriptions',
     name: 'Subscriptions',
@@ -110,11 +120,36 @@ const routes = [
     
   },
   {
-    path: '/manage',
+    path: '/alerts/all',
+    name: 'AlertsAll',
+    component: AlertsAll
+  },
+  {
+    path: '/alerts',
+    redirect: '/alerts/all'
+  },
+  {
+    path: '/alerts/passenger',
+    name: 'AlertsPass',
+    component: AlertsPass
+  },
+  {
+    path: '/alerts/watchlist',
+    name: 'AlertsWatch',
+    component: AlertsWatch
+  },
+  {
+    path: '/alerts/manage',
     name: 'Manage',
     component: Manage,
-    
   },
+  {
+    path: '/alerts/waypoint/:apubID',
+    props: true,
+    name: 'Waypoint',
+    component: Waypoint
+  },
+
   {
     path: '/msg404',
     name: 'Msg404',

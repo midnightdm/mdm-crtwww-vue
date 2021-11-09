@@ -50,7 +50,7 @@ export default {
                 .then((adminCredentials) => {
                     store.commit('saveAdminCredentials', adminCredentials)
                     console.log('adminUser: ', adminCredentials)
-                    router.push('/admin/all')
+                    router.push('/admin/vessels')
                 })
                 .catch((error) => {
                     alert(error.message)

@@ -8,7 +8,11 @@
 <script>
 
 
-export default {}
+export default {
+  beforeUpdate() {
+    this.$store.commit('setSlate', 'ERROR')
+  }
+}
 </script>
 
 <style>
