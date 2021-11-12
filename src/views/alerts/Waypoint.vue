@@ -40,7 +40,7 @@ const db = firestore
 
 export default {
     beforeUpdate() {
-      this.$store.commit('setSlate', 'Waypoint')
+      this.$store.commit('setSlate', 'WAYPOINT')
     },
     data() {
         return {

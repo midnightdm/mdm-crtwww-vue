@@ -76,7 +76,7 @@ const db = firestore
 export default {
     props: ['vesselID'],
     beforeUpdate() {
-      this.$store.commit('setSlate', 'Admin')
+      this.$store.commit('setSlate', 'ADMIN')
     },
     data: function() {
         return {

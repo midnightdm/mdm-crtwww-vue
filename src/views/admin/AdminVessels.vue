@@ -5,6 +5,7 @@
 <h2 v-if="isShowing">Admin Vessels</h2>
 <p v-if="isShowing">These are vessels for which images and data have been scraped from <a href="https://www.myshiptracking.com/vessels">myshiptracking.com</a>. They are added automatically
    when a detected transponder activates our live page. Click a vessel name to see and edit its details. </p>
+   <button id="topbtn" @click="topOfPage">Top</button>
 <router-view v-if="!isShowing"></router-view>  
 <button v-if="!isShowing" v-on:click="showList()" class="example_b">Return To List</button> 
     <div class="container" v-if="isShowing">
@@ -156,6 +157,10 @@ export default {
         console.log("New vesselWatchOn", vWo)
         const vessRef = doc(db, "Vessels", vID)
         setDoc(vessRef, {vesselWatchOn: vWo}, {merge: true})
+      },
+      topOfPage() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
       }      
     },
     components: {
@@ -284,4 +289,17 @@ main.local {
     transform: translateY(-100px);
 }
 
+#topbtn {
+    background-color: greenyellow;
+    border: 4px solid black;
+    text-align: center;
+    border-radius: 10%; 
+    padding: 10px;
+
+    font-weight: bold;
+    position: fixed;
+    bottom: 30px;
+    right: 15px;
+
+}
 </style>

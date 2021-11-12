@@ -19,6 +19,7 @@
     "vue-router": "^4.0.0-0",
     "vue-svg-loader": "^0.16.0",
     "vue-template-compiler": "^2.0.0",
+    "vue-timeago3": "^1.0.1",
     "vuex": "^4.0.2",
     "wave-ui": "^2.23.0"
   },
@@ -36,5 +37,8 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
+  }
 }

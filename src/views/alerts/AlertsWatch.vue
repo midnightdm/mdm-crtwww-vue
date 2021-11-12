@@ -6,7 +6,7 @@
 import AlertsSubMenu from '@/components/AlertsSubMenu.vue'
 export default {
     beforeUpdate() {
-      this.$store.commit('setSlate', 'Alerts')
+      this.$store.commit('setSlate', 'ALERTS')
     },
   components: {
       AlertsSubMenu,

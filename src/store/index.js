@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 //import { mapGetters } from 'vuex'
 import { firestore } from './firebaseApp.js'
-import { doc, getDoc, getDocs, setDoc, collection, onSnapshot, query, where } from 'firebase/firestore'
+import { doc, getDoc, getDocs, setDoc, collection, onSnapshot, query, where, limit, orderBy } from 'firebase/firestore'
 // onSnapshot, collection, query, where
 import { format, lastDayOfMonth, startOfYesterday, endOfYesterday, setHours } from 'date-fns'
 
@@ -380,7 +380,7 @@ function updateSubListActualView() {
 // Has some placeholders that we’ll use further on!
 const moduleA = {
   state: () => ({
-      slate: "", 
+      slate: "ERROR", 
       passagesList: [
         {
           date: "",
@@ -426,7 +426,13 @@ const moduleA = {
       currentUser: {
         cred: null,
         isLoggedIn: false
-      }
+      },
+      alertsAll: [
+
+      ],
+      alertsPassenger: [
+
+      ]
     }),   
   actions: {
 
@@ -529,9 +535,42 @@ const moduleA = {
         console.log("No Passages found for "+lastMonthKey+" "+thisMonthKey)
       }
 
+    },
+
+    async fetchAllAlerts({ commit, state }) {
+      if(state.alertsAll.length==20) {
+        return
+      }
+      const q = query(collection(db, 'Alertpublish'), orderBy('apubTS', 'desc'), limit(20))
+      const apubSnapshot = onSnapshot(q, (querySnapshot) => {
+        let tempAlertsAll = []
+        querySnapshot.forEach( (ret) => {
+          let data = ret.data()
+          data['date'] = new Date(data['apubTS']*1000)
+          tempAlertsAll.push(data)
+        })
+        //After building array replace state version
+        state.alertsAll = tempAlertsAll
+      })
+    },
+
+    async fetchPassengerAlerts({ commit, state }) {
+      if(state.alertsPassenger.length==20) {
+        return
+      }
+      const q = query(collection(db, 'Alertpublish'), where('apubType', '==', 'p'), orderBy('apubTS', 'desc'), limit(20))
+      const apubSnapshot = onSnapshot(q, (querySnapshot) => {
+        let tempAlertsPassenger = []
+        querySnapshot.forEach( (ret) => {
+          let data = ret.data()
+          data['date'] = new Date(data['apubTS']*1000)
+          tempAlertsPassenger.push(data)
+        })
+        //After building array replace state version
+        state.alertsPassenger = tempAlertsPassenger
+      })
     }
   },
-
 
   mutations: {
     setPassagesList(state, val) {
@@ -592,8 +631,6 @@ const moduleA = {
     getRanges: state => { return state.ranges.past7.lo }   
   }    
 }
-
- 
 
 const moduleB = {
   //This module for Admin pages
@@ -661,6 +698,9 @@ const moduleB = {
         state.vesselsList = tempList
       })
     },
+
+
+
     fetchAdminMsg({ commit, state }) {
       if(state.adminMsg != false) {
         return

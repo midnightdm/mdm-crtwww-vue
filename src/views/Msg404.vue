@@ -11,6 +11,12 @@
 export default {
   beforeUpdate() {
     this.$store.commit('setSlate', 'ERROR')
+  },
+  onActivated() {
+    this.$store.commit('setSlate', 'ALERTS')
+  },
+  onErrorCaptured() {
+    this.$store.commit('setSlate', 'ALERTS')
   }
 }
 </script>

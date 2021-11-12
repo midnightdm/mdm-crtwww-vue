@@ -4,7 +4,7 @@
     <h1>{{this.$store.getters.getYesterday.length}} Passage<span v-if='this.$store.getters.getYesterday.length != 1'>s</span>  Yesterday</h1>
     <h4>{{ this.formattedRange }}</h4>
     <main>
-      <ul class="vessels-list" v-for="vessel in this.$store.getters.getYesterday" :key="vessel.passageVesselID">
+      <ul class="vessels-list" v-for="vessel in this.$store.getters.getYesterday" :key="vessel.vesselID">
         <li>
           <div class="shipBox tableBlock">
             <img class="shipBox" :src="vessel.vesselImageUrl" width="200" />

@@ -7,13 +7,15 @@ import router from './router'
 import store from './store'
 import WaveUI from 'wave-ui'
 import 'wave-ui/dist/wave-ui.css'
+import timeago from 'vue-timeago3'
 
 //register components
 const registerComponents = (app) => { 
   app.component('CrtLogo', CrtLogo);
 }
 
-const app = createApp(App).use(router).use(store);
+const app = createApp(App).use(router).use(store).use(timeago);
+
 new WaveUI(app, {
 });
 registerComponents(app);
