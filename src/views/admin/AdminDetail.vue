@@ -54,6 +54,9 @@
                         <td colspan="2" class="w-25">
                             <img data-bind="attr: { src: vesselImageUrl, alt:'Image of '+ vesselName}" class="img-fluid img-thumbnail" :src="vessel.vesselImageUrl" height="240" >
                             <button v-if="changed" v-on:click="saveData()" class="example_a">Save Changes</button>
+                            <button v-on:click="useDefaultUrl()" class="example_b">Default URL</button>
+                            <button v-on:click="useOldUrl()" class="example_b">Old URL</button>
+                            <button v-on:click="useNoImageUrl()" class="example_b">No Image URL</button>
                         </td>
                     </tr>	  		  
                     </table>   
@@ -78,19 +81,39 @@ export default {
     beforeUpdate() {
       this.$store.commit('setSlate', 'ADMIN')
     },
+    mounted() {
+      this.refreshData()
+    },
     data: function() {
         return {
             changed: false,
-            vessel: this.$store.getters.getVesselDetail(this.vesselID)[0]
+            vessel: "", //this.$store.getters.getVesselDetail(this.vesselID)[0],
+            oldUrl: ""
         }        
     },
     methods: {
         refreshData() {
-            this.vessel = this.$store.getters.getVesselDetail(this.vesselID)
+            this.vessel = this.$store.getters.getVesselDetail(this.vesselID)[0]
+            if(typeof this.vessel == 'object') {
+              this.oldUrl = this.vessel.vesselImageUrl
+            }
+            
+        },
+        useOldUrl() {
+          this.vessel.vesselImageUrl = this.oldUrl
+          this.changed = true
+        },
+        useDefaultUrl() {
+          this.vessel.vesselImageUrl = process.env.VUE_APP_IMG_URL + "images/vessels/mmsi" + this.vessel.vesselID + ".jpg"
+          this.changed = true
+        },
+        useNoImageUrl() {
+          this.vessel.vesselImageUrl = process.env.VUE_APP_NOIMG_URL
         },
         changeDetected() {
             this.changed = true
         },
+
         saveData() {
             //Clone vessel obj... 
             var  vesselClone = Object.assign({}, this.vessel)
@@ -226,7 +249,7 @@ tr.isNew {
   -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
   -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
   box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
-  transition: all 0.4s ease 0s;
+  transition: all 0.4s ease 0.4s;
 }
 
 .example_b {

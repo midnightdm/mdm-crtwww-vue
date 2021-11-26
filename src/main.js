@@ -8,6 +8,7 @@ import store from './store'
 import WaveUI from 'wave-ui'
 import 'wave-ui/dist/wave-ui.css'
 import timeago from 'vue-timeago3'
+import 'animate.css'
 
 //register components
 const registerComponents = (app) => { 

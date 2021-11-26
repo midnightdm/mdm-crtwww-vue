@@ -18,6 +18,7 @@ import AdminDetail from '../views/admin/AdminDetail.vue'
 import Subscriptions from '../views/admin/Subscriptions.vue'
 
 import AlertsAll from '../views/alerts/AlertsAll.vue'
+import AlertsDemo from '../views/alerts/AlertsDemo.vue'
 import AlertsPass from '../views/alerts/AlertsPass.vue'
 import AlertsWatch from '../views/alerts/AlertsWatch'
 import Manage from '../views/alerts/Manage.vue'
@@ -127,6 +128,11 @@ const routes = [
   {
     path: '/alerts',
     redirect: '/alerts/all'
+  },
+  {
+    path: '/alerts/demo',
+    name: 'AlertsDemo',
+    component: AlertsDemo
   },
   {
     path: '/alerts/passenger',

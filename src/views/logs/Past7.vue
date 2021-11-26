@@ -3,6 +3,8 @@
 <div id="main" class="past7">
     <h1>{{this.$store.getters.getPast7.length}} Vessel Passage<span v-if='this.$store.getters.getPast7.length != 1'>s</span> in the Past 7 Days</h1>
     <h4>{{ this.formattedRange }}</h4>
+    <button v-bind:class="{ active: scrolled}" id="topbtn" @click="topOfPage">Top</button>
+
     <main>
       <ul class="vessels-list" v-for="vessel in this.$store.getters.getPast7" :key="vessel.vesselID">
       <li>
@@ -18,7 +20,7 @@
           </div>
 
           <div class="tableBlock">
-            <h4>{{vessel.alphaDO.toLocaleDateString() }}</h4>
+            <h4>{{vessel.charlieDO.toLocaleDateString() }}</h4>
             <br/>
             <p><span class="label">LOCK 13:</span> <span class="value">{{ vessel.bravoDO.toLocaleTimeString() }}</span></p>
              <p><span class="label">BRIDGE :</span> <span class="value">{{ vessel.charlieDO.toLocaleTimeString() }}</span></p>
@@ -41,6 +43,7 @@ import LogsSubMenu from '@/components/LogsSubMenu.vue'
 export default {
   created: function () {
     this.$store.dispatch("fetchCurrentMonth")
+    window.addEventListener('scroll', this.handleScroll)
   },
   beforeUpdate() {
     this.$store.commit('setSlate', 'LOGS')
@@ -54,7 +57,7 @@ export default {
       urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
       urlManage: process.env.VUE_APP_BASE_URL+'/manage',
       urlVideo: process.env.VUE_APP_BASE_URL+'/video',
-      slate: 'LOGS'
+      scrolled: false
     }
   },
   computed: {
@@ -65,6 +68,19 @@ export default {
       format(this.$store.state.a.ranges.past7.hi*1000, 'h:mmaaa eeee, LLL do')
 
     }
+  },
+  methods: {
+    topOfPage() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    },
+    handleScroll(event) {
+      if(document.documentElement.scrollTop>20) {
+        this.scrolled = true
+      } else {
+        this.scrolled = false
+      }
+    }  
   },
   components: {
     LogsSubMenu
@@ -137,6 +153,27 @@ h4.title {
   display:flex; 
   align-items: center;
 }
+
+#topbtn {
+    background-color: greenyellow;
+    border: 4px solid black;
+    text-align: center;
+    border-radius: 10%; 
+    padding: 10px;
+    font-weight: bold;
+    position: fixed;
+    bottom: 30px;
+    right: 15px;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+#topbtn.active {
+  opacity: 1;
+  transition: opacity 0.5s;
+  cursor: pointer;
+}
+
 
 .btn {
   transform: translateX(35px);

@@ -3,6 +3,7 @@
   <div id="main" class="yesterday">
     <h1>{{this.$store.getters.getYesterday.length}} Passage<span v-if='this.$store.getters.getYesterday.length != 1'>s</span>  Yesterday</h1>
     <h4>{{ this.formattedRange }}</h4>
+    <button v-bind:class="{ active: scrolled}" id="topbtn" @click="topOfPage">Top</button>
     <main>
       <ul class="vessels-list" v-for="vessel in this.$store.getters.getYesterday" :key="vessel.vesselID">
         <li>
@@ -18,7 +19,7 @@
           </div>
 
           <div class="tableBlock">
-            <h4>{{vessel.alphaDO.toLocaleDateString() }}</h4>
+            <h4>{{vessel.charlieDO.toLocaleDateString() }}</h4>
            <br>/
             <p><span class="label">LOCK 13:</span> <span class="value">{{ vessel.bravoDO.toLocaleTimeString() }}</span></p>
             <p><span class="label">BRIDGE :</span> <span class="value">{{ vessel.charlieDO.toLocaleTimeString() }}</span></p>
@@ -41,9 +42,15 @@ import LogsSubMenu from '@/components/LogsSubMenu.vue'
 export default {
   created: function () {
     this.$store.dispatch("fetchCurrentMonth")
+    window.addEventListener('scroll', this.handleScroll)
   },
   beforeUpdate() {
     this.$store.commit('setSlate', 'LOGS')
+  },
+  data: function() {
+    return {
+      scrolled: false
+    }
   },
   computed: {
     formattedRange() {
@@ -54,8 +61,24 @@ export default {
 
     }
   },
+  methods: {
+    topOfPage() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    },
+    handleScroll(event) {
+      if(document.documentElement.scrollTop>20) {
+        this.scrolled = true
+      } else {
+        this.scrolled = false
+      }
+    }  
+  },
   components: {
     LogsSubMenu
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll);
   }
 }
 </script>
@@ -124,6 +147,26 @@ h4.title {
 .holder {
   display:flex; 
   align-items: center;
+}
+
+#topbtn {
+    background-color: greenyellow;
+    border: 4px solid black;
+    text-align: center;
+    border-radius: 10%; 
+    padding: 10px;
+    font-weight: bold;
+    position: fixed;
+    bottom: 30px;
+    right: 15px;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+#topbtn.active {
+  opacity: 1;
+  transition: opacity 0.5s;
+  cursor: pointer;
 }
 
 .btn {

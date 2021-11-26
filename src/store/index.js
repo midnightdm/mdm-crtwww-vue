@@ -373,14 +373,24 @@ function updateSubListActualView() {
     none.style.visibility = "visible";
     ol.innerHTML = "";
   }
-  
+}
+
+//A function used for updating alert arrays
+function objectQueue(arr, add, size=20) {
+  //Returns the updated array
+  arr.push(add)
+  console.log("arr length: ", arr.length, " size: ", size)
+  if(arr.length >=size) {
+    arr.shift()
+  }
+  return arr
 }
 
 // The shared state object that any vue component can get access to.
 // Has some placeholders that we’ll use further on!
 const moduleA = {
   state: () => ({
-      slate: "ERROR", 
+      slate: "LOADING", 
       passagesList: [
         {
           date: "",
@@ -428,10 +438,48 @@ const moduleA = {
         isLoggedIn: false
       },
       alertsAll: [
-
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()}
       ],
       alertsPassenger: [
-
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()}
       ]
     }),   
   actions: {
@@ -529,49 +577,82 @@ const moduleA = {
       if(found) {
         //Sort by passageMarkerCharlieTS
         vessels.sort( (a,b) => parseInt(a.passageMarkerCharlieTS) < parseInt(b.passageMarkerCharlieTS) ? -1 : 1)
-        console.log("Vessels Passage Array: ", vessels)
+        //console.log("Vessels Passage Array: ", vessels)
         commit('setMonthCache', vessels)
       } else {
-        console.log("No Passages found for "+lastMonthKey+" "+thisMonthKey)
+        //console.log("No Passages found for "+lastMonthKey+" "+thisMonthKey)
       }
 
     },
 
     async fetchAllAlerts({ commit, state }) {
-      if(state.alertsAll.length==20) {
-        return
-      }
-      const q = query(collection(db, 'Alertpublish'), orderBy('apubTS', 'desc'), limit(20))
-      const apubSnapshot = onSnapshot(q, (querySnapshot) => {
-        let tempAlertsAll = []
-        querySnapshot.forEach( (ret) => {
-          let data = ret.data()
-          data['date'] = new Date(data['apubTS']*1000)
-          tempAlertsAll.push(data)
+      if(state.alertsAll[0].apubID == "loading") {
+        const apubSnapshot = onSnapshot(doc(db, "Alertpublish", "all"), (querySnapshot) => {
+          let tempAlertsAll = []
+          let dataSet = querySnapshot.data()
+          let i = 0
+          for(var data in dataSet) {
+            dataSet[data]['date'] = new Date(dataSet[data]['apubTS']*1000)
+            tempAlertsAll.push(dataSet[data])
+            i++
+          }
+          //Add placeholder data if not 20 results
+          let j = 20 - tempAlertsAll.length
+          while(j>0) {
+            console.log("value of j: ", j)
+            tempAlertsAll.push( { apubID: -1, date: new Date() } )
+            j--
+          }
+          //Sort by apubTS decending
+          tempAlertsAll.sort( (a,b) => parseInt(a.apubTS) - parseInt(b.apubTS))
+          //After building array replace state version
+         
+         /*
+          //Does last obj in temp match last obj in state array?
+          if(state.alertsAll[state.alertsAll.length-1].apubID != tempAlertsAll[tempAlertsAll.length-1]) {
+            //No means a change. Shift the array and add new.
+            let obj = tempAlertsAll[tempAlertsAll.length-1]
+            state.alertsAll = objectQueue(state.alertsAll, obj, 20)
+            console.log("alertsAll array shifted", state.alertsAll)
+          } else {
+            */
+            state.alertsAll = tempAlertsAll
+            console.log("alertsAll array replaced", state.alertsAll)
+          //}
         })
-        //After building array replace state version
-        state.alertsAll = tempAlertsAll
-      })
+      }
+      
     },
 
     async fetchPassengerAlerts({ commit, state }) {
-      if(state.alertsPassenger.length==20) {
-        return
-      }
-      const q = query(collection(db, 'Alertpublish'), where('apubType', '==', 'p'), orderBy('apubTS', 'desc'), limit(20))
-      const apubSnapshot = onSnapshot(q, (querySnapshot) => {
-        let tempAlertsPassenger = []
-        querySnapshot.forEach( (ret) => {
-          let data = ret.data()
-          data['date'] = new Date(data['apubTS']*1000)
-          tempAlertsPassenger.push(data)
+      if(state.alertsPassenger[0].apubID == "loading") {
+        const apubSnapshot = onSnapshot(doc(db, "Alertpublish", "passenger"), (querySnapshot) => {
+          let tempAlertsPassenger = []
+          let dataSet = querySnapshot.data()
+          let i = 0
+          for(var data in dataSet) {
+            dataSet[data]['date'] = new Date(dataSet[data]['apubTS']*1000)
+            tempAlertsPassenger.push(dataSet[data])
+            i++
+          }
+          //Add placeholder data if not 20 results
+          let j = 20 - tempAlertsPassenger.length
+          while(j>0) {
+            console.log("value of j: ", j)
+            tempAlertsPassenger.push( { apubID: -1, apubTS:1630614794 , date: new Date() } )
+            j--
+          }
+          tempAlertsPassenger.forEach((item) => console.log("before:",item.date))
+          //Sort by apubTS decending
+          tempAlertsPassenger.sort( (a,b) => parseInt(a.apubTS) - parseInt(b.apubTS))
+          tempAlertsPassenger.forEach((item) => console.log("after:",item.date))
+          //After building array replace state version
+          state.alertsPassenger = tempAlertsPassenger
+          console.log(state.alertsPassenger)
         })
-        //After building array replace state version
-        state.alertsPassenger = tempAlertsPassenger
-      })
-    }
+      }
+    },
   },
-
   mutations: {
     setPassagesList(state, val) {
       state.passagesList = val
@@ -599,38 +680,51 @@ const moduleA = {
     dd: () => { return format(new Date(), "dd")},
     ymd: () => { return format(new Date(), "yyyy-mm-dd") },
     getToday: (state) => {
-      return state.monthCache.filter( (item) => {
+      let ret = state.monthCache.filter( (item) => {
         return item.passageMarkerCharlieTS > state.ranges.today.lo && item.passageMarkerCharlieTS < state.ranges.today.hi
       })
+      ret.sort( (a,b) => a.passageMarkerCharlieTS > b.passageMarkerCharlieTS ? -1 : 1) 
+      return ret
     },
     getYesterday: (state) => {
-      return state.monthCache.filter( (item) => {
+      let ret = state.monthCache.filter( (item) => {
         return item.passageMarkerCharlieTS > state.ranges.yesterday.lo && item.passageMarkerCharlieTS < state.ranges.yesterday.hi
       })
+      ret.sort( (a,b) => a.passageMarkerCharlieTS > b.passageMarkerCharlieTS ? -1 : 1) 
+      return ret
     },
     getPast24: (state) => {
-      return state.monthCache.filter( (item) => {
+      let ret = state.monthCache.filter( (item) => {
         return item.passageMarkerCharlieTS > state.ranges.past24.lo && item.passageMarkerCharlieTS < state.ranges.past24.hi
       })
+      ret.sort( (a,b) => a.passageMarkerCharlieTS > b.passageMarkerCharlieTS ? -1 : 1) 
+      return ret
     },
     getPast7: (state) => {
-      return state.monthCache.filter( (item) => {
+      let ret = state.monthCache.filter( (item) => {
         return item.passageMarkerCharlieTS > state.ranges.past7.lo && item.passageMarkerCharlieTS < state.ranges.past7.hi
       })
+      ret.sort( (a,b) => a.passageMarkerCharlieTS > b.passageMarkerCharlieTS ? -1 : 1) 
+      return ret
     },
     getLastMonth: (state) => {
-      return state.monthCache.filter( (item) => {
+      let ret = state.monthCache.filter( (item) => {
         return item.passageMarkerCharlieTS > state.ranges.lastMonth.lo && item.passageMarkerCharlieTS < state.ranges.lastMonth.hi
       })
+      ret.sort( (a,b) => a.passageMarkerCharlieTS > b.passageMarkerCharlieTS ? -1 : 1) 
+      return ret
     },
     getThisMonth: (state) => {
-      return state.monthCache.filter( (item) => {
+      let ret = state.monthCache.filter( (item) => {
         return item.passageMarkerCharlieTS > state.ranges.thisMonth.lo && item.passageMarkerCharlieTS < state.ranges.thisMonth.hi
       })
+      ret.sort( (a,b) => a.passageMarkerCharlieTS > b.passageMarkerCharlieTS ? -1 : 1) 
+      return ret
     },
     getRanges: state => { return state.ranges.past7.lo }   
   }    
 }
+
 
 const moduleB = {
   //This module for Admin pages

@@ -103,8 +103,8 @@ export default {
   beforeMount() {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       console.log('Service Worker and Push is supported');
-      //mysw.js has the push method and payload, mysw.js also has the eventhandler fr when the notification is clicked
-      navigator.serviceWorker.register('mysw.js') 
+      //mysw.js has the push method and payload, mysw.js also has the eventhandler for when the notification is clicked
+      navigator.serviceWorker.register('../mysw.js') 
       .then( (swReg) => {
         console.log('Service Worker is registered', swReg);
         this.swRegistration = swReg;
@@ -130,12 +130,12 @@ export default {
       imagePath:  process.env.VUE_APP_IMG_URL,
       swRegistration: "",
       db: firestore,
-      mm: new ManageModel(),
+      mm: this.initializeMM(),
       fsAuth: getAuth(),
       isSubscribed: false,
       authEnc: null,
       user: null,
-      pbIsDisabled: true,
+      pbIsDisabled: false,
       pbLabel: 'Enable Push',
       statusTxt: 'Disabled',
       deviceRef: "",
@@ -158,6 +158,9 @@ export default {
     }
   },
   methods: {
+    initializeMM() {
+      return new ManageModel()
+    },
     showAlert(msg) {
       alert(msg)
     },

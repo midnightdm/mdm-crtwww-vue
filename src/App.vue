@@ -1,8 +1,9 @@
 <template>
   <w-app>
     <CrtLogo></CrtLogo>
-      
+    <div class="routerView"> 
       <router-view/>
+      </div>
   </w-app>
 </template>
 
