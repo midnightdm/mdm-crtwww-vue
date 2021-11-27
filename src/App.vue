@@ -15,7 +15,7 @@
   text-align: center;
   color: #2c3e50;
   line-height: normal;
-}
+  }
 
 #main {
   position: relative;

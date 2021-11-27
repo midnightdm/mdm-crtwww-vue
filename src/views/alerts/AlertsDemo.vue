@@ -106,10 +106,7 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans:400');
-.routerView {
-  background-color: #31363e;
-  
-}
+
 
 
 li.card {

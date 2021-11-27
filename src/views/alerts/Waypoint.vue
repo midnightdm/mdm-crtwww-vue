@@ -85,7 +85,7 @@ export default {
             //Determine background map by event and direction data
             let dir = this.direction.includes('wn') ? "down" : "up"
             //Strip waypoint basename as event name
-            this.event = this.event.substr(0, this.event.length-dir.length)
+            this.event = this.event.substr(0, this.event.length-2)
 
             let str = this.event + "-" + dir + "-map.png"
             this.bgMap = this.base +"images/"+str

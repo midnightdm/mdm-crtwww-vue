@@ -9,7 +9,7 @@
         <p>{{this.$store.state.a.alertsAll[19].apubText}}</p>
       </li>
 </transition-group>
-<transition-group enter-active-class="animate__animated animate__slideInDown">
+<transition-group enter-active-class="animate__animated animate__slideInRight">
       <li class="card" v-if="this.$store.state.a.alertsAll[18].apubID >-1"
         :key="this.$store.state.a.alertsAll[18].apubID">
         <h4><router-link :to="{name: 'Waypoint', route: '/alerts/waypoint', params: { apubID: this.$store.state.a.alertsAll[18].apubID}}">{{this.$store.state.a.alertsAll[18].apubVesselName}}</router-link>&nbsp;&nbsp; <timeago autoUpdate :datetime="this.$store.state.a.alertsAll[18].date"/></h4>
@@ -147,10 +147,7 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans:400');
-.routerView {
-  background-color: #31363e;
-  
-}
+
 
 
 li.card {

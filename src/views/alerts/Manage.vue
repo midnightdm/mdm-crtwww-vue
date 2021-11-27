@@ -26,7 +26,7 @@
       <option v-for='event in mm.subListAvail' v-bind:key='event.key' :value='event.key'>{{event.title}}</option>
     </select> <br>   
     <br> 
-    <!-- Button in Subscribe instantly -->
+    <!-- Button to Subscribe instantly -->
      <w-button v-if="selectionFound" @click="removeActualEvent(mm.subListSelection.key)">Remove Event</w-button>
      <w-button v-else @click="subscribeToEvent()">Subscribe to Event</w-button>&nbsp;
     <!-- Button to trigger modal -->
@@ -37,11 +37,17 @@
       dark>
       View Details
     </w-button> 
-
+    &nbsp;
+    <!-- Button to Subscribe to default waypoints -->
+     <w-button @click="subscribeToDefaultWaypoints">Add Default Waypoints</w-button>
     <br/>
   </div>
   <div class="boxb boxc">
   Consider where along the river you like to watch riverboats. Choose one marker a few miles above your spot for downriver notices. Pick another below your spot for upriver notices. "Passenger" events will trigger less often than the "Any" vessel events which occur many times daily.
+  
+  </div>
+    <div class="boxb boxc">
+Please note that "Any" means any vessel OTHER than passenger and does not include passenger vessels also. You will get passenger vessel notices only when subscribed to passenger events. 
   
   </div>
 </main>
@@ -370,6 +376,11 @@ export default {
       setDoc(this.deviceRef, {events: this.user.events} , {merge:true})
       console.log('subscribeToEvent()');
       this.getSelection();
+    },
+    subscribeToDefaultWaypoints() {
+      this.user.events.push('alphadp', 'deltaup');
+      setDoc(this.deviceRef, {events: this.user.events} , {merge:true});
+      //this.getSelection();
     },
     getSelection() {
       this.mm.getSelection().then( () => {

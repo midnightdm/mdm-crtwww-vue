@@ -605,20 +605,8 @@ const moduleA = {
           }
           //Sort by apubTS decending
           tempAlertsAll.sort( (a,b) => parseInt(a.apubTS) - parseInt(b.apubTS))
-          //After building array replace state version
-         
-         /*
-          //Does last obj in temp match last obj in state array?
-          if(state.alertsAll[state.alertsAll.length-1].apubID != tempAlertsAll[tempAlertsAll.length-1]) {
-            //No means a change. Shift the array and add new.
-            let obj = tempAlertsAll[tempAlertsAll.length-1]
-            state.alertsAll = objectQueue(state.alertsAll, obj, 20)
-            console.log("alertsAll array shifted", state.alertsAll)
-          } else {
-            */
-            state.alertsAll = tempAlertsAll
-            console.log("alertsAll array replaced", state.alertsAll)
-          //}
+          state.alertsAll = [...tempAlertsAll]
+          console.log("alertsAll array replaced", state.alertsAll)
         })
       }
       
@@ -639,7 +627,7 @@ const moduleA = {
           let j = 20 - tempAlertsPassenger.length
           while(j>0) {
             console.log("value of j: ", j)
-            tempAlertsPassenger.push( { apubID: -1, apubTS:1630614794 , date: new Date() } )
+            tempAlertsPassenger.push( { apubID: -1, apubTS:1630614794 , date: new Date(1630614794000) } )
             j--
           }
           tempAlertsPassenger.forEach((item) => console.log("before:",item.date))
@@ -647,7 +635,7 @@ const moduleA = {
           tempAlertsPassenger.sort( (a,b) => parseInt(a.apubTS) - parseInt(b.apubTS))
           tempAlertsPassenger.forEach((item) => console.log("after:",item.date))
           //After building array replace state version
-          state.alertsPassenger = tempAlertsPassenger
+          state.alertsPassenger = [...tempAlertsPassenger]
           console.log(state.alertsPassenger)
         })
       }
