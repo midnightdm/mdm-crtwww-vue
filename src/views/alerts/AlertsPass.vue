@@ -138,15 +138,21 @@ export default {
   },
   mounted() {
     this.$store.commit('setSlate', 'ALERTS')
+    this.$store.commit('setAlertsLinkActive', true)
+  },
+  unmounted() {
+    this.$store.commit('setAlertsLinkActive', false)
   },
   components: {
     AlertsSubMenu,
   }
+  
 }
 </script>
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans:400');
+
 
 
 li.card {

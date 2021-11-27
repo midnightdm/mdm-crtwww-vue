@@ -1,4 +1,5 @@
 <template>
+<AlertsSubMenu></AlertsSubMenu>
   <main class="text-center">
     <h1>MANAGE NOTIFICATIONS</h1>
     <p>On this browser push notifications are <w-tag class="mr4" bg-color="yellow" color="primary" round>
@@ -102,6 +103,7 @@ Please note that "Any" means any vessel OTHER than passenger and does not includ
 <script>
 import ManageModel from '@/assets/classes/ManageModel.js'
 //import 'material-design-icons/iconfont/material-icons.css'
+import AlertsSubMenu from '@/components/AlertsSubMenu.vue'
 import { firestore } from '@/store/firebaseApp.js'
 import { doc, getDoc, setDoc, updateDoc, arrayRemove, onSnapshot } from 'firebase/firestore'
 import { getAuth, signInAnonymously } from "firebase/auth";
@@ -126,8 +128,12 @@ export default {
       this.pbLabel = 'Push Not Supported';
     }
   },
-  beforeUpdate() {
+  mounted() {
     this.$store.commit('setSlate', 'ALERTS')
+    this.$store.commit('setAlertsLinkActive', true)
+  },
+  unmounted() {
+    this.$store.commit('setAlertsLinkActive', false)
   },
   data: function() {
     return {
@@ -394,6 +400,9 @@ export default {
         }
       });
     }  
+  },
+  components: {
+    AlertsSubMenu
   }
 }
 </script>

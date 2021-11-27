@@ -140,7 +140,7 @@ export default {
     this.$store.commit('setSlate', 'ALERTS')
   },
   components: {
-    AlertsSubMenu,
+    AlertsSubMenu
   }
 }
 </script>

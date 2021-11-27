@@ -390,7 +390,9 @@ function objectQueue(arr, add, size=20) {
 // Has some placeholders that we’ll use further on!
 const moduleA = {
   state: () => ({
-      slate: "LOADING", 
+      slate: "LOADING",
+      alertsLinkActive: false,
+      logsLinkActive: false, 
       passagesList: [
         {
           date: "",
@@ -630,10 +632,8 @@ const moduleA = {
             tempAlertsPassenger.push( { apubID: -1, apubTS:1630614794 , date: new Date(1630614794000) } )
             j--
           }
-          tempAlertsPassenger.forEach((item) => console.log("before:",item.date))
           //Sort by apubTS decending
           tempAlertsPassenger.sort( (a,b) => parseInt(a.apubTS) - parseInt(b.apubTS))
-          tempAlertsPassenger.forEach((item) => console.log("after:",item.date))
           //After building array replace state version
           state.alertsPassenger = [...tempAlertsPassenger]
           console.log(state.alertsPassenger)
@@ -654,6 +654,12 @@ const moduleA = {
     },
     setSlate(state, val) {
       state.slate = val
+    },
+    setAlertsLinkActive(state, val) {
+      state.alertsLinkActive = val
+    },
+    setLogsLinkActive(state, val) {
+      state.logsLinkActive = val
     }
   },
 

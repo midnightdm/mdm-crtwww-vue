@@ -29,8 +29,12 @@ export default {
   created: function () {
     this.$store.dispatch("fetchPassagesList")
   },
-  beforeUpdate() {
+  mounted() {
     this.$store.commit('setSlate', 'LOGS')
+    this.$store.commit('setLogsLinkActive', true)
+  },
+  unmounted() {
+    this.$store.commit('setLogsLinkActive', false)
   },
   data: function() {
     return {

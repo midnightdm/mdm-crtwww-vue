@@ -43,8 +43,12 @@ export default {
     this.$store.dispatch("fetchCurrentMonth")
     window.addEventListener('scroll', this.handleScroll)
   },
-  beforeUpdate() {
+  mounted() {
     this.$store.commit('setSlate', 'LOGS')
+    this.$store.commit('setLogsLinkActive', true)
+  },
+  unmounted() {
+    this.$store.commit('setLogsLinkActive', false)
   },
   data: function() {
     return {

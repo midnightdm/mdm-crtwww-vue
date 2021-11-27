@@ -93,6 +93,13 @@ export default {
   created: function () {
     this.$store.dispatch("fetchPassageHistory", this.id)
   },
+  mounted() {
+    this.$store.commit('setSlate', 'LOGS')
+    this.$store.commit('setLogsLinkActive', true)
+  },
+  unmounted() {
+    this.$store.commit('setLogsLinkActive', false)
+  },
   components: {
     LogsSubMenu
   }

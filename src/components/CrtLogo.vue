@@ -1,27 +1,29 @@
 <template>
-    <div class="logo-container">
-        <h1>clinton<span>river</span>traffic</h1>
-        <img :src="logoImgUrl" :alt="logoImgAlt" :title="logoImgAlt" class="logo-img">
-        <div id="mbbg" class="hasNav">
-            <!-- hidden checkbox is used as click reciever -->
-            <input type="checkbox" />    
-            <!--    Some spans to act as a hamburger. -->
-            <span></span>
-            <span></span>
-            <span></span>
-            <ul id="menu" class="nav">
-                <li><a class="nav-link" :href="urlAbout">ABOUT</a></li>
-                <li><router-link :to="{name: 'AlertsAll'}" class="nav-link" exact>ALERTS</router-link></li>
-                <li><a class="nav-link" :href="urlLive">LIVE</a></li>
-                <li><router-link :to="{name: 'Logs'}" class="nav-link" >LOGS</router-link></li>
-                <li><a class="nav-link" :href="urlVideo">VIDEO</a></li>
-            </ul>
-        </div>
-        <div id="title_slate">{{ slate }}</div>
+  <div class="logo-container">
+      <h1>clinton<span>river</span>traffic</h1>
+      <img :src="logoImgUrl" :alt="logoImgAlt" :title="logoImgAlt" class="logo-img">
+      <div id="mbbg" class="hasNav">
+          <!-- hidden checkbox is used as click reciever -->
+          <input type="checkbox" />    
+          <!--    Some spans to act as a hamburger. -->
+          <span></span>
+          <span></span>
+          <span></span>
+          <ul id="menu" class="nav">
+              <li><a class="nav-link" :href="urlAbout">ABOUT</a></li>
+              <li><router-link id="alerts-link" :to="{name: 'AlertsAll'}" class="nav-link" :class="{ 'router-link-active': alertsLinkActive }" exact>ALERTS</router-link></li>
+              <li><a class="nav-link" :href="urlLive">LIVE</a></li>
+              <li><router-link :to="{name: 'Logs'}" class="nav-link" :class="{ 'router-link-active': logsLinkActive}">LOGS</router-link></li>
+              <li><a class="nav-link" :href="urlVideo">VIDEO</a></li>
+          </ul>
+      </div>
+      <div id="title_slate">{{ slate }}</div>
   </div>
 </template>
 
 <script>
+import AlertsPass from '@/views/alerts/AlertsPass.vue'
+
 export default {
   data: function() {
     return {
@@ -32,13 +34,19 @@ export default {
       urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
       urlManage: process.env.VUE_APP_BASE_URL+'/manage',
       urlVideo: process.env.VUE_APP_BASE_URL+'/video',
-  
+    
     }
   },
   computed: {
     slate () {
       return this.$store.state.a.slate
-    }
+    },
+    alertsLinkActive() {
+      return this.$store.state.a.alertsLinkActive
+    },
+    logsLinkActive() {
+      return this.$store.state.a.logsLinkActive
+    } 
   },
   name: 'CrtLogo',
   
@@ -96,14 +104,14 @@ export default {
 }
  
 .nav {
-   margin: 0px 0 2px 0;
-   padding: 0 0 0 0;
+   margin: 0px 0 0px 0;
+   padding: 0px 0px 0px 0;
    background: #31363e;
    z-index: 1;  
 }
 
 .nav ul { 
-  margin: 0 0 0px 0px;
+  margin: 0px 0px 0px 0px;
   padding: 5px 5px 5px 5px;
   background: #31363e;
 }

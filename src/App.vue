@@ -26,12 +26,9 @@ main {
   margin: 20px auto 20px auto;
 }
 
-.nav2 {
-  padding: 30px;
-}
+
 
 .nav2 a {
-  font-weight: bold;
   color: #2c3e50;
 }
 
@@ -40,15 +37,15 @@ main {
     position: relative;
     top: 70px;
     width: 100%;
-    margin: 0px 0px 20px -10px;
-    padding: 0 0 0 0;
+    margin: 0px 0px 20px 0px;
+    padding: 0px 0px 10px 10px;
     background-color: #31363e;
     z-index: 0;  
     overflow: auto;
 }
   
 .nav2 ul { 
-   margin: 0 0 0px 0px;
+   margin: 0px 0px 0px 0px;
    padding: 5px 5px 5px 5px;
    background-color: #31363e;
  }
@@ -66,12 +63,12 @@ main {
     border-color: #31363e; 
 }
   
-.nav2 li a {  
+.nav2 li a, .nav2 li router-link {  
     float: left;
-    font-weight: bold;
     vertical-align: middle;
     padding: 10px 12px;
     text-decoration: none;
+    text-transform: uppercase;
     color: #e7e3d9;
     border: none;   
 }
