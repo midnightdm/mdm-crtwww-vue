@@ -4,7 +4,7 @@
    
      <ul>
 <transition-group enter-active-class="animate__animated animate__slideInRight">
-      <li class="card" v-if="this.$store.state.a.alertsPassenger[19].apubID >-1" :key="this.$store.state.a.alertsPassenger[19].apubID">
+      <li class="card" v-if="this.$store.state.a.alertsPassenger[19].apubID >-1" :key="this.$store.state.a.alertsPassenger[19].apubID" @click.prevent="routeWP(19)">
         <h4><router-link :to="{name: 'Waypoint', route: '/alerts/waypoint', params: { apubID: this.$store.state.a.alertsPassenger[19].apubID}}">{{this.$store.state.a.alertsPassenger[19].apubVesselName}}</router-link> <timeago autoUpdate :datetime="this.$store.state.a.alertsPassenger[19].date"/></h4>
         <p>{{this.$store.state.a.alertsPassenger[19].apubText}}</p>
       </li>
@@ -142,6 +142,12 @@ export default {
   },
   unmounted() {
     this.$store.commit('setAlertsLinkActive', false)
+  },
+  methods: {
+    routeWP(arrKey) {
+      console.log('routeWB('+arrKey+')')
+      this.$router.push({ name: 'Waypoint', params: { apubID: this.$store.state.a.alertsPassenger[arrKey].apubID } })
+    }
   },
   components: {
     AlertsSubMenu,

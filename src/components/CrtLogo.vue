@@ -10,11 +10,12 @@
           <span></span>
           <span></span>
           <ul id="menu" class="nav">
-              <li><a class="nav-link" :href="urlAbout">ABOUT</a></li>
+              <li><router-link class="nav-link" :to="{name: 'About'}">ABOUT</router-link></li>
               <li><router-link id="alerts-link" :to="{name: 'AlertsAll'}" class="nav-link" :class="{ 'router-link-active': alertsLinkActive }" exact>ALERTS</router-link></li>
+              <li><router-link class="nav-link" :class="{'router-link-active': galleryLinkActive}" :to="{name: 'Video'}">GALLERY</router-link></li>
               <li><a class="nav-link" :href="urlLive">LIVE</a></li>
               <li><router-link :to="{name: 'Logs'}" class="nav-link" :class="{ 'router-link-active': logsLinkActive}">LOGS</router-link></li>
-              <li><a class="nav-link" :href="urlVideo">VIDEO</a></li>
+              
           </ul>
       </div>
       <div id="title_slate">{{ slate }}</div>
@@ -46,6 +47,9 @@ export default {
     },
     logsLinkActive() {
       return this.$store.state.a.logsLinkActive
+    },
+    galleryLinkActive() {
+      return this.$store.state.a.galleryLinkActive
     } 
   },
   name: 'CrtLogo',

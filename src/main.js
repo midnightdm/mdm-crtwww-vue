@@ -9,13 +9,14 @@ import WaveUI from 'wave-ui'
 import 'wave-ui/dist/wave-ui.css'
 import timeago from 'vue-timeago3'
 import 'animate.css'
+import CommentGrid from 'vue-comment-grid'
 
 //register components
 const registerComponents = (app) => { 
   app.component('CrtLogo', CrtLogo);
 }
 
-const app = createApp(App).use(router).use(store).use(timeago);
+const app = createApp(App).use(router).use(store).use(timeago).use(CommentGrid);
 
 new WaveUI(app, {
 });

@@ -134,20 +134,20 @@ function updateVesselHistory(dat) {
   for(i=0; i<dateArr.length; i++) {
     dir = dateArr[i].passageDirection=="upriver" ? "up" : "down";
     waypoints.alpha[i] = {
-      date: new Date(dateArr[i].passageMarkerAlphaTS*1000),
+      date: new Date(parseInt(dateArr[i].passageMarkerAlphaTS)*1000),
       dir: dir
     };
     waypoints.bravo[i] = {
-      date: new Date(dateArr[i].passageMarkerBravoTS*1000),
+      date: new Date(parseInt(dateArr[i].passageMarkerBravoTS)*1000),
       dir: dir
     }
     waypoints.charlie[i] = {
-      date : new Date(dateArr[i].passageMarkerCharlieTS*1000),
+      date : new Date(parseInt(dateArr[i].passageMarkerCharlieTS)*1000),
       dir: dir
     };
 
     waypoints.delta[i] = {
-      date: new Date(dateArr[i].passageMarkerDeltaTS*1000),
+      date: new Date(parseInt(dateArr[i].passageMarkerDeltaTS)*1000),
       dir: dir
     }
   }
@@ -392,7 +392,9 @@ const moduleA = {
   state: () => ({
       slate: "LOADING",
       alertsLinkActive: false,
-      logsLinkActive: false, 
+      logsLinkActive: false,
+      galleryLinkActive: false,
+      isNotHero: true, 
       passagesList: [
         {
           date: "",
@@ -420,6 +422,10 @@ const moduleA = {
           charlie: [{date: new Date(), dir: "images/uparr.png"}], 
           delta:   [{date: new Date(), dir: "images/uparr.png"}]} 
       },
+      
+      galleryVideo: [ {vessel: "loading" }
+
+      ],
 
       ranges: new Ranges(),
 
@@ -499,6 +505,7 @@ const moduleA = {
               for(key in plObj) {
                 nKey = plObj[key].name;
                 nObj = plObj[key];
+                if(nKey=="---") { continue; }
                 nameArr.push(nKey);
                 tmpArr[nKey] = nObj;
               }
@@ -640,6 +647,20 @@ const moduleA = {
         })
       }
     },
+
+    async fetchGalleryVideo({ commit, state }) {
+      if(state.galleryVideo[0].vessel==="loading") {
+        const vidSnapshot = await getDocs(collection(db, "GalleryVideo"))
+        let tempGalleryVideo = []
+        vidSnapshot.forEach( (doc) => {
+          let data = doc.data()
+          data['id'] = doc.id
+          tempGalleryVideo.push(data);        
+        })
+        tempGalleryVideo.sort( (a,b) => b.sequence - a.sequence) 
+        state.galleryVideo = [...tempGalleryVideo]
+      }
+    },
   },
   mutations: {
     setPassagesList(state, val) {
@@ -660,6 +681,12 @@ const moduleA = {
     },
     setLogsLinkActive(state, val) {
       state.logsLinkActive = val
+    },
+    setGalleryLinkActive(state, val) {
+      state.galleryLinkActive = val
+    },
+    setIsNotHero(state, val) {
+      state.isNotHero = val
     }
   },
 

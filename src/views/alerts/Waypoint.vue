@@ -8,7 +8,7 @@
         <div id="shadow2">
             <img id="vesselImg" :src="vesselImg" title="Image of the vessel {{vesselName}}">
         </div>
-        <div id="shadow3">
+        <div id="shadow3" v-if="supImg">
             <img id="supImg" :src="supimg" :title="supalt">
         </div>
         <div id="shadow4">
@@ -82,13 +82,20 @@ export default {
                 this.vesselName = data['apubVesselName']
                 cnt++
             })
-            //Determine background map by event and direction data
-            let dir = this.direction.includes('wn') ? "down" : "up"
-            //Strip waypoint basename as event name
-            this.event = this.event.substr(0, this.event.length-2)
+            //Fail gracefully if apubID not found
+            if(cnt==0) {
+                this.event = "Not Found"
+                this.bgMap = this.base + "images/charlie-up-map.png";
 
-            let str = this.event + "-" + dir + "-map.png"
-            this.bgMap = this.base +"images/"+str
+            } else {
+                //Determine background map by event and direction data
+                let dir = this.direction.includes('wn') ? "down" : "up"
+                //Strip waypoint basename as event name
+                this.event = this.event.substr(0, this.event.length-2)
+                let str = this.event + "-" + dir + "-map.png"
+                this.bgMap = this.base +"images/"+str
+            }
+
             //Determine dam or bridge image by event
             switch(this.event) {
                 case 'alpha': {
@@ -116,12 +123,20 @@ export default {
                     break;
                 } 
                 case 'detected': {
-                    this.supimg = this.base+"images/compass.png"; 
-                    this.supalt = "Decorative drawing of a compass.";
+                    this.supimg = this.base+"images/compass.png"
+                    this.supalt = "Decorative drawing of a compass."
                     this.mapOn  = true; 
                     //$data['position']  = stringToMapPosition($row['apubText']);
                     //$data['text'] = convertUrlToLink($data['text']); 
                     break;
+                }
+                case 'Not Found': {
+                    this.supimg = false
+                    this.supalt = "Decorative drawing of a compass."
+                    this.mapOn = false
+                    this.vesselImg = process.env.VUE_APP_NOIMG_URL
+                    this.text = "Alert event "+this.apubID+" was not found. The data may have expired."
+                    this.vesselName = "Not Found"
                 }
             }
         }

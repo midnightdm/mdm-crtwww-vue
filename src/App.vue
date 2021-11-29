@@ -1,11 +1,21 @@
 <template>
   <w-app>
-    <CrtLogo></CrtLogo>
+    <CrtLogo v-if="isNotHero"></CrtLogo>
     <div class="routerView"> 
       <router-view/>
-      </div>
+    </div>
   </w-app>
 </template>
+<script>
+
+export default {
+  computed: {
+    isNotHero() {
+      return this.$store.state.a.isNotHero
+    }
+  }  
+}
+</script>
 
 <style>
 #app {

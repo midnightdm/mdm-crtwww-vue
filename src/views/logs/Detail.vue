@@ -5,51 +5,51 @@
 <h2><span>{{ this.$store.getters.getVesselName }}</span> Passages</h2>
 <p>This log shows the direction and time this vessel passed each of the waypoints tracked by the Clinton River Traffic website.</p>
 <table>
-<tr>
-    <th class="labelColumn">Waypoint</th>
+  <tr>
+    <th class="labelColumn first">Waypoint</th>
     <td class="dataHolder" rowspan="6">
       <div class="table-container">
-<table class="dataColumn">
-<tr>
-    <th v-for='alpha in this.$store.state.a.historyCache.vesselPassages.alpha' :key='alpha.date' colspan="2">{{ alpha.date.toLocaleDateString() }}</th>
-  </tr>
-  <tr>
-    <template v-for='alpha in this.$store.getters.getAlpha' :key='alpha.date'>    
-    <td>
-      <img v-if='alpha.dir == "up"' class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25" />
-      <img v-if='alpha.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25"/>
-    </td>
-    <td class="time"> {{ alpha.date.toLocaleTimeString() }} </td>
-    </template> 
-  </tr>  
-  <tr>
-    <template v-for='bravo in this.$store.getters.getBravo' :key='bravo.date'>    
-    <td >
-      <img v-if='bravo.dir == "up"' class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25"/>
-      <img v-if='bravo.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25"/>
-    </td>
-    <td class="time"> {{ bravo.date.toLocaleTimeString() }} </td>
-    </template> 
-  </tr>
-  <tr>
-    <template v-for='charlie in this.$store.getters.getCharlie' :key='charlie.date'>    
-    <td >
-      <img v-if='charlie.dir == "up"'    class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25"/>
-      <img v-if='charlie.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25" />
-      </td>
-    <td class="time"> {{ charlie.date.toLocaleTimeString() }} </td>
-    </template>
-  </tr>
-  <tr>
-    <template v-for='delta in this.$store.getters.getDelta' :key='delta.date'>    
-    <td >
-      <img v-if='delta.dir == "up"' class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25" />
-      <img v-if='delta.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25" />
-    </td>
-    <td class="time"> {{ delta.date.toLocaleTimeString() }} </td>
-    </template>
-  </tr>  
-</table>
+        <table class="dataColumn">
+          <tr>
+            <th v-for='alpha in this.$store.state.a.historyCache.vesselPassages.alpha' :key='alpha.date' colspan="2">{{ alpha.date.toLocaleDateString() }}</th>
+          </tr>
+          <tr>
+            <template v-for='alpha in this.$store.getters.getAlpha' :key='alpha.date'>    
+            <td>
+              <img v-if='alpha.dir == "up"' class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25" />
+              <img v-if='alpha.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25"/>
+            </td>
+            <td class="time"> {{ alpha.date.toLocaleTimeString() }} </td>
+            </template> 
+          </tr>  
+          <tr>
+            <template v-for='bravo in this.$store.getters.getBravo' :key='bravo.date'>    
+            <td >
+              <img v-if='bravo.dir == "up"' class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25"/>
+              <img v-if='bravo.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25"/>
+            </td>
+            <td class="time"> {{ bravo.date.toLocaleTimeString() }} </td>
+            </template> 
+          </tr>
+          <tr>
+            <template v-for='charlie in this.$store.getters.getCharlie' :key='charlie.date'>    
+            <td >
+              <img v-if='charlie.dir == "up"'    class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25"/>
+              <img v-if='charlie.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25" />
+              </td>
+            <td class="time"> {{ charlie.date.toLocaleTimeString() }} </td>
+            </template>
+          </tr>
+          <tr>
+            <template v-for='delta in this.$store.getters.getDelta' :key='delta.date'>    
+            <td >
+              <img v-if='delta.dir == "up"' class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25" />
+              <img v-if='delta.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25" />
+            </td>
+            <td class="time"> {{ delta.date.toLocaleTimeString() }} </td>
+            </template>
+          </tr>  
+        </table>
 
       </div>
     </td>
@@ -64,7 +64,10 @@
     <th class="labelColumn">Railroad Drawbridge</th>
   </tr>
   <tr>
-    <th class="labelColumn last">3 Miles Below Drawbridge</th>  
+    <th class="labelColumn">3 Miles Below Drawbridge</th>  
+  </tr>
+  <tr>
+    <th class="labelColumn last"></th>
   </tr>  
 </table>
 
@@ -129,7 +132,12 @@ export default {
   th.last {
     padding-bottom: 16px;
     border-bottom: 18px normal white;
+    background-color: white;
     
+  }
+
+  th.first {
+    background-color: transparent;
   }
 
   td.time {

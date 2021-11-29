@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { getUserState } from '@/store/firebaseApp.js'
 
+import About from '../views/About.vue'
+import Hero from '../views/Hero.vue'
+
 import Logs from '../views/logs/Logs.vue'
 import Detail from '../views/logs/Detail.vue'
 import LastMonth from '../views/logs/LastMonth.vue'
@@ -24,11 +27,27 @@ import AlertsWatch from '../views/alerts/AlertsWatch'
 import Manage from '../views/alerts/Manage.vue'
 import Waypoint from '../views/alerts/Waypoint.vue'
 
+import Comments from '../views/gallery/Comments.vue'
+import Image from '../views/gallery/Image.vue'
+import Video from '../views/gallery/Video.vue'
+
 import Msg404 from '../views/Msg404.vue'
 
 
 
 const routes = [
+  {
+    path: '/',
+    name: 'Hero',
+    component: Hero,
+    
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About,
+    
+  },
   {
     path: '/admin/login',
     name: 'Login',
@@ -155,7 +174,25 @@ const routes = [
     name: 'Waypoint',
     component: Waypoint
   },
-
+  {
+    path: '/gallery/comments',
+    name: 'Comments',
+    component: Comments,
+  },
+  {
+    path: '/gallery/image',
+    name: 'Image',
+    component: Image,
+  },
+  {
+    path: '/gallery/video',
+    name: 'Video',
+    component: Video,
+  },
+  {
+    path: '/gallery',
+    redirect: '/gallery/video'
+  },
   {
     path: '/msg404',
     name: 'Msg404',
