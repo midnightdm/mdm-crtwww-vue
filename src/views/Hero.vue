@@ -14,17 +14,21 @@
       <span></span>
       <span></span>
       <ul id="menu" class="nav">
-              <li><a class="nav-link " href="about">ABOUT</a></li>
-              <li><a class="nav-link " href="alerts">ALERTS</a></li>
-              <li><a class="nav-link " href="livescan/live">LIVE</a></li>
-              <li><a class="nav-link " href="logs">LOGS</a></li>
+              <li><a @click="leaveHero('/about')" class="nav-link" :href="'/about'">ABOUT</a></li>
+              <li><a @click="leaveHero('/alerts')" :href="'/alerts'" class="nav-link">ALERTS</a></li>
+              <li><a @click="leaveHero('/gallery')" :href="'/gallery'" class="nav-link">GALLERY</a></li>
+              <li><a class="nav-link" :href="urlLive">LIVE</a></li>
+              <li><a @click="leaveHero('/logs')" :href="'/logs'"  class="nav-link" >LOGS</a></li>
           </ul>
       </div>
     </div>
+   
+
+ 
     <video id="videoBG" autoplay muted loop>
       <source :src="bgVidUrl" type="video/mp4">
     </video>
-    
+   
     
     <h1 class="huge">
       <div>
@@ -41,17 +45,26 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 export default {
-    mounted() {
-        this.$store.commit('setIsNotHero', false)
-    },
-    unmounted() {
-        this.$store.commit('setIsNotHere', true)
-    },
-    data: function() {
-        return {
+  mounted() {
+      this.$store.commit('setIsHero', true)
+  },
+  unmounted() {
+      this.$store.commit('setIsHero', false)
+  },
+  data: function() {
+      return {
         logoImgUrl: process.env.VUE_APP_BASE_URL+'/images/logo-towboat2.png',
         bgVidUrl: process.env.VUE_APP_IMG_URL+'images/crt-background-vid.mp4',
+        router: useRouter()
+    } 
+  },
+  name: 'Hero',
+  methods: {
+    leaveHero(path) {
+      this.$store.commit('setIsHero', false)
+      this.router.push(path)
     }
   }
 }
@@ -60,27 +73,13 @@ export default {
 <style>
 
 #videoBG {   
-  transform:translateX(-150px);
+  height: 100%;
+  width: 130vw;
+  transform:translateX(-15%);
   z-index: -2;
   background-color: white;
 }
 
-@media (min-aspect-ratio: 16/9) {
-
-  #videoBG {
-    width: 100%;
-    height: auto;
-  }
-}
-    
-@media (max-aspect-ratio: 16/9) {
-
-  
-  #videoBG {
-    width: auto;
-    height: 100%;
-  }
-}
 
 
 @media (max-width: 475px) {
@@ -96,7 +95,7 @@ body{
    font-weight: normal;
    font-size: 13px;
    line-height: 1.1875;
-   margin: 0 5px 5px 5px;
+   margin: 0 0px 0px 0px;
    padding: 0px;
 }
 
@@ -146,6 +145,7 @@ input:focus, textarea:focus, select:focus {
   /* top: 125px; */
   width: 650px;
   height: 50px;
+  z-index: 2;
   background: #31363e;
 }
  

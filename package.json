@@ -17,7 +17,6 @@
     "node-sass": "^6.0.1",
     "serve-static": "^1.14.1",
     "vue": "^3.0.0",
-    "vue-comment-grid": "^1.0.12",
     "vue-router": "^4.0.0-0",
     "vue-svg-loader": "^0.16.0",
     "vue-template-compiler": "^2.0.0",

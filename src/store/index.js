@@ -394,7 +394,7 @@ const moduleA = {
       alertsLinkActive: false,
       logsLinkActive: false,
       galleryLinkActive: false,
-      isNotHero: true, 
+      isHero: false, 
       passagesList: [
         {
           date: "",
@@ -685,8 +685,8 @@ const moduleA = {
     setGalleryLinkActive(state, val) {
       state.galleryLinkActive = val
     },
-    setIsNotHero(state, val) {
-      state.isNotHero = val
+    setIsHero(state, val) {
+      state.isHero = val
     }
   },
 

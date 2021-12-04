@@ -52,9 +52,7 @@ export default {
       return this.$store.state.a.galleryLinkActive
     } 
   },
-  name: 'CrtLogo',
-  
-
+  name: 'CrtLogo'
 }
 
 </script>

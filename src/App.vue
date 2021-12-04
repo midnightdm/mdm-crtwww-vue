@@ -1,7 +1,10 @@
 <template>
   <w-app>
-    <CrtLogo v-if="isNotHero"></CrtLogo>
-    <div class="routerView"> 
+    <div v-if="isHero">
+      <Hero></Hero>
+    </div>
+    <div v-else> 
+      <CrtLogo></CrtLogo>
       <router-view/>
     </div>
   </w-app>
@@ -10,8 +13,8 @@
 
 export default {
   computed: {
-    isNotHero() {
-      return this.$store.state.a.isNotHero
+    isHero() {
+      return this.$store.state.a.isHero
     }
   }  
 }
