@@ -53,7 +53,7 @@ export default {
   },
    data: function() {
     return {
-      logoImgUrl: process.env.VUE_APP_BASE_URL+'/images/logo-towboat2.png',
+      logoImgUrl: process.env.VUE_APP_IMG_URL+'/images/logo-towboat2.png',
       logoImgAlt: 'The logo image shows a tow boat pushing 9 barges.',
       urlAbout: process.env.VUE_APP_BASE_URL+'/about',
       urlAlerts: process.env.VUE_APP_BASE_URL+'/alerts',
