@@ -102,7 +102,7 @@ export default {
   -webkit-background-clip: text;
   background-clip: text;  
   -webkit-text-fill-color: transparent;
-  background-image: url(https://www.clintonrivertraffic.com/images/crushpixel-1625816-ID1625816-640x427.jpg);
+  background-image: url(https://storage.googleapis.com/www.clintonrivertraffic.com/images/crushpixel-1625816-ID1625816-640x427.jpg);
 }
  
 .nav {

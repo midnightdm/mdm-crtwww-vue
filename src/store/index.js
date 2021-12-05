@@ -411,7 +411,7 @@ const moduleA = {
         vesselDraft: "---",
         vesselHasImage: 1,
         vesselID: 338211453,
-        vesselImageUrl: "https://www.clintonrivertraffic.com/vessels/jpg/338211453",
+        vesselImageUrl: "",
         vesselLastDetectedTS: null,
         vesselLength: "16m",
         vesselName: "Makameya",
