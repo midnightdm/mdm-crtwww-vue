@@ -116,7 +116,7 @@ export default {
       .then( (swReg) => {
         console.log('Service Worker is registered', swReg);
         this.swRegistration = swReg;
-        //console.log("swRegistration value: ", this.swRegistration);
+        console.log("swRegistration value: ", this.swRegistration);
         this.initialiseUI();
 
       })
