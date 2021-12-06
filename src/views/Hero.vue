@@ -57,6 +57,7 @@ export default {
       return {
         logoImgUrl: process.env.VUE_APP_IMG_URL+'/images/logo-towboat2.png',
         bgVidUrl: process.env.VUE_APP_IMG_URL+'/images/crt-background-vid.mp4',
+        urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
         router: useRouter()
     } 
   },
@@ -74,7 +75,7 @@ export default {
 
 #videoBG {   
   height: 100%;
-  width: 130vw;
+  width: 110vw;
   transform:translateX(-15%);
   z-index: -2;
   background-color: white;
@@ -128,14 +129,14 @@ input:focus, textarea:focus, select:focus {
 #logo-img {   
   position: absolute;
   left: 0px;
-  z-index: 2;
+  z-index: 3;
  }
  
  #logo-container h1 {     
   position:absolute;
   font-family: 'Merriweather Sans', sans-serif;
   text-shadow: 2px 2px 2px #f3eeee80;
-  z-index: 3;
+  z-index: 4;
  }
   
  #mbbg {
@@ -224,7 +225,7 @@ input:focus, textarea:focus, select:focus {
     font-size: 90pt;
     position: absolute;
     top: 5%;
-    left: 5%;
+    left: 1%;
     
     border: 0px solid #000000;
     text-align: center;
@@ -480,7 +481,7 @@ input:focus, textarea:focus, select:focus {
  @media (min-width: 975px) {
   
   #logo-container {
-    bottom:250px;;
+    bottom: 400px;;
     right: 700px;
   
   }

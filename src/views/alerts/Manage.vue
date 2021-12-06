@@ -377,6 +377,10 @@ export default {
       this.dialog1.remove = false;  
     },
     subscribeToEvent() {
+      if(this.user===null)  {
+        alert("You must enable Push service before you can add events.");
+        return;
+      }
       console.log("subListSelection =", this.mm.subListSelection.key);
       this.user.events.push(this.mm.subListSelection.key);
       setDoc(this.deviceRef, {events: this.user.events} , {merge:true})
@@ -384,6 +388,10 @@ export default {
       this.getSelection();
     },
     subscribeToDefaultWaypoints() {
+      if(this.user===null)  {
+        alert("You must enable Push service before you can add events.");
+        return;
+      }
       this.user.events.push('alphadp', 'deltaup');
       setDoc(this.deviceRef, {events: this.user.events} , {merge:true});
       //this.getSelection();
