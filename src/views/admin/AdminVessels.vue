@@ -119,9 +119,8 @@ export default {
 
     created: function () {
         this.$store.dispatch("fetchAllVessels")
-    },
-    beforeUpdate() {
-      this.$store.commit('setSlate', 'ADMIN')
+        this.$store.commit('setSlate', 'ADMIN')
+        this.$store.commit('setPageSelected', 'AdminVessels')
     },
     data: function() {
         return {

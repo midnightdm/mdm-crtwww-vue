@@ -139,6 +139,7 @@ export default {
   mounted() {
     this.$store.commit('setSlate', 'ALERTS')
     this.$store.commit('setAlertsLinkActive', true)
+    this.$store.commit('setPageSelected', 'AlertsPass')
   },
   unmounted() {
     this.$store.commit('setAlertsLinkActive', false)

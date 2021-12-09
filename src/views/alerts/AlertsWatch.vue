@@ -5,9 +5,11 @@
 <script>
 import AlertsSubMenu from '@/components/AlertsSubMenu.vue'
 export default {
-    beforeUpdate() {
-      this.$store.commit('setSlate', 'ALERTS')
-    },
+  mounted() {
+    this.$store.commit('setSlate', 'ALERTS')
+    this.$store.commit('setPageSelected', 'AlertsWatch')
+    this.$store.commit('setPageSelected', 'AlertsWatch')
+  },   
   components: {
       AlertsSubMenu,
   }

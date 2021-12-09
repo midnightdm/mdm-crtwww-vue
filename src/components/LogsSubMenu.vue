@@ -1,17 +1,18 @@
 <template>
-  <ul class="nav2">
-    <li class="nav-link"><router-link :to="{name: 'Today'}">Today</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'Past24'}">Past 24 Hours</router-link></li> |
-    <li class="nav-link"><router-link :to="{name: 'Yesterday'}">Yesterday</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'Past7'}">Past 7 Days</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'ThisMonth'}">This Month</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'LastMonth'}">Last Month</router-link></li>
-</ul>
+  <ul class="navigation">
+    <li><router-link class="nav-link" ref="" :to="{name: 'Today'}" :class="{selected: this.$store.state.a.pageSelected=='Today'}">Today</router-link></li>
+    <li><router-link class="nav-link" :to="{name: 'Past24'}" :class="{selected: this.$store.state.a.pageSelected=='Past24'}">Past 24 Hours</router-link></li> 
+    <li><router-link class="nav-link" :to="{name: 'Yesterday'}" :class="{selected: this.$store.state.a.pageSelected=='Yesterday'}">Yesterday</router-link></li>
+    <li><router-link class="nav-link" :to="{name: 'Past7'}" :class="{selected: this.$store.state.a.pageSelected=='Past7'}">Past 7 Days</router-link></li>
+    <li><router-link class="nav-link" :to="{name: 'ThisMonth'}" :class="{selected: this.$store.state.a.pageSelected=='ThisMonth'}">This Month</router-link></li>
+    <li><router-link class="nav-link" :to="{name: 'LastMonth'}" :class="{selected: this.$store.state.a.pageSelected=='LastMonth'}">Last Month</router-link></li>
+  </ul>
+
 </template>
 
 <script>
 export default {
-    name: 'LogsSubMenu'
+    name: 'LogsSubMenu',
 }
 </script>
 

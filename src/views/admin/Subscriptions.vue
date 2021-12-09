@@ -13,6 +13,7 @@ import AdminSubMenu from '@/components/AdminSubMenu.vue'
 export default {
     created: function () {
         this.$store.dispatch("fetchAllSubscribedEvents")
+        this.$store.commit('setPageSelected', 'Subscriptions')
     },
     data: function() {
         return {

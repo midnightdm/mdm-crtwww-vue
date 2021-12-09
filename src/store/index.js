@@ -394,7 +394,9 @@ const moduleA = {
       alertsLinkActive: false,
       logsLinkActive: false,
       galleryLinkActive: false,
-      isHero: false, 
+      pageSelected: null,
+      isHero: false,
+      isTest: true, 
       passagesList: [
         {
           date: "",
@@ -687,6 +689,9 @@ const moduleA = {
     },
     setIsHero(state, val) {
       state.isHero = val
+    },
+    setPageSelected(state, val) {
+      state.pageSelected = val
     }
   },
 

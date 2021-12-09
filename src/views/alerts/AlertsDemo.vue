@@ -66,6 +66,7 @@ export default {
   },
   mounted() {    
     this.$store.commit('setSlate', 'ALERTS')
+    this.$store.commit('setPageSelected', 'AlertsDemo')
   },
   data: function() {
     return {

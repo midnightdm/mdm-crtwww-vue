@@ -1,18 +1,16 @@
 <template>
-  <ul class="nav2">
-    <li class="nav-link"><router-link :to="{name: 'AlertsAll'}">All</router-link></li>
-    <li class="nav-link"><router-link :to="{name: 'AlertsPass'}">Passenger</router-link></li> |
-    <li class="nav-link"><router-link :to="{name: 'AlertsWatch'}">Watchlist</router-link></li>
-    <li>|</li>
-    <li class="nav-link"><router-link :to="{name: 'Manage'}">Manage Notifications</router-link></li>
-    
-
+  <ul class="navigation">
+    <li><router-link class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='AlertsAll'}" :to="{name: 'AlertsAll'}">ALL</router-link></li>
+    <li><router-link class="nav-link" :to="{name: 'AlertsPass'}" :class="{selected: this.$store.state.a.pageSelected=='AlertsPass'}">PASSENGER</router-link></li>
+    <li><router-link class="nav-link" :to="{name: 'AlertsWatch'}" :class="{selected: this.$store.state.a.pageSelected=='AlertsWatch'}">WATCHLIST</router-link></li>
+    <li><router-link class="nav-link" :to="{name: 'Manage'}" :class="{selected: this.$store.state.a.pageSelected=='Manage'}">NOTIFICATIONS</router-link></li>
 </ul>
 </template>
 
 <script>
 export default {
-    name: 'AlertsSubMenu'
+    name: 'AlertsSubMenu',
+
 }
 </script>
 

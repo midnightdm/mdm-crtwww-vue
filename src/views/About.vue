@@ -38,11 +38,18 @@
 export default {
   mounted() {
     this.$store.commit('setSlate', 'ABOUT')
+    this.$store.commit('setPageSelected', 'About')
   }
 }
 </script>
 
 <style>
+
+#content-container {
+  
+  transform: translateY(60px);
+}
+
 h1 {  
   font-family: sans-serif;
   font-size: 20pt;
@@ -60,11 +67,12 @@ h1 {
   }
   
   .div1 { grid-area: 1 / 1 / 4 / 2;
-    background-color: rgb(104, 10, 10);
-    
+    background-color: rgb(104, 10, 10); 
     padding: 1rem;
     font-size: 16px;
   }
+
+
   .div1 h2, .div1 h4, .div1 li {
     color:darkseagreen;
   }

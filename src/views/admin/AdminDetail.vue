@@ -78,11 +78,10 @@ const db = firestore
 
 export default {
     props: ['vesselID'],
-    beforeUpdate() {
-      this.$store.commit('setSlate', 'ADMIN')
-    },
     mounted() {
       this.refreshData()
+      this.$store.commit('setSlate', 'ADMIN')
+      this.$store.commit('setPageSelected', 'AdminDetail')
     },
     data: function() {
         return {

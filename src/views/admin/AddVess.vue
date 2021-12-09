@@ -48,6 +48,8 @@ const db = firestore
 export default {
     created: function () {
       this.$store.dispatch("fetchAdminMsg")
+      this.$store.commit('setSlate', 'ADMIN')
+      this.$store.commit('setPageSelected', 'AddVess')
     },
     data: function() {
         return {

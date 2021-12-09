@@ -19,6 +19,7 @@ export default {
   mounted() {
     this.$store.commit('setSlate', 'GALLERY')
     this.$store.commit('setGalleryLinkActive', true)
+    this.$store.commit('setPageSelected', 'Comments')
   },
   unmounted() {
     this.$store.commit('setGalleryLinkActive', false)

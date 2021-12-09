@@ -39,9 +39,6 @@ import { doc, getDocs, collection, query, where } from 'firebase/firestore'
 const db = firestore
 
 export default {
-    beforeUpdate() {
-      this.$store.commit('setSlate', 'WAYPOINT')
-    },
     data() {
         return {
             text: "",
@@ -63,6 +60,8 @@ export default {
     mounted() {
         document.body.style.backgroundImage = process.env.VUE_APP_IMG_URL+'images/bg-pattern-blue.png'
         this.getData()
+        this.$store.commit('setSlate', 'WAYPOINT')
+        this.$store.commit('setPageSelected', 'Waypoint')
     },
     methods: {
         async getData() {

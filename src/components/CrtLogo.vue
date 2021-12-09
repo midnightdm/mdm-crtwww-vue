@@ -67,14 +67,14 @@ export default {
 .logo-img {   
   position: absolute;
   left: 0px;
-  z-index: 2;
+  z-index: 3;
 }
  
 .logo-container h1 {     
   position:absolute;
   font-family: 'Merriweather Sans', sans-serif;
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.50);
-  z-index: 3;
+  z-index: 4;
 }
   
 #mbbg {

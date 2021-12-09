@@ -32,6 +32,7 @@ export default {
   mounted() {
     this.$store.commit('setSlate', 'LOGS')
     this.$store.commit('setLogsLinkActive', true)
+    this.$store.commit('setPageSelected', 'Logs')
   },
   unmounted() {
     this.$store.commit('setLogsLinkActive', false)

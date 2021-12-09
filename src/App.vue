@@ -3,6 +3,10 @@
     <div v-if="isHero">
       <Hero></Hero>
     </div>
+    <div v-if="isTest">
+      <Navigation></Navigation>
+      <router-view/>
+    </div>  
     <div v-else> 
       <CrtLogo></CrtLogo>
       <router-view/>
@@ -15,6 +19,9 @@ export default {
   computed: {
     isHero() {
       return this.$store.state.a.isHero
+    },
+    isTest() {
+      return this.$store.state.a.isTest
     }
   }  
 }

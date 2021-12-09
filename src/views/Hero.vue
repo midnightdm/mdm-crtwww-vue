@@ -94,7 +94,6 @@ body{
    color: #000000;
    font-family: Arial;
    font-weight: normal;
-   font-size: 13px;
    line-height: 1.1875;
    margin: 0 0px 0px 0px;
    padding: 0px;
@@ -155,6 +154,7 @@ input:focus, textarea:focus, select:focus {
  #logo-container h1 span {
   color: blue;
   -webkit-background-clip: text;  
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   background-image: url(https://storage.googleapis.com/www.clintonrivertraffic.com/images/crushpixel-1625816-ID1625816-640x427.jpg);
 
