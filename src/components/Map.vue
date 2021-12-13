@@ -10,7 +10,7 @@ import { firestore } from '@/store/firebaseApp.js'
 //import { Loader } from '@googlemaps/js-api-loader'
 //const MAP_KEY = process.env.VUE_APP_MAP_KEY
 
-const goo = google
+//const goo = google
 
 export default {
   name: 'Map',
@@ -41,6 +41,7 @@ export default {
     //const map    = ref(null)
     //const google = ref(null)
     const liveScan = ref(null)
+    /*
     onMounted(async () => {
       initLiveScan(goo).then(()=>{
         initMap(mapDiv.value)
@@ -50,6 +51,7 @@ export default {
       })
     })
     return { mapDiv, liveScan, toggleMileLabels, deleteOldScans, initMap, initLiveScan }
+    */
   }  
 
 }
