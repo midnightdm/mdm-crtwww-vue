@@ -817,7 +817,7 @@ const moduleA = {
     },
 
     async fetchGalleryVideo({ commit, state }) {
-      if(galleryVideo[0].vessel==="loading") {
+      if(state.galleryVideo[0].vessel==="loading") {
         const vidSnapshot = await getDocs(collection(db, "GalleryVideo"))
         let tempGalleryVideo = []
         vidSnapshot.forEach( (doc) => {
@@ -826,7 +826,7 @@ const moduleA = {
           tempGalleryVideo.push(data);        
         })
         tempGalleryVideo.sort( (a,b) => b.sequence - a.sequence) 
-        galleryVideo = [...tempGalleryVideo]
+        state.galleryVideo = [...tempGalleryVideo]
       }
     },
 
@@ -1030,7 +1030,7 @@ const moduleA = {
       state.logsLinkActive = val
     },
     setGalleryLinkActive(state, val) {
-      galleryLinkActive = val
+      state.galleryLinkActive = val
     },
     setIsHero(state, val) {
       state.isHero = val

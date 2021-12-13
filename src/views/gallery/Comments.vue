@@ -1,6 +1,7 @@
 <template>
   
-  <main>
+  <main id="local">
+    
     <h1>Comments</h1>
     
 
@@ -31,5 +32,7 @@ export default {
 </script>
 
 <style>
-
+h1 {
+  transform: translateY(60px);
+}
 </style>
