@@ -1,5 +1,5 @@
 <template>
- <LogsSubMenu></LogsSubMenu>
+ 
   <div id="main" class="logs">
       <h1>List of Vessels Logged</h1>
     <p>The transponder-equipped vessels below passed Clinton most recently on the date shown. Select a vessel to view all its passages.</p>

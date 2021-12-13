@@ -31,6 +31,8 @@ import Comments from '../views/gallery/Comments.vue'
 import Image from '../views/gallery/Image.vue'
 import Video from '../views/gallery/Video.vue'
 
+import LiveMobile from '../views/live/LiveMobile.vue'
+
 import Msg404 from '../views/Msg404.vue'
 
 
@@ -85,6 +87,13 @@ const routes = [
     name: 'Subscriptions',
     component: Subscriptions,
     meta: { requiresAuth: true }
+  },
+
+
+  {
+    path: '/live/mobile',
+    name: 'LiveMobile',
+    component: LiveMobile
   },
   {
     path: '/logs',

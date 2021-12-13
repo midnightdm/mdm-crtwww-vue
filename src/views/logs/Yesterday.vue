@@ -1,5 +1,5 @@
 <template>
- <LogsSubMenu></LogsSubMenu>
+ 
   <div id="main" class="yesterday">
     <h1>{{this.$store.getters.getYesterday.length}} Passage<span v-if='this.$store.getters.getYesterday.length != 1'>s</span>  Yesterday</h1>
     <h4>{{ this.formattedRange }}</h4>

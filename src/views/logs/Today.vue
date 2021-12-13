@@ -1,5 +1,5 @@
 <template>
- <LogsSubMenu></LogsSubMenu>
+ 
  <div id="main" class="today">
 <h1>{{this.$store.getters.getToday.length}} Vessel Passage<span v-if='this.$store.getters.getYesterday.length != 1'>s</span> Today</h1>
 <h4>{{ this.formattedRange }}</h4>

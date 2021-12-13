@@ -1,5 +1,5 @@
 <template>
-  <GallerySubMenu></GallerySubMenu>
+  
   <main id="local">
     <div class="col1">
     <h2>Video Gallery</h2>

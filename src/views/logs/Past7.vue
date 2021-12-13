@@ -1,5 +1,5 @@
 <template>
- <LogsSubMenu></LogsSubMenu>
+ 
 <div id="main" class="past7">
     <h1>{{this.$store.getters.getPast7.length}} Vessel Passage<span v-if='this.$store.getters.getPast7.length != 1'>s</span> in the Past 7 Days</h1>
     <h4>{{ this.formattedRange }}</h4>

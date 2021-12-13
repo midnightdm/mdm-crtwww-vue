@@ -1,5 +1,5 @@
 <template>
-<AlertsSubMenu></AlertsSubMenu>
+
   <main class="text-center">
     <h1>MANAGE NOTIFICATIONS</h1>
     <p>On this browser push notifications are <w-tag class="mr4" bg-color="yellow" color="primary" round>

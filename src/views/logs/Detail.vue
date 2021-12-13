@@ -1,5 +1,5 @@
 <template>
-  <LogsSubMenu></LogsSubMenu>
+  
   <div class="detail">
     
 <h2><span>{{ this.$store.getters.getVesselName }}</span> Passages</h2>

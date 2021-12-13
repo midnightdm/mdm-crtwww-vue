@@ -1,5 +1,5 @@
 <template>
-  <AlertsSubMenu></AlertsSubMenu>
+  
   <main>
     <button @click="updateArray">Update</button>
     <ul>

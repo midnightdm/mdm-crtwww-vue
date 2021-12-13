@@ -1,5 +1,5 @@
 <template>
-  <GallerySubMenu></GallerySubMenu>
+  
   <main>
     <h1>Comments</h1>
     

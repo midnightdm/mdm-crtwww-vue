@@ -1,5 +1,5 @@
 <template>
- <LogsSubMenu></LogsSubMenu>
+ 
   <div id="main" class="thisMonth">
     <h1>{{this.$store.getters.getThisMonth.length}} Vessel Passage<span v-if='this.$store.getters.getThisMonth.length != 1'>s</span> This Month</h1>
     <h4>{{ this.formattedRange }}</h4>

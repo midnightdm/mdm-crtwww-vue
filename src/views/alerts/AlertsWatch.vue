@@ -1,5 +1,5 @@
 <template>
-  <AlertsSubMenu></AlertsSubMenu>
+  
 </template>
 
 <script>

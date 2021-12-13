@@ -1,5 +1,5 @@
 <template>
-  <GallerySubMenu></GallerySubMenu>
+  
   <h1>Image</h1>
 </template>
 
