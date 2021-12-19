@@ -1,57 +1,52 @@
 <template>
-  <div id="map" ref="mapDiv" style="width: 100%; height: 80vh"></div>
+ 
+  <GoogleMap
+   :api-key="apiKey"
+   style="width: 100vw; max-width: 1100px; height: 50vh;"
+   :center="store.state.a.map.center"
+   :zoom="store.state.a.map.zoom"
+   :mapTypeId="store.state.a.map.mapTypeId"
+   >
+
+    <Marker   v-for="vessel in store.state.a.liveScans" :key="vessel.id" :options="vessel.marker" />
+    <Polyline v-for="item in store.state.a.polylines" :key="item.name" :options="item" />
+    <Polyline v-for="mile in store.state.a.mileMarkersList" :key="mile.name" :options="mile"/>
+    <div v-if="store.state.a.infoOn">
+      <Marker v-for="label in store.state.a.mileMarkerLabels" :key="label.title" :options="label"/>
+    </div>
+ 
+   </GoogleMap>
 </template>
 
 <script>
-/* eslint-disable no-undef */
+
 import { computed, ref, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
-import { firestore } from '@/store/firebaseApp.js'
-//import { Loader } from '@googlemaps/js-api-loader'
-//const MAP_KEY = process.env.VUE_APP_MAP_KEY
+//import { firestore } from '@/store/firebaseApp.js'
 
-//const goo = google
+import { GoogleMap, Marker, Polyline } from 'vue3-google-map'
 
 export default {
   name: 'Map',
+  components: { GoogleMap, Marker, Polyline },
   setup() {
+    const apiKey = process.env.VUE_APP_MAP_KEY
     const store = useStore()
 
-    function initMap(mapDomRef) {
-      store.dispatch("initMap", mapDomRef)
-    }
-
-     async function initLiveScan(payload) {
-      await store.dispatch("initLiveScan", payload)
-      if(typeof store.state.a.google != undefined) {
-        return true
-      }
-    }
-
-    function deleteOldScans() {
-      store.dispatch("deleteOldScans")
+    function initMap() {
+      store.dispatch("initMap")
     }
 
     function toggleMileLabels() {
       store.dispatch("toggleMileLabels")
     }
-
-    //const loader = new Loader({ apiKey: MAP_KEY })
-    const mapDiv = ref(null)
-    //const map    = ref(null)
-    //const google = ref(null)
-    const liveScan = ref(null)
-    /*
+ 
     onMounted(async () => {
-      initLiveScan(goo).then(()=>{
-        initMap(mapDiv.value)
-        //google.value   = store.state.a.google
-        //map.value      = store.state.a.map
-        liveScan.value = store.state.a.liveScan
-      })
+      initMap()
     })
-    return { mapDiv, liveScan, toggleMileLabels, deleteOldScans, initMap, initLiveScan }
-    */
+    
+    return { initMap, store, toggleMileLabels, apiKey}
+    
   }  
 
 }

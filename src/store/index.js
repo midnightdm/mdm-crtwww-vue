@@ -86,7 +86,6 @@ class Ranges {
   }
 }
 
-
 class SubListItem { 
   constructor() {
     this.key;
@@ -108,9 +107,10 @@ class LiveScan {
     this.id             = null
     this.name           = null
     this.liveLocation   = null
-    this.mapLabel       = null;
+    this.mapLabel       = null
     this.btnText        = "+"
     this.dir            = "undetermined"
+    this.dirImg         = null
     this.callsign       = null
     this.timerOutput    = null
     this.speed          = null
@@ -119,7 +119,6 @@ class LiveScan {
     this.width          = null
     this.draft          = null
     this.marker         = null
-    this.isZoomed       = false
     this.hasImage       = null
     this.imageUrl       = null
     this.type           = null
@@ -137,6 +136,7 @@ class LiveScan {
     this.dataAge                   = "age-green"
     this.prevLat                   = null
     this.prevLng                   = null
+    this.isMoving                  = false
     this.localVesselText           = () => {
       if(this.liveIsLocal==1) {
         return "Passages are not logged for this local operations vessel as it doesn't cross all four monitored waypoints.";
@@ -158,11 +158,11 @@ class LiveScan {
     this.url = () => {
       return "../logs/history/" + this.id;
     }
-    this.dirImg = () => {
+    this.setDirImg = ()=> {
       switch(this.dir) {
-        case "undetermined": return "../images/qmark.png"; break;
-        case "upriver"     : return "../images/uparr.png"; break;
-        case "downriver"   : return "../images/dwnarr.png"; break;
+        case "undetermined": return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/qmark.png"; break;
+        case "upriver"     : return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/uparr.png"; break;
+        case "downriver"   : return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/dwnarr.png"; break;
       }
     }
     this.alphaTime = () => {
@@ -195,14 +195,14 @@ class LiveScan {
       
     } 
     this.zoomMap = () => {
-      if(this.isZoomed) {
-        this.state.map.setCenter(this.state.liveScanModel.clinton);
-        this.state.map.setZoom(12);      
+      if(this.state.map.isZoomed) {
+        this.state.map.center = this.state.liveScanModel.clinton;
+        this.state.map.zoom = 12;      
         this.isZoomed = false
       } else {
-        this.state.map.setCenter(this.position);
-        this.state.map.setZoom(15);
-        this.isZoomed = true
+        this.state.map.center = this.position;
+        this.state.map.zoom = 15;
+        this.state.isZoomed = true
       }
     }
   }
@@ -274,14 +274,6 @@ function updateVesselHistory(dat) {
   return o;            
 }
 
-async function loadGoogle()  {
-  let g = { google };
-  if(typeof g.maps !=undefined) {
-    console.log("g is object", g);
-    return g;
-  }
-  console.log("g is undefined");
-}
 
 /* * * * * * * * * * * * * * *
 *  Function definitions used by manage page
@@ -300,11 +292,6 @@ function urlB64ToUint8Array(base64String) {
   }
   return outputArray;
 }
-
-/** 
- *  Probably Relocate some of these functions to Manage.vue for
- *  page specific events rather than being here in the store.
- */
 
 function subscribeUser() {
   const applicationServerKey = urlB64ToUint8Array(process.env.MDM_VKEY_PUB);
@@ -336,7 +323,7 @@ function initialiseUI() {
       subscribeUser();
     }
   });
-// Set the initial subscription value
+  // Set the initial subscription value
   swRegistration.pushManager.getSubscription()
   .then(function(subscription) {
     isSubscribed = !(subscription === null);
@@ -402,9 +389,6 @@ function getKeyOfId(arr, id) {
   return key;  
 }
 
-/**
- * This has db tasks and can work here, but update for v9 firestore
- */
 function getSubList() {
   navigator.serviceWorker.ready
   .then(serviceWorkerRegistration => serviceWorkerRegistration.pushManager.getSubscription())
@@ -483,10 +467,7 @@ function loadSubListActual(tird, srcIdx, srcArray) { //This function used by get
   vm.subListActual.push(item);
 }
 
-/**
- * Definately a page specific function for Manage.vue
- * 
- */
+
 function updateSubListActualView() {
   let none = document.getElementById('actualNone');
   let ol = document.getElementById('actualOL');
@@ -518,6 +499,10 @@ function objectQueue(arr, add, size=20) {
   return arr
 }
 
+/* * * * * * * * *
+* Functions used by Live page & Map component
+*/
+
 //Function used in initLiveScan()
 function formatTime(ts) {
   var d, day, days, dh, h, m, merd, str;
@@ -541,7 +526,42 @@ function formatTime(ts) {
   return str;
 }
 
+function predictMovement(state) {
+  var speed, distance, bearing, point, coords;
+  //Loop through live vessels
+  state.liveScans.forEach( (o) => {
+    //Skip if vessel not moving or bogus position data
+    if( o.isMoving && (o.lat > 1) && (-o.lng > 1)) {
+      //Remove 'kts' from speed & change to int 
+      speed = parseInt(o.speed);
+      //Multiply knots by 1.852 to get KPH
+      speed = speed * 1.852;
+      //Ignore unrealistic speed reports.
+      if(speed > 50) {
+        return;
+      }
+      //Divide KPH by 3600 to get kilometers traveled in one second
+      distance = speed / 3600;
+      //Clean course 
+      bearing = parseInt(o.course);
+      //Predict next point
+      point = calculateNewPositionFromBearingDistance(o.lat, o.lng, bearing, distance);
+      //Update view model
+      o.lat = point[0];
+      o.lng = point[1];
+      o.marker.position = { lat: point[0], lng: point[1] };
+      coords = getShipSpriteCoords(bearing);
+      o.marker.icon.origin = {x: coords[0], y: coords[1] };     
+    } 
+  });  
+}
 
+function calculateNewPositionFromBearingDistance(lat, lng, bearing, distance) {
+  var R = 6371; // Earth Radius in Km
+  var lat2 = Math.asin(Math.sin(Math.PI / 180 * lat) * Math.cos(distance / R) + Math.cos(Math.PI / 180 * lat) * Math.sin(distance / R) * Math.cos(Math.PI / 180 * bearing));
+  var lon2 = Math.PI / 180 * lng + Math.atan2(Math.sin( Math.PI / 180 * bearing) * Math.sin(distance / R) * Math.cos( Math.PI / 180 * lat ), Math.cos(distance / R) - Math.sin( Math.PI / 180 * lat) * Math.sin(lat2));
+  return [180 / Math.PI * lat2 , 180 / Math.PI * lon2];
+}
 
 // The shared state object that any vue component can get access to.
 // Has some placeholders that we’ll use further on!
@@ -556,9 +576,19 @@ const moduleA = {
       isTest: true,
       lab: "ABCDEFGHIJKLMNOPQRSTUVWXYZ*#@&~1234567890abcdefghijklmnopqrstuvwxyz",
       red: "#ff0000",
-      map: null,
-      google: null,
-      infoOn: false,  
+      isZoomed: false,
+      map: {
+        zoom: 12, 
+        center: {lat: 41.857202, lng:-90.184084}, 
+        mapTypeId: "hybrid"
+      },
+      polylines: [],
+      mileMarkersList: [],
+      mileMarkerLabels: [],
+      infoOn: true, 
+      liveScanModel: null,
+      liveScans: [ { liveName: "loading" }
+      ], 
       passagesList: [
         {
           date: "",
@@ -588,11 +618,6 @@ const moduleA = {
       },
       
       galleryVideo: [ {vessel: "loading" }
-      ],
-
-      liveScanModel: null,
-
-      liveScans: [ { liveName: "loading" }
       ],
 
       ranges: new Ranges(),
@@ -831,11 +856,11 @@ const moduleA = {
     },
 
     async initLiveScan({ commit, state }, payload) {
-      //google = await loadGoogle()
-      //await new Promise(resolve => setTimeout(resolve, 1500))
+      console.log("running initLiveScan()")
       state.liveScanModel = new LiveScanModel(payload)
       if(state.liveScans[0].liveName == "loading") {
         const liveScanSnapshot = await getDocs(collection(db, "LiveScan"))
+        state.liveScans = []
         var key, o, marker, coords, course
         liveScanSnapshot.forEach( (doc) => {
           let dat = doc.data()
@@ -848,13 +873,13 @@ const moduleA = {
           else {
             state.liveScans[key] = state.liveScanModel.mapper(state.liveScans[key], dat, false, state)
           }    
-        })     
+        })
+        setInterval(predictMovement(state), 1000)     
       }
-      //console.log("This is google obj:", google)
     },
 
       //Run by initMap()
-    addMileMarkers({ commit, state }) {
+    addMileMarkers( { dispatch, state } ) {
       var dat = [
         {id:486, lngA:-90.50971806363766, latA:41.52215220467504, lngB:-90.5092203536731, latB:41.51372097487243}, 
         {id:487, lngA:-90.48875678287305, latA:41.521402024002950, lngB:-90.48856266269104, latB:41.5145424556308},
@@ -912,64 +937,110 @@ const moduleA = {
         {id:540, lngA:-90.18197341024099, latA:42.12474496670414, lngB:-90.18304430150994, latB:42.12795599576975},
         {id:520, lngA:-90.17610039282224, latA:41.86515500754595, lngB:-90.17058699252856, latB:41.86429560522607}  
       ];
-      
-      if(state.liveScanModel.markerList.length == 0) {
-        console.log("Loading markerList array data");
+
+      if(state.mileMarkersList.length == 0) {
         for(var i=0, len=dat.length; i<len; i++) {
-          state.liveScanModel.markerList[i] = {
-            line: new google.maps.Polyline({
+          state.mileMarkersList.push({
+              name: "Mile "+dat[i].id,            
               path: [
-                new google.maps.LatLng(dat[i].latA, dat[i].lngA),
-                new google.maps.LatLng(dat[i].latB, dat[i].lngB)
+                  {lat: dat[i].latA, lng: dat[i].lngA},
+                  {lat: dat[i].latB, lng: dat[i].lngB}
               ],
               strokeColor: "#34A16B",
-              strokeWeight: 2
-            }),
-            info: new google.maps.InfoWindow({
-              content: "Mile "+dat[i].id,
-              position: new google.maps.LatLng(dat[i].latA, dat[i].lngA)
-            })
-          };
-          state.liveScanModel.markerList[i].line.setMap(state.map);
+              strokeWeight: 2,
+              options: {
+                clickable: false,
+                draggable: false,
+                editable: false
+              }
+          })
+          state.mileMarkerLabels.push({
+              position: {lat: dat[i].latA, lng: dat[i].lngA },
+              title: "Mile "+dat[i].id, 
+              label: String(dat[i].id),
+              icon: {
+                url: "https://storage.googleapis.com/www.clintonrivertraffic.com/images/green.png" ,
+                labelOrigin: {x: 24, y: 15},
+                scaledSize: {width: 50, height: 50}
+              }
+          }) 
         }
       }     
     },
 
-    initMap({ dispatch, state }, mapDomRef) {   
-      var alphaLine, bravoLine, charlieLine, deltaLine, milemarkers;  
-      //google initialized in initLiveScan()
-      state.map = new google.maps.Map(mapDomRef, {
-        zoom: 12, center: state.liveScanModel.clinton, mapTypeId: "hybrid"
-      });
+    initMap({ dispatch, state }) {   
+      state.map =  {
+        zoom: 12, 
+        center: {lat: 41.857202, lng:-90.184084}, 
+        mapTypeId: "hybrid"
+      }
+      state.polylines = [
+        {
+          name: "alpha",
+          path: [{lat: 41.938785, lng: -90.173893}, {lat: 41.938785, lng: -90.108296}],
+          strokeColor: state.red,
+          strokeWeight: 2,
+          options: {
+            clickable: false,
+            draggable: false,
+            editable: false
+          }
+        },
+        {
+          name: "bravo", 
+          path: [{lat: 41.897258, lng: -90.174}, {lat: 41.897258, lng: -90.154058}],
+          strokeColor: state.red,
+          strokeWeight: 2,
+          options: {
+            clickable: false,
+            draggable: false,
+            editable: false
+          }
+        },
         
-      alphaLine = new google.maps.Polyline({
-        path: [{lat: 41.938785, lng: -90.173893}, {lat: 41.938785, lng: -90.108296}],
-        strokeColor: state.red,
-        strokeWeight: 2
-      });
-      alphaLine.setMap(state.map);
-    
-      bravoLine = new google.maps.Polyline({
-        path: [{lat: 41.897258, lng: -90.174}, {lat: 41.897258, lng: -90.154058}],
-        strokeColor: state.red,
-        strokeWeight: 2
-      });
-      bravoLine.setMap(state.map);
-    
-      charlieLine = new google.maps.Polyline({
-        path: [{lat: 41.836353, lng: -90.186610}, {lat: 41.836353, lng: -90.169705}],
-        strokeColor: state.red,
-        strokeWeight: 2
-      });
-      charlieLine.setMap(state.map);
-      
-      deltaLine = new google.maps.Polyline({
-        path: [{lat: 41.800704, lng: -90.212768}, {lat: 41.800704, lng: -90.188677}],
-        strokeColor: state.red,
-        strokeWeight: 2
-      });
-      deltaLine.setMap(state.map);
-      dispatch.addMileMarkers();
+
+        {
+          name: "charlie",
+          path: [{lat: 41.836353, lng: -90.186610}, {lat: 41.836353, lng: -90.169705}],
+          strokeColor: state.red,
+          strokeWeight: 2,
+          options: {
+            clickable: false,
+            draggable: false,
+            editable: false
+          }
+        },
+        
+        
+        {
+          name: "delta",
+          path: [{lat: 41.800704, lng: -90.212768}, {lat: 41.800704, lng: -90.188677}],
+          strokeColor: state.red,
+          strokeWeight: 2,
+          options: {
+            clickable: false,
+            draggable: false,
+            editable: false
+          }
+        }
+      ]            
+      dispatch('addMileMarkers');
+    },
+
+    focusMap({ commit }, payload) {
+      commit('focusMap', payload)
+    },
+
+    toggleZoom({dispatch, state}) {
+      if(state.isZoomed) {
+        state.map.center = state.liveScanModel.clinton
+        state.map.zoom = 12
+        state.isZoomed = false
+      } else {
+        state.map.center = state.focusPosition
+        state.map.zoom = 15
+        state.isZoomed = true
+      }
     },
 
     deleteOldScans({ commit, state }) {
@@ -992,8 +1063,8 @@ const moduleA = {
       if(state.infoOn==false) {
         state.infoOn = true
         console.log("Opening markers...")
-        for(var i=0, len=state.liveScanModel.markerList.length; i<len; i++) {
-          state.liveScanModel.markerList[i].info.open(state.map, state.liveScanModel.markerList[i].line.path);
+        for(var i=0, len=state.markerList.length; i<len; i++) {
+          state.markerList[i].info.open(state.map, state.markerList[i].line.path);
         }  
         state.map.setZoom(14);
         //map.center(liveScanModel.clinton);
@@ -1001,8 +1072,8 @@ const moduleA = {
       } else {
         state.infoOn = false
         console.log("Closing markers..")
-        for(var i=0, len=state.liveScanModel.markerList.length; i<len; i++) {
-            state.liveScanModel.markerList[i].info.close();
+        for(var i=0, len=state.markerList.length; i<len; i++) {
+            state.markerList[i].info.close();
         }
       }
       //map.setCenter(liveScanModel.clinton);
@@ -1037,7 +1108,13 @@ const moduleA = {
     },
     setPageSelected(state, val) {
       state.pageSelected = val
-    }
+    },
+    focusMap(state, payload) {
+      state.focusPosition = state.liveScans[payload].position
+      state.map.center = state.focusPosition
+      state.map.zoom = 15
+      state.isZoomed = true
+    },
   },
 
   getters : { 

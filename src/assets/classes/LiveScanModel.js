@@ -1,8 +1,7 @@
 export default class LiveScanModel {
-  constructor(google) {
+  constructor(callback) {
     let self = this;
-    self.google = google;
-    self.livescans = [];
+    self.store     = callback;
     self.clinton   = {lat: 41.857202, lng:-90.184084};
     //self.url       = "..livescanjson";
     self.INTERVAL  = 20000;
@@ -15,23 +14,23 @@ export default class LiveScanModel {
     self.mapZoom      = 12;  //ko.observable
     self.markerList   = [];
     self.markersOn    = false; //ko.observable
-    self.infoOn       = false; //ko.observable
+    self.infoOn       = true; //ko.observable
 
     self.toggleMileLabels = function() {
-      if(self.infoOn()==false) {
-        self.infoOn(true);
+      if(self.infoOn ==false) {
+        self.infoOn = true;
         console.log("Opening markers...");
-        for(var i=0, len=liveScanModel.markerList.length; i<len; i++) {
-          liveScanModel.markerList[i].info.open(map, liveScanModel.markerList[i].line.path);
+        for(var i=0, len=self.store.a.mileMarkersList.length; i<len; i++) {
+          self.store.a.mileMarkersList[i].info.open(map, self.mileMarkersList[i].line.path);
         }  
-        map.setZoom(14);
+        self.store.a.map.zoom = 14;
         //map.center(liveScanModel.clinton);
         //map.center(liveScanModel.clinton);
       } else {
-        self.infoOn(false);
+        self.infoOn = false;
         console.log("Closing markers..");
-        for(var i=0, len=liveScanModel.markerList.length; i<len; i++) {
-            liveScanModel.markerList[i].info.close();
+        for(var i=0, len=self.store.a.mileMarkersList.length; i<len; i++) {
+            self.store.a.mileMarkersList[i].info.close();
         }
       }
       //map.setCenter(liveScanModel.clinton);
@@ -66,7 +65,7 @@ export default class LiveScanModel {
     };
 
     self.mapper = function(o, dat, isNew, state) {
-      o.position = new self.google.maps.LatLng(dat.liveLastLat, dat.liveLastLon)
+      o.position = {lat: dat.liveLastLat, lng: dat.liveLastLon}
       o.lat = dat.liveLastLat
       o.lng = dat.liveLastLon
       o.id = dat.liveVesselID
@@ -74,45 +73,42 @@ export default class LiveScanModel {
       o.liveLocation = dat.liveLocation
       o.mapLabel = state.lab[++state.liveScanModel.labelIndex]
       o.dir = dat.liveDirection
-      //o.callsign  deprecated
-      //o.liveIsLocal deprecated
+      o.dirImg = o.setDirImg()
       o.speed = dat.liveSpeed
       o.course = dat.liveCourse
-      //o.width deprecated
-      //o.length deprecated
-      //o.draft deprecated
-      //o.hasImage deprecated
-      o.imageUrl //NEEDS SOURCE
-      o.type     //NEEDS SOURCE
+      o.imageUrl = dat.imageUrl
+      o.type     = dat.type
       o.otherDataLabel = "od"+dat.liveVesselID
       o.lastMovementTS = new Date()
       //FOR SHIP ICON MOVEMENT
       let coords = self.getShipSpriteCoords(o.course)
       let icon = {
-        url: "https://storage.googleapis.com/www.clintonrivertraffic.com/www.clintonrivertraffic.com/images/ship-icon-sprite-cyan.png",
-        origin: new self.google.maps.Point(coords[0], coords[1]),
-        size: new self.google.maps.Size(55, 55)
+        url: "https://storage.googleapis.com/www.clintonrivertraffic.com/images/ship-icon-sprite-cyan.png",
+        origin: { x: coords[0], y: coords[1] }, 
+        size: {width: 55, height: 55 }
       }
       if(isNew) {
         o.liveLastScanTS = new Date(dat.liveLastTS*1000)
-        let marker = new self.google.maps.Marker({
+        let marker = {
           position: o.position,
           title: o.name, 
           label: o.mapLabel, 
           icon: icon,
-          map: state.map
-        })
+        }
         o.marker = marker
       } else {
-        o.liveLastScanTS.setTime(dat.liveLastTS*1000)
-        o.marker.setPosition(new self.google.maps.LatLng(o.lat, o.lng))
-        o.marker.setIcon(icon);
+        let coords = self.getShipSpriteCoords(o.course)
+        o.marker.position = {lat: o.lat, lng: o.lng} 
+        o.marker.icon.origin = { x: coords[0], y: coords[1] };
         if(o.speed>0) { //If transponder reported movement...
           if((o.lng != o.prevLng) || (o.lat != o.prevLat)) { //...did its location change?           
             //Yes means the transponder report is current. Update time value.
-            now = Date.now();          
-            o.lastMovementTS.setTime(now);
+            now = Date.now()          
+            o.lastMovementTS.setTime(now)
+            o.isMoving = true
             //Reported speed with no position change means stale data. Don't update time value.
+          } else {
+            o.isMoving = false
           }
         } //0 speed & 0 movement is ok. Just means vessel is idle
         o.prevLat = o.lat

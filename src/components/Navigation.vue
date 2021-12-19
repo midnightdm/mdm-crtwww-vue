@@ -9,7 +9,7 @@
         <li><a @click="goRoute('/about')" class="nav-link" :href="'/about'" :class="{selected: this.$store.state.a.pageSelected=='About'}">ABOUT</a></li>
         <li><a id="alerts-link" @click="goRoute('/alerts')" :href="'/alerts'" class="nav-link" :class="{ 'selected': alertsLinkActive }" exact>ALERTS</a></li>
         <li><a @click="goRoute('/gallery')" :href="'/gallery'" class="nav-link" :class="{'selected': galleryLinkActive}" >GALLERY</a></li>
-        <li><a class="nav-link" :href="urlLive">LIVE</a></li>
+        <li><a @click="goRoute('/live/mobile')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='LiveMobile'}" :href="'/live/mobile'" >LIVE</a></li>
         <li><a @click="goRoute('/logs')" :href="'/logs'" class="nav-link" :class="{ 'selected': logsLinkActive}">LOGS</a></li>
       </ul>
 
@@ -33,7 +33,7 @@
               <a @click="goRoute('/gallery')" :href="'/gallery'" class="nav-link" :class="{'selected': galleryLinkActive}" >GALLERY</a>
               <GallerySubMenu v-show="galleryLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></GallerySubMenu>
             </li>
-            <li><a class="nav-link" :href="urlLive">LIVE</a>
+            <li><a @click="goRoute('/live/mobile')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='LiveMobile'}" :href="'/live/mobile'" >LIVE</a>
             </li>
             <li>
               <a @click="goRoute('/logs')" :href="'/logs'" class="nav-link" :class="{ 'selected': logsLinkActive}">LOGS</a>
