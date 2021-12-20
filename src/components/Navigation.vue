@@ -138,6 +138,7 @@ nav {
   top: 0px;
   height: 100px;
   bottom: 250px;
+  background-color: white;
 }
 
 #logo-img {   
@@ -303,4 +304,7 @@ li a, li router-link {
   z-index: 4;
 }
 
+main #local {
+  top: 15rem;
+}
 </style>

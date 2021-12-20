@@ -127,6 +127,7 @@ h4.title {
   padding: 5px;
 }
 
+
 .shipBoxData {
   background-color: white;
   opacity: .5;

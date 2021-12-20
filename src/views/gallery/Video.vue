@@ -53,8 +53,16 @@ export default {
 
 <style>
 main#local {
+  transform: translateY(10rem);
   display: grid;
   grid-template-columns: 20rem 3fr;
+}
+
+@media (max-width: 700px) {
+   main#local {
+    transform: translateY(5rem);
+    display: block;
+   }
 }
 
 ul.video-wrapper {

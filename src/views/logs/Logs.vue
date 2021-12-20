@@ -70,7 +70,14 @@ h1 {
     height: 150px;
   
   }
+
+  p {
+    transform: translateY(1 rem);
+  }
   
+  #main {
+    transform: translateY(8rem);
+  }
   
   ul .vessels-list {
       display: flex;
