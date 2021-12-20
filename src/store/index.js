@@ -582,6 +582,7 @@ const moduleA = {
         center: {lat: 41.857202, lng:-90.184084}, 
         mapTypeId: "hybrid"
       },
+      focusPosition: {lat: 41.857202, lng:-90.184084},
       polylines: [],
       mileMarkersList: [],
       mileMarkerLabels: [],
@@ -856,7 +857,6 @@ const moduleA = {
     },
 
     async initLiveScan({ commit, state }, payload) {
-      console.log("running initLiveScan()")
       state.liveScanModel = new LiveScanModel(payload)
       if(state.liveScans[0].liveName == "loading") {
         const liveScanSnapshot = await getDocs(collection(db, "LiveScan"))
@@ -874,12 +874,148 @@ const moduleA = {
             state.liveScans[key] = state.liveScanModel.mapper(state.liveScans[key], dat, false, state)
           }    
         })
-        setInterval(predictMovement(state), 1000)     
+        //setInterval(predictMovement(state), 1000)
+        console.log("map center:", state.map )     
       }
     },
 
-      //Run by initMap()
-    addMileMarkers( { dispatch, state } ) {
+    //Run by initMap()
+    addMileMarkers( { commit } ) {
+      commit('addMileMarkers')
+    },  
+      
+    initMap({ dispatch, commit }) {   
+      commit('initMap')
+      dispatch('addMileMarkers')
+    },
+      
+
+    focusMap({ commit }, payload) {
+      commit('focusMap', payload)
+    },
+
+    toggleZoom({dispatch, state}) {
+      if(state.isZoomed) {
+        state.map.center = state.liveScanModel.clinton
+        state.map.zoom = 12
+        state.isZoomed = false
+      } else {
+        state.map.center = state.focusPosition
+        state.map.zoom = 15
+        state.isZoomed = true
+      }
+    },
+
+    deleteOldScans({ commit, state }) {
+      var a, l = 0, arr = [], i = 0, now = Date.now();
+      state.livescans.forEach( (obj) => {
+        if((now - 1800000)> obj.lastMovementTS.getTime()) {
+          arr.push(i); //array of indexes to remove    
+        }
+        i++
+      })
+      l = arr.length
+      if(l) { //proceed only if any found above
+        for(a in arr) {
+          state.livescans = state.livescans.splice(a,1)
+        }    
+      }  
+    },
+
+  },
+
+  mutations: {
+    setPassagesList(state, val) {
+      state.passagesList = val
+    },
+    setHistoryCache(state, payload) {
+      state.historyCache = payload
+    },
+    setMonthCache(state, payload) {
+      console.log("Ranges: ", state.ranges)
+      state.monthCache = payload
+    },
+    setSlate(state, val) {
+      state.slate = val
+    },
+    setAlertsLinkActive(state, val) {
+      state.alertsLinkActive = val
+    },
+    setLogsLinkActive(state, val) {
+      state.logsLinkActive = val
+    },
+    setGalleryLinkActive(state, val) {
+      state.galleryLinkActive = val
+    },
+    setIsHero(state, val) {
+      state.isHero = val
+    },
+    setPageSelected(state, val) {
+      state.pageSelected = val
+    },
+    focusMap(state, payload) {
+      if(!state.liveScans.length) {
+        return
+      }
+      state.focusPosition = state.liveScans[payload].position
+      state.map.center = state.focusPosition
+      state.map.zoom = 15
+      state.isZoomed = true
+    },
+    initMap(state) {
+      state.map =  {
+        zoom: 12, 
+        center: {lat: 41.857202, lng:-90.184084}, 
+        mapTypeId: "hybrid"
+      }
+      state.polylines = [
+        {
+          name: "alpha",
+          path: [{lat: 41.938785, lng: -90.173893}, {lat: 41.938785, lng: -90.108296}],
+          strokeColor: state.red,
+          strokeWeight: 2,
+          options: {
+            clickable: false,
+            draggable: false,
+            editable: false
+          }
+        },
+        {
+          name: "bravo", 
+          path: [{lat: 41.897258, lng: -90.174}, {lat: 41.897258, lng: -90.154058}],
+          strokeColor: state.red,
+          strokeWeight: 2,
+          options: {
+            clickable: false,
+            draggable: false,
+            editable: false
+          }
+        },
+        {
+          name: "charlie",
+          path: [{lat: 41.836353, lng: -90.186610}, {lat: 41.836353, lng: -90.169705}],
+          strokeColor: state.red,
+          strokeWeight: 2,
+          options: {
+            clickable: false,
+            draggable: false,
+            editable: false
+          }
+        },        
+        {
+          name: "delta",
+          path: [{lat: 41.800704, lng: -90.212768}, {lat: 41.800704, lng: -90.188677}],
+          strokeColor: state.red,
+          strokeWeight: 2,
+          options: {
+            clickable: false,
+            draggable: false,
+            editable: false
+          }
+        }
+      ]         
+    },
+    addMileMarkers(state) {
       var dat = [
         {id:486, lngA:-90.50971806363766, latA:41.52215220467504, lngB:-90.5092203536731, latB:41.51372097487243}, 
         {id:487, lngA:-90.48875678287305, latA:41.521402024002950, lngB:-90.48856266269104, latB:41.5145424556308},
@@ -966,155 +1102,8 @@ const moduleA = {
           }) 
         }
       }     
-    },
-
-    initMap({ dispatch, state }) {   
-      state.map =  {
-        zoom: 12, 
-        center: {lat: 41.857202, lng:-90.184084}, 
-        mapTypeId: "hybrid"
-      }
-      state.polylines = [
-        {
-          name: "alpha",
-          path: [{lat: 41.938785, lng: -90.173893}, {lat: 41.938785, lng: -90.108296}],
-          strokeColor: state.red,
-          strokeWeight: 2,
-          options: {
-            clickable: false,
-            draggable: false,
-            editable: false
-          }
-        },
-        {
-          name: "bravo", 
-          path: [{lat: 41.897258, lng: -90.174}, {lat: 41.897258, lng: -90.154058}],
-          strokeColor: state.red,
-          strokeWeight: 2,
-          options: {
-            clickable: false,
-            draggable: false,
-            editable: false
-          }
-        },
-        
-
-        {
-          name: "charlie",
-          path: [{lat: 41.836353, lng: -90.186610}, {lat: 41.836353, lng: -90.169705}],
-          strokeColor: state.red,
-          strokeWeight: 2,
-          options: {
-            clickable: false,
-            draggable: false,
-            editable: false
-          }
-        },
-        
-        
-        {
-          name: "delta",
-          path: [{lat: 41.800704, lng: -90.212768}, {lat: 41.800704, lng: -90.188677}],
-          strokeColor: state.red,
-          strokeWeight: 2,
-          options: {
-            clickable: false,
-            draggable: false,
-            editable: false
-          }
-        }
-      ]            
-      dispatch('addMileMarkers');
-    },
-
-    focusMap({ commit }, payload) {
-      commit('focusMap', payload)
-    },
-
-    toggleZoom({dispatch, state}) {
-      if(state.isZoomed) {
-        state.map.center = state.liveScanModel.clinton
-        state.map.zoom = 12
-        state.isZoomed = false
-      } else {
-        state.map.center = state.focusPosition
-        state.map.zoom = 15
-        state.isZoomed = true
-      }
-    },
-
-    deleteOldScans({ commit, state }) {
-      var a, l = 0, arr = [], i = 0, now = Date.now();
-      state.livescans.forEach( (obj) => {
-        if((now - 1800000)> obj.lastMovementTS.getTime()) {
-          arr.push(i); //array of indexes to remove    
-        }
-        i++
-      })
-      l = arr.length
-      if(l) { //proceed only if any found above
-        for(a in arr) {
-          state.livescans = state.livescans.splice(a,1)
-        }    
-      }  
-    },
-
-    toggleMileLabels({commit, state} ) {
-      if(state.infoOn==false) {
-        state.infoOn = true
-        console.log("Opening markers...")
-        for(var i=0, len=state.markerList.length; i<len; i++) {
-          state.markerList[i].info.open(state.map, state.markerList[i].line.path);
-        }  
-        state.map.setZoom(14);
-        //map.center(liveScanModel.clinton);
-        //map.center(liveScanModel.clinton);
-      } else {
-        state.infoOn = false
-        console.log("Closing markers..")
-        for(var i=0, len=state.markerList.length; i<len; i++) {
-            state.markerList[i].info.close();
-        }
-      }
-      //map.setCenter(liveScanModel.clinton);
     }
-  },
 
-  mutations: {
-    setPassagesList(state, val) {
-      state.passagesList = val
-    },
-    setHistoryCache(state, payload) {
-      state.historyCache = payload
-    },
-    setMonthCache(state, payload) {
-      console.log("Ranges: ", state.ranges)
-      state.monthCache = payload
-    },
-    setSlate(state, val) {
-      state.slate = val
-    },
-    setAlertsLinkActive(state, val) {
-      state.alertsLinkActive = val
-    },
-    setLogsLinkActive(state, val) {
-      state.logsLinkActive = val
-    },
-    setGalleryLinkActive(state, val) {
-      state.galleryLinkActive = val
-    },
-    setIsHero(state, val) {
-      state.isHero = val
-    },
-    setPageSelected(state, val) {
-      state.pageSelected = val
-    },
-    focusMap(state, payload) {
-      state.focusPosition = state.liveScans[payload].position
-      state.map.center = state.focusPosition
-      state.map.zoom = 15
-      state.isZoomed = true
-    },
   },
 
   getters : { 

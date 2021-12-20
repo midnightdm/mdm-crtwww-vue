@@ -1,7 +1,7 @@
 <template>
   <Map class="map"></Map>
   <section>
-  <carousel v-model="currentSlide" :items-to-show="1" :wrap-around="true">
+  <carousel v-if="store.state.a.liveScans.length" v-model="currentSlide" :items-to-show="1" :wrap-around="true">
     <slide class="slide" v-for="live in store.state.a.liveScans" :key="live.id">
       <div class="slideData" :style="'background-image: url('+live.imageUrl+');'">
         <div class="label-wrap">
@@ -26,6 +26,7 @@
       <pagination />
     </template>
   </carousel>
+  <h1 class="noslide" v-else>No vessel transponders are in range currently.</h1>
   </section>
 </template>
 
@@ -62,12 +63,16 @@ export default {
     }
 
     onMounted(async () => {
-      //setTimeout(() => { console.log("carosel obj", caro)}, 2000)
-      store.dispatch("initLiveScan", store)
-      console.log("liveScans:", store.liveScans)
-      this.$store.commit('setSlate', this.$store.state.a.liveScans.length+' LIVE')
+      store.commit("initLiveScan", store)
       store.commit('setPageSelected', 'Live')
-      this.$store.commit('focusMap', 0)
+      console.log("liveScans:", store.liveScans)
+      if(store.liveScans != undefined && store.state.liveScans.length) {
+        store.commit('setSlate', store.state.a.liveScans.length+' LIVE')
+        store.commit('focusMap', 0)
+      }
+      else {
+        store.commit('setSlate', 'LIVE')
+      }      
     })
     return { store, toggleZoom, focusMap }
   },
@@ -109,6 +114,7 @@ h5 {
 }
  
 
+
 img.dir-img {
   margin-left: auto;
   margin-right: auto;
@@ -134,6 +140,16 @@ img.vesselImg {
   bottom: -15%;
   background: rgba(0, 0, 0, 0.4);
 }
+
+h1.noslide {
+  border-radius: 8px;
+  color: white;
+  padding: 2rem 0;
+  background-color: #2c3e50;
+  text-align: center;
+  text-shadow: 2px 2px #000;
+}
+
 .map-label {
     background: aquamarine;
     color: black;
