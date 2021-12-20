@@ -90,7 +90,7 @@ export default {
 <style>
 .map {
   border-radius: 8px;
-  padding: 8rem 2rem 0 2rem;
+  padding: 10rem 2rem 0 2rem;
 }
 
 .label-wrap  {

@@ -280,20 +280,21 @@ input:focus, textarea:focus, select:focus {
 
 
  /* Phone */
- @media (max-width: 500px) {
+ @media (max-width: 400px) {
   /* Turn off video... */
   #videoBG {
     display: none;
   }
   
-  /* ...and turn on background image. */
-  body {
+  /* ...and turn on background image. 
     background-image: url('https://storage.googleapis.com/www.clintonrivertraffic.com/images/msq-hero-tall.png');
     background-size: cover;
     height: 800px;
-
-  }
-
+  */
+}
+                
+  
+  body {
   .huge {
     font-size: 30pt;
     top: 200px;
@@ -320,193 +321,7 @@ input:focus, textarea:focus, select:focus {
     top: 70px;
   }
 
-  #mbbg
-  {
-    display: block;
-    position: relative;
-    top: 60px;
-    left: 0px; 
-    z-index: 1;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-  
-  #mbbg input
-  {
-    display: block;
-    width: 40px;
-    height: 50px;
-    position: absolute;
-    top: 0px;
-    left: 0px; 
-    cursor: pointer;
-    opacity: 0; /* hide this */
-    z-index: 2; /* and place it over the hamburger */
-    -webkit-touch-callout: none;
-  }
-  
-  /*
-   * Just a quick hamburger
-   */
-  #mbbg span
-  {
-    display: block;
-    width: 33px;
-    height: 4px;
-    margin-left: 10px;
-    margin-bottom: 5px;
-    position: relative;
-    top: 15px;
-    left: 0px;
-    background: #cdcdcd;
-    border-radius: 3px;
-    
-    z-index: 4;
-    
-    transform-origin: 4px 0px;
-    
-    transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-                background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-                opacity 0.55s ease;
-  }
-  
-  #mbbg span:first-child
-  {
-    transform-origin: 0% 0%;
-    margin-top: 10px;
-  }
-  
-  #mbbg span:nth-last-child(2)
-  {
-    transform-origin: 0% 100%;
-  }
-  
-  /* 
-   * Transform all the slices of hamburger
-   * into a crossmark.
-   */
-  #mbbg input:checked ~ span
-  {
-    opacity: 1;
-    transform: rotate(45deg) translate(-2px, -1px);
-    background: red;
-  }
-  
-  /*
-   * But let's hide the middle one.
-   */
-  #mbbg input:checked ~ span:nth-last-child(3)
-  {
-    opacity: 0;
-    transform: rotate(0deg) scale(0.2, 0.2);
-  }
-  
-  /*
-   * Ohyeah and the last one should go the other direction
-   */
-  #mbbg input:checked ~ span:nth-last-child(2)
-  {
-    transform: rotate(-45deg) translate(0, -1px);
+
   }
 
-#menu
-{
-  position: absolute;
-  width: 300px;
-  margin: -100px 0 0 -50px;
-  padding: 50px;
-  padding-top: 125px;
-  
-  background: #31363e;
-  list-style-type: none;
-  -webkit-font-smoothing: antialiased;
-  /* to stop flickering of text in safari */
-  
-  transform-origin: 0% 0%;
-  transform: translate(-100%, 0);
-  
-  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
-}
-
-#menu li
-{
-  border: 2px solid red;
-  padding: 10px 0;
-  width: 300px;
-  font-size: 22px;
-}
-
-/*
- * And let's slide it in from the left
- */
-#mbbg input:checked ~ ul
-{
-  transform: none;
-}
-
- }
- 
- /* Tablet */
- @media (min-width: 500px) {
-  #logo-container {
-    bottom:250px;;
-    right: 400px;
-  
-  }
-  #logo-img {
-    top: 10px;
-    width: 200px;
-    height: 95px;
-  }
-  #logo-container h1 {
-    font-size: 24pt;
-    top: 20px;
-    left: 50px;
-  }
-  #title_slate {
-    font-size: 1.5em;
-    margin: 75px 25px 24px 0;
-    padding: 5px 5px 5px 5px;
-  }
-  #mbbg {
-    top: 95px;
-  }
-  #main {
-    top: 90px;
-  }
-  #mbbg input { display:none; }
-  #mmbg span { display:none; }
- }
- /* Desktop*/
- @media (min-width: 975px) {
-  
-  #logo-container {
-    bottom: 400px;;
-    right: 700px;
-  
-  }
-  #logo-img {
-    top: 10px;
-    width: 320px;
-    height: 130px;
-  }
-  #logo-container h1 {
-    font-size: 52pt;
-    top: 0px;
-    left: 65px;
-  }
-  #title_slate {
-    font-size: 2em;
-    margin: 95px 25px 24px 0;
-    padding: 10px 10px 10px 10px;
-  }
-  #mbbg {
-    top: 125px;
-  }
-  #main {
-    top: 110px;
-  }
-  #mbbg input { display:none; }
-  #mmbg span { display:none; }
- }
 </style>

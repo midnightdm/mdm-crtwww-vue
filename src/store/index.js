@@ -856,27 +856,8 @@ const moduleA = {
       }
     },
 
-    async initLiveScan({ commit, state }, payload) {
-      state.liveScanModel = new LiveScanModel(payload)
-      if(state.liveScans[0].liveName == "loading") {
-        const liveScanSnapshot = await getDocs(collection(db, "LiveScan"))
-        state.liveScans = []
-        var key, o, marker, coords, course
-        liveScanSnapshot.forEach( (doc) => {
-          let dat = doc.data()
-          key = getKeyOfId(state.liveScans, dat.liveVesselID)
-          //Create & Push
-          if(key==-1) {
-            state.liveScans.push(state.liveScanModel.mapper(new LiveScan(state), dat, true, state))
-          }
-          //Find & Update
-          else {
-            state.liveScans[key] = state.liveScanModel.mapper(state.liveScans[key], dat, false, state)
-          }    
-        })
-        //setInterval(predictMovement(state), 1000)
-        console.log("map center:", state.map )     
-      }
+    initLiveScan({ commit }, payload) {
+      commit('initLiveScan', payload)
     },
 
     //Run by initMap()
@@ -889,7 +870,6 @@ const moduleA = {
       dispatch('addMileMarkers')
     },
       
-
     focusMap({ commit }, payload) {
       commit('focusMap', payload)
     },
@@ -1102,7 +1082,29 @@ const moduleA = {
           }) 
         }
       }     
-    }
+    },
+    async initLiveScan( state, payload) {
+      state.liveScanModel = new LiveScanModel(payload)
+      if(state.liveScans[0].liveName == "loading") {
+        const liveScanSnapshot = await getDocs(collection(db, "LiveScan"))
+        state.liveScans = []
+        var key, o, marker, coords, course
+        liveScanSnapshot.forEach( (doc) => {
+          let dat = doc.data()
+          key = getKeyOfId(state.liveScans, dat.liveVesselID)
+          //Create & Push
+          if(key==-1) {
+            state.liveScans.push(state.liveScanModel.mapper(new LiveScan(state), dat, true, state))
+          }
+          //Find & Update
+          else {
+            state.liveScans[key] = state.liveScanModel.mapper(state.liveScans[key], dat, false, state)
+          }    
+        })
+        setInterval(predictMovement(state), 1000)
+        console.log("map center:", state.map )     
+      }
+    },
 
   },
 

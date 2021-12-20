@@ -7,7 +7,9 @@
    :zoom="store.state.a.map.zoom"
    :mapTypeId="store.state.a.map.mapTypeId"
    >
-
+    <div class="vesselMarkers" v-if="store.state.a.liveScans.length">
+      <Marker  v-for="vessel in store.state.a.liveScans" :key="vessel.id" :options="vessel.marker" />
+    </div>
     <Polyline v-for="item in store.state.a.polylines" :key="item.name" :options="item" />
     <Polyline v-for="mile in store.state.a.mileMarkersList" :key="mile.name" :options="mile"/>
     <div v-if="store.state.a.infoOn">
