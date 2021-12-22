@@ -1,7 +1,12 @@
 <template>
   <Map class="map"></Map>
   <section>
-  <carousel v-if="store.state.a.liveScans.length" v-model="currentSlide" :items-to-show="1" :wrap-around="true">
+  <carousel v-if="store.state.a.liveScans.length" 
+   v-model="currentSlide" 
+   :items-to-show="1" 
+   :wrap-around="true"
+   :autoplay="store.state.a.liveAutoOn"
+   >
     <slide class="slide" v-for="live in store.state.a.liveScans" :key="live.id">
       <div class="slideData" :style="'background-image: url('+live.imageUrl+');'">
         <div class="label-wrap">
@@ -15,7 +20,7 @@
         <ul>
           <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
           <li class="dataPoint"><span class="th">SPEED:</span> <span class="td">{{live.speed}} Knots</span></li>
-          <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td">{{live.dir}}</span>  </li>
+          <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
         </ul>
         
       </div>
@@ -28,6 +33,11 @@
   </carousel>
   <h1 class="noslide" v-else>No vessel transponders are in range currently.</h1>
   </section>
+  <div class="btnBar">
+    <button @click="toggleAuto">Auto <span class='led' :class="{'on': autoOn}"></span></button>
+    <button @click="toggleList">List <span class='led' :class="{'on': listOn}"></span></button>
+
+  </div>
 </template>
 
 <script>
@@ -47,12 +57,24 @@ export default {
   },
   data() {
     return {
-      currentSlide: 0
+      currentSlide: 0,
+      autoOn: true,
+      listOn: false
+    }
+  },
+  methods: {
+    toggleAuto() {
+      this.autoOn = !this.autoOn
+      this.$store.commit('toggleLiveAuto')
+    },
+    toggleLiveView() {
+      this.listOn = !this.listOn
+      this.$store.commit('toggleLiveList')
     }
   },
   setup() {
     const store = useStore()
-    //const caro = ref(null)
+    const autoBtn = ref(null)
     
     function focusMap(key) {
       store.dispatch('focusMap', key)
@@ -74,7 +96,7 @@ export default {
         store.commit('setSlate', 'LIVE')
       }      
     })
-    return { store, toggleZoom, focusMap }
+    return { store, toggleZoom, focusMap, autoBtn }
   },
   watch: {
     currentSlide: function (val) {
@@ -96,6 +118,7 @@ export default {
 .label-wrap  {
   background-color: #2c3e50;
   opacity: 0.9;
+  min-width: 20rem;
   border-radius: 8px;
   display: flex;
   font-size: 20pt;
@@ -113,7 +136,28 @@ h5 {
   text-shadow: 2px 2px #000;
 }
  
+.btnBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
 
+.btnBar button {
+   padding: 4px;
+}
+
+.led  {
+  height: 10px;
+  display: inline-block;
+  background-color: red;
+  width: 10px;
+  border-radius: 50%;
+}
+
+.led.on {
+  background-color: rgba(6, 245, 6, 1);
+
+}
 
 img.dir-img {
   margin-left: auto;
@@ -165,6 +209,7 @@ h1.noslide {
   border-radius: 8px;
   padding: 0px 30px;
   height: 40vh; /* You must set a specified height */
+  
   min-height: 20rem;
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
@@ -177,6 +222,10 @@ h1.noslide {
 
 .td {
   float: right;
+}
+
+.td.dir {
+  text-transform: capitalize;
 }
 
 .shade {

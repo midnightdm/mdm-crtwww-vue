@@ -62,6 +62,7 @@ export default class LiveScanModel {
       if(course >= 316 && course <= 330) return [165, 165];
       if(course >= 331 && course <= 345) return [220, 165];
       if(course >= 346)                  return [275, 165];
+      else                               return [  0,   0];
     };
 
     self.mapper = function(o, dat, isNew, state) {
@@ -71,7 +72,6 @@ export default class LiveScanModel {
       o.id = dat.liveVesselID
       o.name = dat.liveName
       o.liveLocation = dat.liveLocation
-      o.mapLabel = state.lab[++state.liveScanModel.labelIndex]
       o.dir = dat.liveDirection
       o.dirImg = o.setDirImg()
       o.speed = dat.liveSpeed
@@ -88,6 +88,7 @@ export default class LiveScanModel {
         size: {width: 55, height: 55 }
       }
       if(isNew) {
+        o.mapLabel = state.lab[++state.liveScanModel.labelIndex]
         o.liveLastScanTS = new Date(dat.liveLastTS*1000)
         let marker = {
           position: o.position,
@@ -95,7 +96,7 @@ export default class LiveScanModel {
           label: o.mapLabel, 
           icon: icon,
         }
-        o.marker = marker
+        o.marker = marker   
       } else {
         let coords = self.getShipSpriteCoords(o.course)
         o.marker.position = {lat: o.lat, lng: o.lng} 

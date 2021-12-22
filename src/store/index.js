@@ -527,6 +527,7 @@ function formatTime(ts) {
 }
 
 function predictMovement(state) {
+  console.log('predictMovement()')
   var speed, distance, bearing, point, coords;
   //Loop through live vessels
   state.liveScans.forEach( (o) => {
@@ -551,7 +552,8 @@ function predictMovement(state) {
       o.lng = point[1];
       o.marker.position = { lat: point[0], lng: point[1] };
       coords = getShipSpriteCoords(bearing);
-      o.marker.icon.origin = {x: coords[0], y: coords[1] };     
+      o.marker.icon.origin = {x: coords[0], y: coords[1] }; 
+      console.log(o.name+' '+o.lat+' '+o.lng)    
     } 
   });  
 }
@@ -586,7 +588,8 @@ const moduleA = {
       polylines: [],
       mileMarkersList: [],
       mileMarkerLabels: [],
-      infoOn: true, 
+      liveAutoOn: 7000, 
+      liveListOn: false,
       liveScanModel: null,
       liveScans: [ { liveName: "loading" }
       ], 
@@ -858,6 +861,7 @@ const moduleA = {
 
     initLiveScan({ commit }, payload) {
       commit('initLiveScan', payload)
+      setInterval(predictMovement(state), 1000)
     },
 
     //Run by initMap()
@@ -868,6 +872,14 @@ const moduleA = {
     initMap({ dispatch, commit }) {   
       commit('initMap')
       dispatch('addMileMarkers')
+    },
+
+    toggleLiveAuto({ commit }) {
+      commit('toggleLiveAuto')
+    },
+
+    toggleLiveList({ commit }) {
+      commit('toggleLiveList')
     },
       
     focusMap({ commit }, payload) {
@@ -1086,25 +1098,43 @@ const moduleA = {
     async initLiveScan( state, payload) {
       state.liveScanModel = new LiveScanModel(payload)
       if(state.liveScans[0].liveName == "loading") {
-        const liveScanSnapshot = await getDocs(collection(db, "LiveScan"))
         state.liveScans = []
-        var key, o, marker, coords, course
-        liveScanSnapshot.forEach( (doc) => {
-          let dat = doc.data()
-          key = getKeyOfId(state.liveScans, dat.liveVesselID)
-          //Create & Push
-          if(key==-1) {
-            state.liveScans.push(state.liveScanModel.mapper(new LiveScan(state), dat, true, state))
-          }
-          //Find & Update
-          else {
-            state.liveScans[key] = state.liveScanModel.mapper(state.liveScans[key], dat, false, state)
-          }    
+        const q = query(collection(db, 'LiveScan'), where('liveVesselID', '!=', false));
+        const liveScanSnapshot = onSnapshot(q, (querySnapshot)=> {
+          var key, o, marker, coords, course
+          querySnapshot.forEach( (doc) => {
+            let dat = doc.data()
+            key = getKeyOfId(state.liveScans, dat.liveVesselID)
+            //Create & Push
+            if(key==-1) {
+              state.liveScans.push(state.liveScanModel.mapper(new LiveScan(state), dat, true, state))
+            }
+            //Find & Update
+            else {
+              state.liveScans[key] = state.liveScanModel.mapper(state.liveScans[key], dat, false, state)
+            }    
+          })
         })
-        setInterval(predictMovement(state), 1000)
+        
         console.log("map center:", state.map )     
       }
     },
+
+    toggleLiveAuto(state) {
+      if(state.liveAutoOn === false) {
+        state.liveAutoOn = 7000
+      } else if(state.liveAutoOn === 7000) {
+        state.liveAutoOn = false
+      }
+    },
+
+    toggleLiveList(state) {
+      if(state.liveListOn === false) {
+        state.liveListOn = true
+      } else if(state.liveListOn === true) {
+        state.liveListOn = false
+      }
+    }
 
   },
 
