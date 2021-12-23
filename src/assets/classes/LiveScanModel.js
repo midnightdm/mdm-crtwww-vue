@@ -104,7 +104,7 @@ export default class LiveScanModel {
         if(o.speed>0) { //If transponder reported movement...
           if((o.lng != o.prevLng) || (o.lat != o.prevLat)) { //...did its location change?           
             //Yes means the transponder report is current. Update time value.
-            now = Date.now()          
+            let now = Date.now()          
             o.lastMovementTS.setTime(now)
             o.isMoving = true
             //Reported speed with no position change means stale data. Don't update time value.

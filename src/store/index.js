@@ -578,7 +578,7 @@ const moduleA = {
       isTest: true,
       lab: "ABCDEFGHIJKLMNOPQRSTUVWXYZ*#@&~1234567890abcdefghijklmnopqrstuvwxyz",
       red: "#ff0000",
-      isZoomed: false,
+      //isZoomed: false,
       map: {
         zoom: 12, 
         center: {lat: 41.857202, lng:-90.184084}, 
@@ -588,8 +588,11 @@ const moduleA = {
       polylines: [],
       mileMarkersList: [],
       mileMarkerLabels: [],
-      liveAutoOn: 7000, 
+      liveAutoOn: true, 
+      liveAutoDelay: 7,
+      liveAutoLast: 500,
       liveListOn: false,
+      liveMapHeight: 50,
       liveScanModel: null,
       liveScans: [ { liveName: "loading" }
       ], 
@@ -874,28 +877,16 @@ const moduleA = {
       dispatch('addMileMarkers')
     },
 
-    toggleLiveAuto({ commit }) {
-      commit('toggleLiveAuto')
+    toggleLiveAuto({ commit }, payload) {
+      commit('toggleLiveAuto', payload)
     },
 
-    toggleLiveList({ commit }) {
-      commit('toggleLiveList')
+    toggleLiveList({ commit }, payload) {
+      commit('toggleLiveList', payload)
     },
       
     focusMap({ commit }, payload) {
       commit('focusMap', payload)
-    },
-
-    toggleZoom({dispatch, state}) {
-      if(state.isZoomed) {
-        state.map.center = state.liveScanModel.clinton
-        state.map.zoom = 12
-        state.isZoomed = false
-      } else {
-        state.map.center = state.focusPosition
-        state.map.zoom = 15
-        state.isZoomed = true
-      }
     },
 
     deleteOldScans({ commit, state }) {
@@ -1120,20 +1111,17 @@ const moduleA = {
       }
     },
 
-    toggleLiveAuto(state) {
-      if(state.liveAutoOn === false) {
-        state.liveAutoOn = 7000
-      } else if(state.liveAutoOn === 7000) {
-        state.liveAutoOn = false
-      }
+    toggleLiveAuto(state, val) {
+      state.liveAutoOn = val.on  
+      state.liveAutoLast = state.liveAutoDelay
+      state.liveAutoDelay = val.delay
     },
 
-    toggleLiveList(state) {
-      if(state.liveListOn === false) {
-        state.liveListOn = true
-      } else if(state.liveListOn === true) {
-        state.liveListOn = false
-      }
+    toggleLiveList(state, val) {
+      state.liveListOn    = val.on
+      state.liveMapHeight = val.vh
+      state.map.zoom      = val.zoom
+      state.map.center    = val.center
     }
 
   },

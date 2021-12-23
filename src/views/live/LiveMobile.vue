@@ -1,11 +1,11 @@
 <template>
   <Map class="map"></Map>
-  <section>
+  <section v-show="!store.state.a.liveListOn">
   <carousel v-if="store.state.a.liveScans.length" 
    v-model="currentSlide" 
    :items-to-show="1" 
    :wrap-around="true"
-   :autoplay="store.state.a.liveAutoOn"
+   :autoplay="parseInt(store.state.a.liveAutoDelay)*1000"
    >
     <slide class="slide" v-for="live in store.state.a.liveScans" :key="live.id">
       <div class="slideData" :style="'background-image: url('+live.imageUrl+');'">
@@ -33,9 +33,25 @@
   </carousel>
   <h1 class="noslide" v-else>No vessel transponders are in range currently.</h1>
   </section>
+  <section v-show="store.state.a.liveListOn">
+    <ul>
+      <li v-for="live in store.state.a.liveScans" :key="live.id">
+        <div class="list-wrap">
+          <h4 class="map-label">{{live.mapLabel}}</h4>
+          <h4 class="tile-title">{{live.name}}</h4> 
+          <img class="dir-img" :src="live.dirImg"/>              
+        </div>
+
+        <h5>{{live.liveLocation}}</h5>
+      </li>
+    </ul>
+  </section>
   <div class="btnBar">
-    <button @click="toggleAuto">Auto <span class='led' :class="{'on': autoOn}"></span></button>
-    <button @click="toggleList">List <span class='led' :class="{'on': listOn}"></span></button>
+    <button @click="toggleAuto">Auto <span class='led' :class="{'on': store.state.a.liveAutoOn}"></span></button>
+    Set Delay 
+    <input @change="updateDelay" type="range" name="inputDelay" ref="inputDelay" value="7" min="2" max="60">
+    {{delayDisplay}} Seconds
+    <button @click="toggleList">List <span class='led' :class="{'on':  store.state.a.liveListOn }"></span></button>
 
   </div>
 </template>
@@ -58,45 +74,86 @@ export default {
   data() {
     return {
       currentSlide: 0,
-      autoOn: true,
-      listOn: false
+      delayDisplay: 7     
     }
   },
   methods: {
-    toggleAuto() {
-      this.autoOn = !this.autoOn
-      this.$store.commit('toggleLiveAuto')
-    },
-    toggleLiveView() {
-      this.listOn = !this.listOn
-      this.$store.commit('toggleLiveList')
+    updateDelay(e) {
+      this.delayDisplay = e.target.value
+      this.$store.commit('toggleLiveAuto', {
+        on: true,
+        delay: this.delayDisplay 
+      })
     }
   },
   setup() {
     const store = useStore()
-    const autoBtn = ref(null)
-    
+    const inputDelay = ref(null)
+        
     function focusMap(key) {
       store.dispatch('focusMap', key)
     }
 
-    function toggleZoom() {
-      store.dispatch('toggleZoom')
+    function toggleAuto() {
+      if(store.state.a.liveAutoOn === true) {
+        store.commit('toggleLiveAuto', {
+          on: false,
+          delay: 500,
+          last: store.state.a.liveAutoDelay
+        })
+      }
+      else if(store.state.a.liveAutoOn === false) {
+        store.commit('toggleLiveAuto', {
+          on: true,
+          delay: store.state.a.liveAutoLast
+        })
+      }
     }
+
+    function toggleList() {
+      if(store.state.a.liveListOn === false) {
+        store.commit('toggleLiveList', {
+          on: true, 
+          vh:70, 
+          zoom: 12, 
+          center: store.state.a.liveScanModel.clinton
+        })
+        store.commit('toggleLiveAuto', {
+          on: false,
+          delay: 500,
+          last: store.state.a.liveAutoDelay
+        })  
+      }
+      else if(store.state.a.liveListOn === true) {
+        store.commit('toggleLiveList', {
+          on: false, 
+          vh:50, 
+          zoom: 15, 
+          center: store.state.a.focusPosition
+        })
+        store.commit('toggleLiveAuto', {
+          on: true,
+          delay: store.state.a.liveAutoLast,
+          last: store.state.a.liveAutoDelay
+        })       
+      }
+    }
+
 
     onMounted(async () => {
       store.commit("initLiveScan", store)
       store.commit('setPageSelected', 'Live')
-      console.log("liveScans:", store.liveScans)
+      console.log("inputDelay", inputDelay.value)
       if(store.liveScans != undefined && store.state.liveScans.length) {
         store.commit('setSlate', store.state.a.liveScans.length+' LIVE')
         store.commit('focusMap', 0)
       }
       else {
         store.commit('setSlate', 'LIVE')
-      }      
+      }
+      //let reference = document.getElementById("inputDelay")      
     })
-    return { store, toggleZoom, focusMap, autoBtn }
+    return { store, focusMap, toggleList, inputDelay, toggleAuto }
   },
   watch: {
     currentSlide: function (val) {
@@ -130,8 +187,10 @@ export default {
 }
 
 h5 {
-  padding: .2rem;
-  background: rgb(231, 246, 30, 0.4);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.829);
+  padding: .3rem;
+  background: rgb(168, 179, 14);
   text-align: center;
   text-shadow: 2px 2px #000;
 }
@@ -140,6 +199,8 @@ h5 {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  margin: .5rem;
+  font-weight: bold;
 }
 
 .btnBar button {
@@ -248,4 +309,44 @@ section {
   margin-left: 1rem;
   width: 95%;
 }
+
+.list-wrap  {
+  background-color: #2c3e50;
+  opacity: 1;
+  max-height: 3rem;
+  min-width: 20rem;
+  border-radius: 8px;
+  display: flex;
+  font-size: 20pt;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  padding: 0 0.5rem;
+  margin: 0px;
+}
+
+.list-wrap h5 {
+  opacity: 1;
+  padding: .2rem;
+  background: rgba(232, 246, 30, 0.979);
+  text-align: center;
+  text-shadow: 2px 2px #000;
+}
+
+.list-wrap .map-label {
+    background: aquamarine;
+    color: black;
+    padding: 5px 15px;
+    border-radius: 60%;
+    font-size: 15px;
+    border: 2px solid black;  
+}
+
+.list-wrap .tile-title {
+  color: white;
+  margin-left:auto;
+  margin-right: auto;
+}
+
+
 </style>

@@ -2,7 +2,7 @@
  
   <GoogleMap
    :api-key="apiKey"
-   style="width: 100vw; max-width: 1100px; height: 50vh;"
+   :style="'width: 100vw; max-width: 1100px; height:'+ store.state.a.liveMapHeight+'vh;'"
    :center="store.state.a.map.center"
    :zoom="store.state.a.map.zoom"
    :mapTypeId="store.state.a.map.mapTypeId"
@@ -34,7 +34,7 @@ export default {
   setup() {
     const apiKey = process.env.VUE_APP_MAP_KEY
     const store = useStore()
-
+  
     function initMap() {
       store.dispatch("initMap")
     }
@@ -46,7 +46,7 @@ export default {
     function predictMovement() {
       var speed, distance, bearing, point, coords;
       //Loop through live vessels
-      store.state.a.liveScans.forEach( (o) => {
+      store.state.a.liveScans.forEach( (o, key, map) => {
       //Skip if vessel not moving or bogus position data
       if( o.isMoving && (o.lat > 1) && (-o.lng > 1)) {
       //Remove 'kts' from speed & change to int 
@@ -69,6 +69,8 @@ export default {
       o.marker.position = { lat: point[0], lng: point[1] };
       coords = getShipSpriteCoords(bearing);
       o.marker.icon.origin = {x: coords[0], y: coords[1] }; 
+      //Reintegrate updated object into original array
+      map[key] = o;
       console.log(o.name+' '+o.lat+' '+o.lng)    
     } 
 
