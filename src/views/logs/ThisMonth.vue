@@ -96,7 +96,7 @@ export default {
 
 <style>
 main {
-  width: 80%;
+  
   margin: 20px auto 20px auto;
 }
 

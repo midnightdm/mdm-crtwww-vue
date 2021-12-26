@@ -2,7 +2,7 @@
  
   <GoogleMap
    :api-key="apiKey"
-   :style="'width: 100vw; max-width: 1100px; height:'+ store.state.a.liveMapHeight+'vh;'"
+   :style="'width: '+store.state.a.liveMapWidth+'vw; height:'+ store.state.a.liveMapHeight+'vh;'"
    :center="store.state.a.map.center"
    :zoom="store.state.a.map.zoom"
    :mapTypeId="store.state.a.map.mapTypeId"

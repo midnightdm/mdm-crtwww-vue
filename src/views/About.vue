@@ -1,8 +1,8 @@
 <template>
   <main>
-      <div class="parent" id="content-container">
+    <div class="parent" id="content-container">
       <div class="div1">
-      <h2>Welcome River Fans!</h2>
+        <h2>Welcome River Fans!</h2>
         <p>This website is for river fans and barge tow spotters of the Clinton, Iowa area. It works by collecting MMSI transponder data sent via a radio device on equipped vessels using a radio receiver and a computer. The information is then parsed and saved to a database for display on these pages. Presently each vessel's location is plotted on a <a href="https://maps.google.com">Google Map</a> while other information is shown along side. Anyone who likes to watch vessels can use the site to figure when one will soon be close to them.</p>
         <h2>Fully Implemented</h2>
         <p>All features envisioned for this site are now complete including boat-shaped map icons that rotate with vessel heading updates and text descriptions of vessel locations on the data tiles.We've also solved a software crashing problem that had limited refreshes to once per minute. Now they happen 3 times per minute which is the same frequency as vessels actually send out their data updates.</p>
@@ -14,23 +14,21 @@
        </div>
 
         <div class="div2">
-        <h1>WHAT DO YOU WANT TO SEE?</h1>
-         <em>Let us know what site features you like and what we could have that is missing.</em>
-
-        <h5>admin@clintonrivertraffic.com</h5>
-        
+          <h1>WHAT DO YOU WANT TO SEE?</h1>
+          <em>Let us know what site features you like and what we could have that is missing.</em>
+          <h5 class="about">admin@clintonrivertraffic.com</h5>
         </div> 
         
         
         <div class="div3"><h1>RELATED LINKS</h1>
-                <ul>
-                    <li><a href="http://www.cityofclintoniowa.us/departments/parks_grounds_and_facilities/riverview_park.php">Clinton Riverview Park</a></li>
-                    <li><a href="https://everythingriverfront.com/">Clinton Shopping</a></li>
-                    <li><a href="https://www.navcen.uscg.gov/?pageName=lnmDistrict&region=8&ext=r">Coast Guard Notices</a></li>
-                    <li><a href="https://www.mvr.usace.army.mil/Missions/Navigation/Lock-Status/">Lock Status</a></li>
-                </ul>
+          <ul>
+            <li><a href="http://www.cityofclintoniowa.us/departments/parks_grounds_and_facilities/riverview_park.php">Clinton Riverview Park</a></li>
+            <li><a href="https://everythingriverfront.com/">Clinton Shopping</a></li>
+            <li><a href="https://www.navcen.uscg.gov/?pageName=lnmDistrict&region=8&ext=r">Coast Guard Notices</a></li>
+            <li><a href="https://www.mvr.usace.army.mil/Missions/Navigation/Lock-Status/">Lock Status</a></li>
+          </ul>
         </div>
-        </div>
+    </div>
   </main>
 </template>
 
@@ -45,9 +43,8 @@ export default {
 
 <style>
 
-#content-container {
-  
-  transform: translateY(60px);
+#content-container {   
+  margin: 76px .3rem 13rem .3rem;
 }
 
 h1 {  
@@ -56,60 +53,85 @@ h1 {
   line-height: 1;
 }
 
-.parent {
-  transform: translateY(10px);
-  display: grid;
-  grid-template-columns: 75% 25%;
-  grid-template-rows: repeat(3, 1fr);
-  grid-column-gap: 3px;
-  grid-row-gap: 0px;
+h5.about {
+  margin: 20px 5px 5px 5px;
+}
   
-  }
+.div1 { 
+  border-radius: 8px;
+  background-color: rgb(104, 10, 10); 
+  padding: 1rem;
+  font-size: 16px;
+}
+
+
+.div1 h2, 
+.div1 h4, 
+.div1 li {
+  color:darkseagreen;
+}
+.div1 p {
   
-  .div1 { grid-area: 1 / 1 / 4 / 2;
-    background-color: rgb(104, 10, 10); 
-    padding: 1rem;
-    font-size: 16px;
-  }
+  color:rgb(160, 250, 16);
+}
 
 
-  .div1 h2, .div1 h4, .div1 li {
-    color:darkseagreen;
-  }
-  .div1 p {
-    color:rgb(160, 250, 16);
-  }
-
-
-  .div2 { 
-    grid-area: 1 / 2 / 2 / 3;
-    padding: 20px;
-    text-justify: center;
-    font-size: 18px;
-    
-    background-color: rgb(56, 165, 42);
-  }
+.div2 { 
+  border-radius: 8px;
+  padding: 20px;
+  margin-right: .3rem;
+  text-justify: center;
+  font-size: 18px;
+  background-color: rgb(56, 165, 42);
+}
 
 .div2 h1 {
   font-style: italic;
 }
+
+.div3 { 
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: .3rem;
+  margin-right: .3rem;
+  background-color: rgb(75, 42, 165); 
+  font-size: 18px;
+  
+}
+
+.div3 h1 {
+  font-style: italic;
+}
+
+.div3 ul {
+  background-color: darkseagreen;
+  margin: 20px 5px 5px 5px;
+  padding: 0px;
+}
+
+
+@media (min-width: 931px) {
+  .parent {
+    transform: translateY(10px);
+    display: grid;
+    grid-template-columns: 75% 25%;
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 3px;
+    grid-row-gap: 0px;
+  }
+  .div1 { 
+    grid-area: 1 / 1 / 4 / 2;
+  }
+  .div2 { 
+    grid-area: 1 / 2 / 2 / 3;
+  }
   .div3 { 
     grid-area: 2 / 2 / 3 / 3;
-    padding: 20px;
-    background-color: rgb(75, 42, 165); 
-    font-size: 18px;
-    
   }
-
-  .div3 h1 {
-    font-style: italic;
+  .div4 { 
+    border-radius: 8px;
+    grid-area: 3 / 2 / 4 / 3;
   }
-
-  .div3 ul {
-    background-color: darkseagreen;
-    padding: 5px;
-  }
-  .div4 { grid-area: 3 / 2 / 4 / 3; }
-  
+}
 
 </style>

@@ -1,56 +1,55 @@
 <template>
+  <main id="Manage" class="text-center">
+    <section>
+      <h1>MANAGE NOTIFICATIONS</h1>
+      <p>On this browser push notifications are <w-tag class="mr4" bg-color="yellow" color="primary" round>
+  {{statusTxt}}</w-tag></p>
+      <p class="btnWrapper"><button v-if="isSubscribed" @click="unsubscribeUser()" class="pushtoglbtn" v-bind:disabled='pbIsDisabled'>{{pbLabel}}</button>
+      <button  v-else @click="subscribeUser()"  class="pushtoglbtn" v-bind:disabled='pbIsDisabled'>{{pbLabel}}</button>&nbsp; 
+      </p>
+  
+    <div class="boxa">
+      <h3>Subscribed Events</h3>
+      <ol id="actualOL">
+        <li v-for="item in mm.subListActual" :key="item.key">
+          <span class="listItem">{{item.title}}</span><span class="listBtns"><button v-bind="{id: 'remBtn'+item.key}" @click="removeActualEvent(item.key)">Delete</button>&nbsp;
+          <button v-bind="{id: 'revBtn'+item.key}" @click="reviewActualEvent(item.key)">Review</button>
+          </span>
+        </li>
+      </ol>
+      <br>
+      <w-tag v-if="!mm.subListActual.length" id="actualNone" class="mr4" bg-color="primary" color="yellow" round >None</w-tag>
+      
+    </div>
+    <div class="boxb">
+      <h3>Available Events</h3>  
+      <select name="sub-list-avail" @change="getSelection" id="sub-list-avail" class="form-select" size="5" >
+        <option v-for='event in mm.subListAvail' v-bind:key='event.key' :value='event.key'>{{event.title}}</option>
+      </select> <br>   
+      <br> 
+      <!-- Button to Subscribe instantly -->
+      <w-button class="btnGrpA" v-if="selectionFound" @click="removeActualEvent(mm.subListSelection.key)">Remove Event</w-button>
+      <w-button v-else @click="subscribeToEvent()">Subscribe to Event</w-button>&nbsp;
+      <!-- Button to trigger modal -->
+      <w-button
+        class="px4 btnGrpA"
+        @click="getSelection; dialog1.show = true"
+        bg-color="primary"
+        dark>
+        View Details
+      </w-button> 
+      &nbsp;
+      <!-- Button to Subscribe to default waypoints -->
+      <w-button class="btnGrpA" @click="subscribeToDefaultWaypoints">Add Default Waypoints</w-button>
+      <br/>
+    </div>
 
-  <main class="text-center">
-    <h1>MANAGE NOTIFICATIONS</h1>
-    <p>On this browser push notifications are <w-tag class="mr4" bg-color="yellow" color="primary" round>
-{{statusTxt}}</w-tag></p>
-    <p><button v-if="isSubscribed" @click="unsubscribeUser()" class="pushtoglbtn" v-bind:disabled='pbIsDisabled'>{{pbLabel}}</button>
-    <button  v-else @click="subscribeUser()"  class="pushtoglbtn" v-bind:disabled='pbIsDisabled'>{{pbLabel}}</button>&nbsp; 
-    </p>
+    <div class="boxb boxc">Consider where along the river you like to watch riverboats. Choose one marker a few miles above your spot for downriver notices. Pick another below your spot for upriver notices. "Passenger" events will trigger less often than the "Any" vessel events which occur many times daily.
   
-  <div class="boxa">
-    <h3>Subscribed Events</h3>
-    <ol id="actualOL">
-      <li v-for="item in mm.subListActual" :key="item.key">
-        <span class="listItem">{{item.title}}</span><span class="listBtns"><button v-bind="{id: 'remBtn'+item.key}" @click="removeActualEvent(item.key)">Delete</button>&nbsp;
-        <button v-bind="{id: 'revBtn'+item.key}" @click="reviewActualEvent(item.key)">Review</button>
-        </span>
-      </li>
-    </ol>
-    <br>
-    <w-tag v-if="!mm.subListActual.length" id="actualNone" class="mr4" bg-color="primary" color="yellow" round >None</w-tag>
-    
-  </div>
-  <div class="boxb">
-    <h3>Available Events</h3>  
-    <select name="sub-list-avail" @change="getSelection" id="sub-list-avail" class="form-select" size="5" >
-      <option v-for='event in mm.subListAvail' v-bind:key='event.key' :value='event.key'>{{event.title}}</option>
-    </select> <br>   
-    <br> 
-    <!-- Button to Subscribe instantly -->
-     <w-button v-if="selectionFound" @click="removeActualEvent(mm.subListSelection.key)">Remove Event</w-button>
-     <w-button v-else @click="subscribeToEvent()">Subscribe to Event</w-button>&nbsp;
-    <!-- Button to trigger modal -->
-    <w-button
-      class="px4"
-      @click="getSelection; dialog1.show = true"
-      bg-color="primary"
-      dark>
-      View Details
-    </w-button> 
-    &nbsp;
-    <!-- Button to Subscribe to default waypoints -->
-     <w-button @click="subscribeToDefaultWaypoints">Add Default Waypoints</w-button>
-    <br/>
-  </div>
-  <div class="boxb boxc">
-  Consider where along the river you like to watch riverboats. Choose one marker a few miles above your spot for downriver notices. Pick another below your spot for upriver notices. "Passenger" events will trigger less often than the "Any" vessel events which occur many times daily.
-  
-  </div>
-    <div class="boxb boxc">
-Please note that "Any" means any vessel OTHER than passenger and does not include passenger vessels also. You will get passenger vessel notices only when subscribed to passenger events. 
-  
-  </div>
+    </div>
+    <div class="boxb boxc">Please note that "Any" means any vessel OTHER than passenger and does not include passenger vessels also. You will get passenger vessel notices only when subscribed to passenger events. 
+    </div>
+  </section>
 </main>
 <!-- Modal for available list selection -->
 <w-dialog  id="availModal" 
@@ -417,10 +416,11 @@ export default {
 </script>
 
 <style>
-main {
-  position: relative;
-  top: 70px;
+
+#Manage section {
+  padding-top: 130px;
 }
+
 
 li {
   margin: 2px 2px 2px 5%;
@@ -433,7 +433,12 @@ li {
 
 .listBtns {
   display: block;
-  text-align: right;  
+  text-align: right; 
+}
+
+.btnGrpA {
+  padding: .5rem;
+  margin: .5rem;
 }
 
 .boxa {
@@ -456,6 +461,16 @@ li {
 
 .boxb.boxc {
   text-align: justify;
+}
+
+
+@media (max-width: 750px) {
+  #Manage section {
+    padding-top: 80px;
+  }
+  .boxa, .boxb {
+    width: 26rem;
+  }
 }
 </style>
 

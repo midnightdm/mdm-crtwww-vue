@@ -1,8 +1,9 @@
 <template>
   
-  <main>
-   
-     <ul>
+  <main id="AlertsAll">
+    <section>
+      <h1 class="mobile">All Vessels</h1>
+      <ul>
 <transition-group enter-active-class="animate__animated animate__slideInRight">
       <li class="card" v-if="this.$store.state.a.alertsAll[19].apubID >-1" :key="this.$store.state.a.alertsAll[19].apubID" @click="routeWP(19)">
         <h4><router-link :to="{name: 'Waypoint', route: '/alerts/waypoint', params: { apubID: this.$store.state.a.alertsAll[19].apubID}}">{{this.$store.state.a.alertsAll[19].apubVesselName}}</router-link>&nbsp;&nbsp; <timeago autoUpdate :datetime="this.$store.state.a.alertsAll[19].date"/></h4>
@@ -125,7 +126,8 @@
         <p>{{ this.$store.state.a.alertsAll[0].apubText}}</p>
       </li>
 </transition-group>
-  </ul>  
+      </ul>  
+    </section>
   </main>
 </template>
 
@@ -160,6 +162,26 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans:400');
 
 
+#AlertsAll section {
+  padding-top: 80px;
+}
+
+#mobile {
+  visibility: hidden;
+}
+
+@media (max-width: 750px) {
+  #AlertsAll section {
+    padding-top: 70px;
+  }
+  #mobile {
+    padding-bottom: 0;
+    visibility: visible;
+  }
+  li:first-child.card {
+    margin-top: 0;
+  }
+}
 
 li.card {
     list-style: none;

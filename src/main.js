@@ -2,7 +2,6 @@ import devtools from '@vue/devtools'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import App from './App.vue'
-import CrtLogo from '@/components/CrtLogo.vue'
 import AlertsSubMenu from '@/components/AlertsSubMenu.vue'
 import GallerySubMenu from '@/components/GallerySubMenu.vue'
 import LogsSubMenu from '@/components/LogsSubMenu.vue'
@@ -23,7 +22,6 @@ library.add(faBars);
 
 //register components
 const registerComponents = (app) => { 
-  app.component('CrtLogo', CrtLogo);
   app.component('Hero', Hero);
   app.component('Navigation', Navigation);
   app.component('AlertsSubMenu', AlertsSubMenu);

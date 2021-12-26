@@ -32,7 +32,5 @@ export default {
 </script>
 
 <style>
-h1 {
-  transform: translateY(60px);
-}
+
 </style>

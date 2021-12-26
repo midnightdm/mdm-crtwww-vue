@@ -1,58 +1,62 @@
 <template>
-  <Map class="map"></Map>
-  <section v-show="!store.state.a.liveListOn">
-  <carousel v-if="store.state.a.liveScans.length" 
-   v-model="currentSlide" 
-   :items-to-show="1" 
-   :wrap-around="true"
-   :autoplay="parseInt(store.state.a.liveAutoDelay)*1000"
-   >
-    <slide class="slide" v-for="live in store.state.a.liveScans" :key="live.id">
-      <div class="slideData" :style="'background-image: url('+live.imageUrl+');'">
-        <div class="label-wrap">
-          <h4 class="map-label">{{live.mapLabel}}</h4>
-          <h4 class="tile-title">{{live.name}}</h4> 
-          <img class="dir-img" :src="live.dirImg"/>              
-        </div>
+  <div id="page-container">
+    <div id="content-wrap">
+      <Map class="map"></Map>
+      <section v-show="!store.state.a.liveListOn">
+        <carousel v-if="store.state.a.liveScans.length" 
+        v-model="currentSlide" 
+        :items-to-show="1" 
+        :wrap-around="true"
+        :autoplay="parseInt(store.state.a.liveAutoDelay)*1000"
+        >
+          <slide class="slide" v-for="live in store.state.a.liveScans" :key="live.id">
+            <div class="slideData" :style="'background-image: url('+live.imageUrl+');'">
+              <div class="label-wrap">
+                <h4 class="map-label">{{live.mapLabel}}</h4>
+                <h4 class="tile-title">{{live.name}}</h4> 
+                <img class="dir-img" :src="live.dirImg"/>              
+              </div>
 
-        <h5>{{live.liveLocation}}</h5>
-        
+              <h5>{{live.liveLocation}}</h5>
+              
+              <ul>
+                <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
+                <li class="dataPoint"><span class="th">SPEED:</span> <span class="td">{{live.speed}} Knots</span></li>
+                <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
+              </ul>
+              
+            </div>
+          </slide>
+
+          <template #addons>
+            <navigation />
+            <pagination />
+          </template>
+        </carousel>
+        <h1 class="noslide" v-else>No vessel transponders are in range currently.</h1>
+      </section>
+      <section class="listMode" v-show="store.state.a.liveListOn">
         <ul>
-          <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
-          <li class="dataPoint"><span class="th">SPEED:</span> <span class="td">{{live.speed}} Knots</span></li>
-          <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
+          <li v-for="live in store.state.a.liveScans" :key="live.id">
+            <div class="list-wrap">
+              <h4 class="map-label">{{live.mapLabel}}</h4>
+              <h4 class="tile-title">{{live.name}}</h4> 
+              <img class="dir-img" :src="live.dirImg"/>              
+            </div>
+            <h5>{{live.liveLocation}}</h5>
+          </li>
         </ul>
-        
+      </section>
+    </div>
+    <section id="footer">
+      <div class="btnBar">
+        <button @click="toggleAuto">Auto <span class='led' :class="{'on': store.state.a.liveAutoOn}"></span></button>
+        Set Delay 
+        <input @change="updateDelay" type="range" name="inputDelay" ref="inputDelay" value="7" min="2" max="60">
+        {{delayDisplay}} Seconds
+        <button @click="toggleList">List <span class='led' :class="{'on':  store.state.a.liveListOn }"></span></button>
       </div>
-    </slide>
-
-    <template #addons>
-      <navigation />
-      <pagination />
-    </template>
-  </carousel>
-  <h1 class="noslide" v-else>No vessel transponders are in range currently.</h1>
-  </section>
-  <section v-show="store.state.a.liveListOn">
-    <ul>
-      <li v-for="live in store.state.a.liveScans" :key="live.id">
-        <div class="list-wrap">
-          <h4 class="map-label">{{live.mapLabel}}</h4>
-          <h4 class="tile-title">{{live.name}}</h4> 
-          <img class="dir-img" :src="live.dirImg"/>              
-        </div>
-
-        <h5>{{live.liveLocation}}</h5>
-      </li>
-    </ul>
-  </section>
-  <div class="btnBar">
-    <button @click="toggleAuto">Auto <span class='led' :class="{'on': store.state.a.liveAutoOn}"></span></button>
-    Set Delay 
-    <input @change="updateDelay" type="range" name="inputDelay" ref="inputDelay" value="7" min="2" max="60">
-    {{delayDisplay}} Seconds
-    <button @click="toggleList">List <span class='led' :class="{'on':  store.state.a.liveListOn }"></span></button>
-
+    </section>
   </div>
 </template>
 
@@ -62,6 +66,7 @@ import { onMounted, watch, ref } from 'vue'
 import { useStore } from 'vuex'
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
+import { useRouter } from 'vue-router'
 
 export default {
   components: {
@@ -89,7 +94,16 @@ export default {
   setup() {
     const store = useStore()
     const inputDelay = ref(null)
-        
+    const router = useRouter()
+    
+    
+    function checkScreen() {
+      let windowWidth = window.innerWidth
+      if(windowWidth >= 751) {
+        router.push('/live/wide')
+      }
+    }
+    
     function focusMap(key) {
       store.dispatch('focusMap', key)
     }
@@ -114,7 +128,8 @@ export default {
       if(store.state.a.liveListOn === false) {
         store.commit('toggleLiveList', {
           on: true, 
-          vh:70, 
+          vh: 66,
+          vw: 100, 
           zoom: 12, 
           center: store.state.a.liveScanModel.clinton
         })
@@ -127,7 +142,8 @@ export default {
       else if(store.state.a.liveListOn === true) {
         store.commit('toggleLiveList', {
           on: false, 
-          vh:50, 
+          vh:50,
+          vw: 100, 
           zoom: 15, 
           center: store.state.a.focusPosition
         })
@@ -141,9 +157,17 @@ export default {
 
 
     onMounted(async () => {
+      window.addEventListener('resize', checkScreen)
+      checkScreen()
       store.commit("initLiveScan", store)
       store.commit('setPageSelected', 'Live')
-      console.log("inputDelay", inputDelay.value)
+      store.commit('toggleLiveList', {
+        on: false, 
+        vh: 50, 
+        vw: 100,
+        zoom: 12, 
+        center: store.state.a.liveScanModel.clinton
+      })
       if(store.liveScans != undefined && store.state.liveScans.length) {
         store.commit('setSlate', store.state.a.liveScans.length+' LIVE')
         store.commit('focusMap', 0)
@@ -153,7 +177,7 @@ export default {
       }
       //let reference = document.getElementById("inputDelay")      
     })
-    return { store, focusMap, toggleList, inputDelay, toggleAuto }
+    return { store, focusMap, toggleList, inputDelay, checkScreen, toggleAuto }
   },
   watch: {
     currentSlide: function (val) {
@@ -169,7 +193,8 @@ export default {
 <style>
 .map {
   border-radius: 8px;
-  padding: 10rem 2rem 0 2rem;
+  /*
+  padding: 10rem 2rem 0 2rem; */
 }
 
 .label-wrap  {
@@ -194,8 +219,28 @@ h5 {
   text-align: center;
   text-shadow: 2px 2px #000;
 }
- 
+
+
+/* Next 3 ensure footer on bottom of page */
+#page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content-wrap {
+  padding-bottom: 2.5rem;    /* Footer height */
+}
+
+#footer {
+  position: absolute;
+  bottom: 5px;
+  height: 2.5rem;
+}
+/*  End of Footer controls  */
+
+
 .btnBar {
+  bottom: 5px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -206,6 +251,19 @@ h5 {
 .btnBar button {
    padding: 4px;
 }
+
+.listMode {
+  height: 16rem;
+  overflow-y: scroll;
+}
+
+
+.listMode ul {
+  padding: 0px 5px;
+  max-width: 30rem;
+}
+
+
 
 .led  {
   height: 10px;
@@ -321,9 +379,10 @@ section {
   flex-direction: row;
   justify-content: left;
   align-items: center;
-  padding: 0 0.5rem;
+  padding: 0 0.5;
   margin: 0px;
 }
+
 
 .list-wrap h5 {
   opacity: 1;

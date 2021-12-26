@@ -593,6 +593,7 @@ const moduleA = {
       liveAutoLast: 500,
       liveListOn: false,
       liveMapHeight: 50,
+      liveMapWidth: 100,
       liveScanModel: null,
       liveScans: [ { liveName: "loading" }
       ], 
@@ -1120,6 +1121,7 @@ const moduleA = {
     toggleLiveList(state, val) {
       state.liveListOn    = val.on
       state.liveMapHeight = val.vh
+      state.liveMapWidth  = val.vw
       state.map.zoom      = val.zoom
       state.map.center    = val.center
     }

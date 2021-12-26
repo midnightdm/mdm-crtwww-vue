@@ -32,6 +32,7 @@ import Image from '../views/gallery/Image.vue'
 import Video from '../views/gallery/Video.vue'
 
 import LiveMobile from '../views/live/LiveMobile.vue'
+import LiveWide from '../views/live/LiveWide.vue'
 
 import Msg404 from '../views/Msg404.vue'
 
@@ -94,6 +95,15 @@ const routes = [
     path: '/live/mobile',
     name: 'LiveMobile',
     component: LiveMobile
+  },
+  {
+    path: '/live/wide',
+    name: 'LiveWide',
+    component: LiveWide
+  },
+  {
+    path: '/live',
+    redirect: '/live/mobile'
   },
   {
     path: '/logs',

@@ -14,7 +14,7 @@
         <li><a @click="goRoute('/about')" class="nav-link" :href="'/about'" :class="{selected: this.$store.state.a.pageSelected=='About'}">ABOUT</a></li>
         <li><a id="alerts-link" @click="goRoute('/alerts')" :href="'/alerts'" class="nav-link" :class="{ 'selected': alertsLinkActive }" exact>ALERTS</a></li>
         <li><a @click="goRoute('/gallery')" :href="'/gallery'" class="nav-link" :class="{'selected': galleryLinkActive}" >GALLERY</a></li>
-        <li><a @click="goRoute('/live/mobile')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='LiveMobile'}" :href="'/live/mobile'" >LIVE</a></li>
+        <li><a @click="goRoute('/live/mobile')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='LiveMobile'}" :href="'/live'" >LIVE</a></li>
         <li><a @click="goRoute('/logs')" :href="'/logs'" class="nav-link" :class="{ 'selected': logsLinkActive}">LOGS</a></li>
       </ul>
 
@@ -111,12 +111,18 @@ export default {
 
 <style>
 
+.topDiv {
+  background: white;
+  z-index: 98;
+}
+
 header {
   position: fixed;
   z-index: 97;
   width: 100%;
   transition: 0.5x ease all;
   color: #fff;
+  background-color: white;
 }
 
 nav {
@@ -152,7 +158,7 @@ nav {
 
 .logo h1 {     
   position: fixed;
-  top: -40px;
+  top: 21px;
   left: 50px;
   color: #000;
   font-size: 3rem;
@@ -184,7 +190,7 @@ li a, li router-link {
   padding: .5rem 1rem 1rem 1rem;
 }
 
-.nav-link {
+.nav-link, .nav-link:visited {
     font-weight: 500;
     list-style: none;
     color: #fff;
@@ -220,6 +226,10 @@ li a, li router-link {
 .navigation2 {
   flex-direction: column;
   margin-left: 2rem;
+}
+
+ul.navigation2 {
+  background-color: white; 
 }
 
 .icon {
@@ -294,14 +304,22 @@ li a, li router-link {
 #title_slate {
   font-family: 'Rubik', sans-serif;
   font-size: 2em;
+  padding: .3rem;
+  margin: .3rem 1rem;
   color: black;
   position: absolute;
   right: 0px;
-  top: -50px;
+  top: -30px;
   background-color: #FFFF00;
   border: 0px solid #000000;
   text-align: center;
   z-index: 4;
+}
+
+@media (max-width: 750px) {
+  #title_slate {
+    top: 5px;
+  }
 }
 
 main #local {

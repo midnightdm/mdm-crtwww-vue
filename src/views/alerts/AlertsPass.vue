@@ -1,8 +1,9 @@
 <template>
   
-  <main>
-   
-     <ul>
+  <main id="AlertsPass">
+    <section>
+      <h1 id="mobile">Passenger Vessels</h1>
+      <ul>
 <transition-group enter-active-class="animate__animated animate__slideInRight">
       <li class="card" v-if="this.$store.state.a.alertsPassenger[19].apubID >-1" :key="this.$store.state.a.alertsPassenger[19].apubID" @click.prevent="routeWP(19)">
         <h4><router-link :to="{name: 'Waypoint', route: '/alerts/waypoint', params: { apubID: this.$store.state.a.alertsPassenger[19].apubID}}">{{this.$store.state.a.alertsPassenger[19].apubVesselName}}</router-link> <timeago autoUpdate :datetime="this.$store.state.a.alertsPassenger[19].date"/></h4>
@@ -125,7 +126,8 @@
         <p>{{ this.$store.state.a.alertsPassenger[0].apubText}}</p>
       </li>
 </transition-group>
-  </ul>  
+      </ul>  
+    </section>
   </main>
 </template>
 
@@ -160,7 +162,26 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans:400');
 
+#AlertsPass section {
+  padding-top: 80px;
+}
 
+#mobile {
+  visibility: hidden;
+}
+
+@media (max-width: 750px) {
+  #AlertsPass section {
+    padding-top: 70px;
+  }
+  #mobile {
+    padding-bottom: 0;
+    visibility: visible;
+  }
+  li:first-child.card {
+    margin-top: 0;
+  }
+}
 
 li.card {
     list-style: none;
@@ -170,9 +191,10 @@ li.card {
     margin: 5px;
     border-radius: 30px;
     border: 5px solid red;
-    margin: 25px;
-    
+    margin: 25px;   
 }
+
+
 
 li.card h4 {
    

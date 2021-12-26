@@ -1,6 +1,9 @@
 <template>
-  <main>
-  <h1>Watch List</h1>
+  <main id="AlertsWatch">
+    <section>
+      <h1>Watch List</h1>
+    </section>
+  
   </main>
 </template>
 
@@ -19,7 +22,17 @@ export default {
 </script>
 
 <style>
-h1{
-  transform: translateY(60px);
+#AlertsWatch section {
+  padding-top: 130px;
+}
+
+@media (max-width: 750px) {
+  #AlertsWatch section {
+    padding-top: 80px;
+  }
+}
+
+section {
+  margin: 1rem;
 }
 </style>
