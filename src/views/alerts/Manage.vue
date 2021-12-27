@@ -63,7 +63,7 @@
     {{ mm.subListSelection.title }} 
   </template>
 <div class="modal-body">
-  <img id="vm-image" class="river-map" :src="imagePath + mm.subListSelection.image" height="600" alt="Map image of river showing boat icon at edge of target area"/><br>
+  <img id="vm-image" class="river-map" :src="imagePath +'/'+ mm.subListSelection.image" height="600" alt="Map image of river showing boat icon at edge of target area"/><br>
   <div class="description" id="vm-description">{{ mm.subListSelection.description }}</div>
 </div>
   <template #actions>
@@ -86,7 +86,7 @@
     {{ mm.actListSelection.title }} 
   </template>
 <div class="modal-body">
-  <img id="vm-image" class="river-map" :src="imagePath + mm.actListSelection.image" height="600" alt="Map image of river showing boat icon at edge of target area"/><br>
+  <img id="vm-image" class="river-map" :src="imagePath + '/'+mm.actListSelection.image" height="600" alt="Map image of river showing boat icon at edge of target area"/><br>
   <div class="description" id="vm-description">{{ mm.actListSelection.description }}</div>
 </div>
   <template #actions>
@@ -421,6 +421,9 @@ export default {
   padding-top: 130px;
 }
 
+img.river-map {
+  overflow: scroll;
+}
 
 li {
   margin: 2px 2px 2px 5%;
