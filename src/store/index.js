@@ -592,7 +592,7 @@ const moduleA = {
       liveAutoDelay: 7,
       liveAutoLast: 500,
       liveListOn: false,
-      liveMapHeight: 50,
+      liveMapHeight: 30,
       liveMapWidth: 100,
       liveScanModel: null,
       liveScans: [ { liveName: "loading" }

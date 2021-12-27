@@ -1,8 +1,8 @@
 <template>
   <div id="page-container">
-    <div id="content-wrap">
+    <div id="mobile-content-wrap" class="mobile">
       <Map class="map"></Map>
-      <section v-show="!store.state.a.liveListOn">
+      <section class="middle" v-show="!store.state.a.liveListOn">
         <carousel v-if="store.state.a.liveScans.length" 
         v-model="currentSlide" 
         :items-to-show="1" 
@@ -18,13 +18,14 @@
               </div>
 
               <h5>{{live.liveLocation}}</h5>
+              <button class="pill" @click="router.push('/logs/history/'+ live.id )" >History</button>
               
               <ul>
                 <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
                 <li class="dataPoint"><span class="th">SPEED:</span> <span class="td">{{live.speed}} Knots</span></li>
                 <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
               </ul>
-              
+             
             </div>
           </slide>
 
@@ -37,8 +38,8 @@
       </section>
       <section class="listMode" v-show="store.state.a.liveListOn">
         <ul>
-          <li v-for="live in store.state.a.liveScans" :key="live.id">
-            <div class="list-wrap">
+          <li v-for="(live, idx) in store.state.a.liveScans" :key="live.id">
+            <div @click="focusMap(idx)" class="list-wrap">
               <h4 class="map-label">{{live.mapLabel}}</h4>
               <h4 class="tile-title">{{live.name}}</h4> 
               <img class="dir-img" :src="live.dirImg"/>              
@@ -96,7 +97,6 @@ export default {
     const inputDelay = ref(null)
     const router = useRouter()
     
-    
     function checkScreen() {
       let windowWidth = window.innerWidth
       if(windowWidth >= 751) {
@@ -128,7 +128,7 @@ export default {
       if(store.state.a.liveListOn === false) {
         store.commit('toggleLiveList', {
           on: true, 
-          vh: 66,
+          vh: 30,
           vw: 100, 
           zoom: 12, 
           center: store.state.a.liveScanModel.clinton
@@ -142,7 +142,7 @@ export default {
       else if(store.state.a.liveListOn === true) {
         store.commit('toggleLiveList', {
           on: false, 
-          vh:50,
+          vh: 30,
           vw: 100, 
           zoom: 15, 
           center: store.state.a.focusPosition
@@ -161,14 +161,17 @@ export default {
       checkScreen()
       store.commit("initLiveScan", store)
       store.commit('setPageSelected', 'Live')
-      store.commit('toggleLiveList', {
-        on: false, 
-        vh: 50, 
-        vw: 100,
-        zoom: 12, 
-        center: store.state.a.liveScanModel.clinton
-      })
-      if(store.liveScans != undefined && store.state.liveScans.length) {
+      setTimeout(() =>{
+        store.commit('toggleLiveList', {
+            on: false, 
+            vh: 30, 
+            vw: 100,
+            zoom: 15, 
+            center: store.state.a.liveScans[0].position
+          })
+      }, 1500)
+      
+      if(store.liveScans != undefined && store.state.liveScans.length>0) {
         store.commit('setSlate', store.state.a.liveScans.length+' LIVE')
         store.commit('focusMap', 0)
       }
@@ -177,7 +180,7 @@ export default {
       }
       //let reference = document.getElementById("inputDelay")      
     })
-    return { store, focusMap, toggleList, inputDelay, checkScreen, toggleAuto }
+    return { store, focusMap, toggleList, inputDelay, checkScreen, toggleAuto, router }
   },
   watch: {
     currentSlide: function (val) {
@@ -192,12 +195,12 @@ export default {
 
 <style>
 .map {
-  border-radius: 8px;
-  /*
-  padding: 10rem 2rem 0 2rem; */
+  position: relative;
+  top: -45px;
+  padding: 0px .4rem 0 .4rem; 
 }
 
-.label-wrap  {
+.mobile .label-wrap  {
   background-color: #2c3e50;
   opacity: 0.9;
   min-width: 20rem;
@@ -207,8 +210,7 @@ export default {
   flex-direction: row;
   justify-content: left;
   align-items: center;
-  padding: 0px .5rem;
-  margin: 0px;
+  padding: 0px 0.5rem;
 }
 
 h5 {
@@ -225,19 +227,20 @@ h5 {
 #page-container {
   position: relative;
   min-height: 100vh;
+  max-height: 100vh;
 }
 
-#content-wrap {
-  padding-bottom: 2.5rem;    /* Footer height */
+#mobile-content-wrap {
+  padding-bottom: 4.5rem;    /* Footer height */
 }
 
 #footer {
   position: absolute;
   bottom: 5px;
-  height: 2.5rem;
+  height: 4.5rem;
+  margin-bottom: 3rem;
 }
 /*  End of Footer controls  */
-
 
 .btnBar {
   bottom: 5px;
@@ -257,13 +260,10 @@ h5 {
   overflow-y: scroll;
 }
 
-
 .listMode ul {
   padding: 0px 5px;
   max-width: 30rem;
 }
-
-
 
 .led  {
   height: 10px;
@@ -275,7 +275,6 @@ h5 {
 
 .led.on {
   background-color: rgba(6, 245, 6, 1);
-
 }
 
 img.dir-img {
@@ -292,15 +291,16 @@ img.dir-img {
 img.vesselImg {
   width: 30vw;
   height: auto;
+  max-height: 10vh;
 }
 
-.slide {
-  align-content: center;
+.middle {
+  transform: translateY(-60px);
+  max-height: 30vh;
 }
 
-.slide ul {
-  position: relative;
-  bottom: -15%;
+.mobile .slide ul {  
+  bottom: -5%;
   background: rgba(0, 0, 0, 0.4);
 }
 
@@ -322,17 +322,21 @@ h1.noslide {
     border: 2px solid black;  
 }
 
-.slideData {
+.middle .slideData {
   color:  var(--vc-clr-white);
+  text-align:center;
   font-size: 20px;
   border-radius: 8px;
-  padding: 0px 30px;
-  height: 40vh; /* You must set a specified height */
-  
+  padding: 10px 30px;
+  /* height: 30vh; /* You must set a specified height */
   min-height: 20rem;
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
-  background-size: cover; /* Resize the background image to cover the entire container */
+  background-size: auto 50vh; /* Resize the background image to cover the entire container */
+}
+
+.slide {
+  align-content: center;
 }
 
 .th {
@@ -352,8 +356,14 @@ h1.noslide {
   background-color: black;
 }
 
-.carousel__slide {
-  padding: 0px 30x;
+.carousel__slide { 
+  position: relative;
+  margin: 0px;
+  padding: 5px 2px;
+}
+
+.carousel__track {
+  height: 40vh;
 }
 
 .carousel__prev,
@@ -368,7 +378,7 @@ section {
   width: 95%;
 }
 
-.list-wrap  {
+#mobile-content-wrap > .list-wrap  {
   background-color: #2c3e50;
   opacity: 1;
   max-height: 3rem;
@@ -379,13 +389,17 @@ section {
   flex-direction: row;
   justify-content: left;
   align-items: center;
-  padding: 0 0.5;
-  margin: 0px;
+  padding: 10px 0.5rem;
+  margin: 30px;
 }
 
+.mobile .pill {
+  text-align: center;
+}
 
-.list-wrap h5 {
+.mobile .list-wrap h5 {
   opacity: 1;
+  margin-top: 20px;
   padding: .2rem;
   background: rgba(232, 246, 30, 0.979);
   text-align: center;
@@ -407,5 +421,8 @@ section {
   margin-right: auto;
 }
 
+.listMode .list-wrap {
+ cursor: pointer;
+}
 
 </style>

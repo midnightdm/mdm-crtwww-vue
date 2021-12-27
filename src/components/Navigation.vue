@@ -167,6 +167,23 @@ nav {
   z-index: 100;
 }
 
+@media (max-width: 750px) {
+  nav {
+    top: 3rem;
+  }
+  #logo-img {
+    top: 1px;
+    width: 130px;
+    height: 62px;
+  }
+  .logo h1 {
+    font-size: 2.2rem;
+    left: 30px;
+    top: 10px;
+    
+  }
+}
+
 .logo h1 span {
   color: blue;
   -webkit-background-clip: text;  
@@ -237,7 +254,7 @@ ul.navigation2 {
   position: absolute;
   align-items: center;
   top: -9px;
-  left: 15rem;
+  left: 10rem;
   height: 100%;   
 }
 
