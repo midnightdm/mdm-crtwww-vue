@@ -12,40 +12,53 @@
 
       <ul v-show="!mobile" class="navigation">
         <li><a @click="goRoute('/about')" class="nav-link" :href="'/about'" :class="{selected: this.$store.state.a.pageSelected=='About'}">ABOUT</a></li>
-        <li><a id="alerts-link" @click="goRoute('/alerts')" :href="'/alerts'" class="nav-link" :class="{ 'selected': alertsLinkActive }" exact>ALERTS</a></li>
-        <li><a @click="goRoute('/gallery')" :href="'/gallery'" class="nav-link" :class="{'selected': galleryLinkActive}" >GALLERY</a></li>
+        <li><a  @click="goRoute('/alerts')" :href="'/alerts'" class="nav-link" :class="{ 'selected': this.$store.state.a.alertsLinkActive  }" exact>ALERTS</a></li>
+        <li><a @click="goRoute('/gallery')" :href="'/gallery'" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" >GALLERY</a></li>
         <li><a @click="goRoute('/live/mobile')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='LiveMobile'}" :href="'/live'" >LIVE</a></li>
-        <li><a @click="goRoute('/logs')" :href="'/logs'" class="nav-link" :class="{ 'selected': logsLinkActive}">LOGS</a></li>
+        <li><a @click="goRoute('/logs')" :href="'/logs'" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive }">LOGS</a></li>
       </ul>
 
-      <AlertsSubMenu v-show="alertsLinkActive && !mobile"></AlertsSubMenu>
-      <GallerySubMenu v-show="galleryLinkActive && !mobile"></GallerySubMenu>
-      <LogsSubMenu v-show="logsLinkActive && !mobile"></LogsSubMenu>
+      <AlertsSubMenu v-show="this.$store.state.a.alertsLinkActive && !mobile"></AlertsSubMenu>
+      <GallerySubMenu v-show="this.$store.state.a.galleryLinkActive && !mobile"></GallerySubMenu>
+      <LogsSubMenu v-show="this.$store.state.a.logsLinkActive && !mobile"></LogsSubMenu>
       
       <div id="title_slate">{{ slate }}</div>
       
       <transition name="mobile-navi">
         <div v-show="mobileNav" class="mobile-side-menu">  
           <ul class="dropdown-nav">
-            <li><a @click="goRoute('/about')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='About'}" :href="'/about'" >ABOUT</a></li>
             <li>
-              <a id="alerts-link" @click="goRoute('/alerts')" :href="'/alerts'" class="nav-link" :class="{ 'selected': alertsLinkActive }" exact>ALERTS</a>
-              <AlertsSubMenu v-show="alertsLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></AlertsSubMenu>
+              <router-link class="nav-link" :to="{name: 'About'}" :class="{selected: this.$store.state.a.pageSelected=='About'}">ABOUT</router-link>
             </li>
             <li>
-              <a @click="goRoute('/gallery')" :href="'/gallery'" class="nav-link" :class="{'selected': galleryLinkActive}" >GALLERY</a>
-              <GallerySubMenu v-show="galleryLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></GallerySubMenu>
-            </li>
-            <li><a @click="goRoute('/live/mobile')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='LiveMobile'}" :href="'/live/mobile'" >LIVE</a>
+              <span @click="makeActive('setAlertsLinkActive')" class="nav-link" :class="{ 'selected': this.$store.state.a.alertsLinkActive }" exact>ALERTS</span>
+              <transition name="alerts-submenu">
+                
+                  <AlertsSubMenu v-show="this.$store.state.a.alertsLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></AlertsSubMenu>
+                
+              </transition>
             </li>
             <li>
-              <a @click="goRoute('/logs')" :href="'/logs'" class="nav-link" :class="{ 'selected': logsLinkActive}">LOGS</a>
-              <LogsSubMenu v-show="logsLinkActive  && mobileNav" :class="{'navigation2': mobileNav}"></LogsSubMenu>
+              <span @click="makeActive('setGalleryLinkActive')" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" >GALLERY</span>
+              <transition name="gallery-submenu">
+                 
+                  <GallerySubMenu v-show="this.$store.state.a.galleryLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></GallerySubMenu>
+                
+              </transition>
+            </li>
+            <li><router-link class="nav-link" :to="{name: 'LiveMobile'}" :class="{selected: this.$store.state.a.pageSelected=='Live'}">LIVE</router-link>
+            </li>
+            <li>
+              <span @click="makeActive('setLogsLinkActive')" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive}">LOGS</span>
+              <transition name="logs-submenu">
+                
+                  <LogsSubMenu v-show="this.$store.state.a.logsLinkActive  && mobileNav" :class="{'navigation2': mobileNav}"></LogsSubMenu>
+                
+              </transition>
             </li>
           </ul> 
         </div>
       </transition>
-
     </nav>
   </header>    
 </template>
@@ -64,26 +77,17 @@ export default {
             urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
             logo: process.env.VUE_APP_IMG_URL+'/images/logo-towboat2.png',
             crushpixel: process.env.VUE_APP_IMG_URL+'/images/crushpixel-1625816-ID1625816-640x427.jpg',
-            router: useRouter()
+            router: useRouter(),
+            galleryTipOn: false,
+            alertsTipOn: false,
+            logsTipOn: false
+
         }
     },
-    
     computed: {
-        slate () {
-          return this.$store.state.a.slate
-        },
-        alertsLinkActive() {
-          return this.$store.state.a.alertsLinkActive
-        },
-        logsLinkActive() {
-          return this.$store.state.a.logsLinkActive
-        },
-        galleryLinkActive() {
-          return this.$store.state.a.galleryLinkActive
-        },
-        pageSelected() {
-          return this.$store.state.a.pageSelected
-        } 
+      slate() {
+        return this.$store.state.a.slate
+      }
     },
     methods: {
         toggleMobileNav() {
@@ -100,6 +104,31 @@ export default {
         },   
         goRoute(path) {
             this.router.push(path)
+        },
+        makeActive(page) {
+          this.$store.commit(page, true)
+          //console.log("active page",this.$store.state.a.pageSelected)
+        },
+        checkTips() {
+          if(this.$store.state.a.alertsLinkActive &&
+          this.$store.state.a.pageSelected === null) {
+            this.alertsTipOn = true
+          } else {
+            this.alertsTipOn = false
+          }
+          if(this.$store.state.a.galleryLinkActive &&
+          this.$store.state.a.pageSelected === null) {
+            this.galleryTipOn = true
+          } else {
+            this.galleryTipOn = false
+          }
+          if(this.$store.state.a.logsLinkActive &&
+          this.$store.state.a.pageSelected === null) {
+            this.logsTipOn = true
+          } else {
+            this.logsTipOn = false
+          }
+          console.log('tips:alert/gallery/logs',this.alertsTipOn, this.galleryTipOn, this.logsTipOn)
         }
     },
     created() {
@@ -123,23 +152,26 @@ header {
   transition: 0.5x ease all;
   color: #fff;
   background-color: white;
+  height: 6rem;
 }
 
 nav {
   position: relative;
-  top: 5rem;
+  top: 4.5rem;
   background-color: #31363e;
   padding: 12px 0;
   transition: 0.5 ease all;
   width: 100%;
-  height: 4rem;
-  margin: 0 auto;
+  height: 3rem;
+  margin: 0 auto; 
+  /*
   @media(min-width: 1140px) {
       max-width: 1140px;
   }
+  */
 }
 
-.logo {  
+div.logo {  
   position: fixed;
   top: 0px;
   height: 100px;
@@ -165,24 +197,9 @@ nav {
   font-family: 'Merriweather Sans', sans-serif;
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.50);
   z-index: 100;
+  
 }
 
-@media (max-width: 750px) {
-  nav {
-    top: 3rem;
-  }
-  #logo-img {
-    top: 1px;
-    width: 130px;
-    height: 62px;
-  }
-  .logo h1 {
-    font-size: 2.2rem;
-    left: 30px;
-    top: 10px;
-    
-  }
-}
 
 .logo h1 span {
   color: blue;
@@ -203,8 +220,13 @@ li {
   
 }
 
+.navigation li {
+  text-align: center; 
+  line-height: 1.3; 
+}
+
 li a, li router-link {
-  padding: .5rem 1rem 1rem 1rem;
+  padding: .5rem .5rem .5rem .5rem;
 }
 
 .nav-link, .nav-link:visited {
@@ -212,6 +234,7 @@ li a, li router-link {
     list-style: none;
     color: #fff;
     text-decoration: none;
+    border-radius: 8px;
 }
 
 .navigation .nav-link {
@@ -220,10 +243,17 @@ li a, li router-link {
     text-transform: uppercase;
 }
 
-.navigation a.selected,
-.navigation router-link.selected {
-  background: white;
-  color: red;
+.dropdown-nav .nav-link,
+.navigation2 a.nav-link {
+  background-color: #fff;
+  color: #000;
+  font-size: 2rem;
+  margin: .5rem;
+  padding: .5rem;
+}
+
+.navigation2 li {
+  text-align: left;
 }
 
 .navigation .nav-link:hover,
@@ -237,7 +267,7 @@ li a, li router-link {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  transition: 0.5x ease all;
+  transition: 0.5x ease all; 
 }
 
 .navigation2 {
@@ -253,14 +283,14 @@ ul.navigation2 {
   display: flex;
   position: absolute;
   align-items: center;
-  top: -9px;
+  top: 0px;
   left: 10rem;
   height: 100%;   
 }
 
 .icon .fa-bars {
   cursor: pointer;
-  font-size: 3rem;
+  font-size: 2.5rem;
   z-index: 100;
   transition: 0.8s ease all; 
         
@@ -268,15 +298,16 @@ ul.navigation2 {
 
 .icon-active {
   color: #31363e;
+  transform: translate(20px, 15px);
 }
 
 .mobile-side-menu {
-  top: 0;
+  top: 0px;
   left: -10px;
   height: 100vh;
-  width: 60vw;
+  width: 80vw;
   background-color: #fff;
-  z-index: 100;
+  z-index: 99;
   border-right: red solid .5rem
 }
 
@@ -289,24 +320,31 @@ ul.navigation2 {
 }
 
 
-.dropdown-nav .nav-link {
-  background-color: #fff;
-  color: #000;
-  font-size: 2rem;
-  margin: .5rem;
-  padding: .5rem;
+.navigation a.selected,
+.navigation router-link.selected {
+  background: white;
+  color: red;
 }
 
+.dropdown-nav li span.nav-link.selected, 
 .dropdown-nav li a.nav-link.selected, 
 .dropdown-nav li router-link.nav-link.selected {
   background-color: #FFFF00;
   color: red;
 }
 
-
+.alerts-submenu-enter-active,
+.logs-submenu-enter-active,
+.gallery-submenu-enter-active,
 .mobile-navi-enter-active,
 .mobile-navi-leave-active {
-    transition: 1s ease all;
+    transition: 0.5s ease all;
+}
+
+.alerts-submenu-leave-active,
+.logs-submenu-leave-active,
+.gallery-submenu-leave-active {
+  transition: none;
 }
 
 .mobile-navi-enter-from,
@@ -318,28 +356,58 @@ ul.navigation2 {
     transform: translateX(0px);
 }
 
+.alerts-submenu-enter-from,
+.alerts-submenu-leave-to,
+.logs-submenu-enter-from,
+.logs-submenu-leave-to,
+.gallery-submenu-enter-from,
+.gallery-submenu-leave-to {
+    opacity: 0;
+}
+
+alerts-submenu-enter-to,
+logs-submenu-enter-to,
+.gallery-submenu-enter-to {
+  opacity: 1;
+}
+
 #title_slate {
   font-family: 'Rubik', sans-serif;
-  font-size: 2em;
+  font-size: 1.3em;
   padding: .3rem;
   margin: .3rem 1rem;
   color: black;
   position: absolute;
-  right: 0px;
-  top: -30px;
+  right: 2rem;  
+  top: -30px; 
   background-color: #FFFF00;
   border: 0px solid #000000;
   text-align: center;
   z-index: 4;
 }
 
-@media (max-width: 750px) {
-  #title_slate {
-    top: 5px;
-  }
-}
-
 main #local {
   top: 15rem;
 }
+
+@media (max-width: 750px) {
+  nav {
+    top: 3rem;
+  }
+  #logo-img {
+    top: 1px;
+    width: 130px;
+    height: 62px;
+  }
+  .logo h1 {
+    font-size: 2.2rem;
+    left: 30px;
+    top: 10px;
+    
+  }
+  #title_slate {
+    top: .2rem;
+  }
+}
+
 </style>

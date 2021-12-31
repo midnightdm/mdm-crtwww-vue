@@ -37,6 +37,10 @@ export default {
   mounted() {
     this.$store.commit('setSlate', 'ABOUT')
     this.$store.commit('setPageSelected', 'About')
+  },
+  unmounted() {
+    this.$store.commit('setSlate', 'LOADING')
+    this.$store.commit('setPageSelected', null)
   }
 }
 </script>

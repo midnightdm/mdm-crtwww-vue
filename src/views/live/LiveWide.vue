@@ -36,7 +36,7 @@
 
 <script>
 import Map from '@/components/Map.vue'
-import { onMounted, watch, ref } from 'vue'
+import { onMounted, onUnmounted, watch, ref } from 'vue'
 import { useStore } from 'vuex'
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
@@ -98,7 +98,9 @@ export default {
       }
     }
 
-
+    onUnmounted(() => {
+      store.commit('setLogsLinkActive', false)
+    })
 
 
     onMounted(async () => {
@@ -182,8 +184,7 @@ ul.cardWrapper {
   min-height: 100vh;
 }
 
-#content-wrap {
-  
+#content-wrap { 
   padding-bottom: 2.5rem;    /* Footer height */
 }
 
@@ -276,6 +277,7 @@ img.dir-img {
   margin-left: auto;
   margin-right: auto;
   height: 25px;
+  filter: drop-shadow(2px 2px 4px #4444dd);
 }
 
 .tile-title {
@@ -328,7 +330,7 @@ h1.noslide {
   min-height: 20rem;
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
-  background-size: cover; /* Resize the background image to cover the entire container */
+  background-size: auto 15rem; /* Resize the background image to cover the entire container */
 }
 
 .th {

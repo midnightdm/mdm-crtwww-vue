@@ -923,12 +923,27 @@ const moduleA = {
       state.slate = val
     },
     setAlertsLinkActive(state, val) {
+      //Clean the slate
+      state.alertsLinkActive = false
+      state.logsLinkActive = false
+      state.galleryLinkActive = false
+      //Then set new value
       state.alertsLinkActive = val
     },
     setLogsLinkActive(state, val) {
+      //Clean the slate
+      state.alertsLinkActive = false
+      state.logsLinkActive = false
+      state.galleryLinkActive = false
+      //Then set new value
       state.logsLinkActive = val
     },
     setGalleryLinkActive(state, val) {
+      //Clean the slate
+      state.alertsLinkActive = false
+      state.logsLinkActive = false
+      state.galleryLinkActive = false
+      //Then set new value
       state.galleryLinkActive = val
     },
     setIsHero(state, val) {
@@ -1285,6 +1300,11 @@ const moduleB = {
     getVesselsPassengerOnly: (state) => {
       return state.vesselsList.filter( (item) => {
         return item.vesselType.includes("assenger")
+      })
+    },
+    getVesselsWatchOnOnly: (state) => {
+      return state.vesselsList.filter( (item) => {
+        return item.vesselWatchOn == true
       })
     },
     getVesselsSortAdded: (state) => {

@@ -60,7 +60,7 @@ export default {
   grid-template-columns: 20rem 3fr;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 750px) {
   #Video section {
     padding-top: 70px;
     display: block;

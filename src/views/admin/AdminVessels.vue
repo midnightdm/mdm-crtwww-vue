@@ -9,7 +9,7 @@
 <router-view v-if="!isShowing"></router-view>  
 <button v-if="!isShowing" v-on:click="showList()" class="example_b">Return To List</button> 
     <div class="container" v-if="isShowing">
-      <ul class="nav2 sort">
+      <ul class="navigation sort">
         <li class="nav-link"><a href="#" @click="changePageView('default')"
         v-bind:class="{ 'router-link-exact-active': pageView=='default'}">All</a></li>
         <li class="nav-link"><a href="#" @click="changePageView('passenger')"
@@ -285,7 +285,7 @@ main.local {
 }
 
 .sort {
-    transform: translateY(-100px);
+    transform: translateY(-50spx);
 }
 
 #topbtn {
@@ -300,5 +300,49 @@ main.local {
     bottom: 30px;
     right: 15px;
 
+}
+
+.navigation .nav-link {
+    font-size: 1.2em;
+    padding-bottom: 4px;
+    text-transform: uppercase;
+}
+
+a, a:visited,
+.nav-link, .nav-link:visited {
+    font-weight: 500;
+    list-style: none;
+    color: #fff;
+    text-decoration: none;
+}
+
+.navigation a.selected,
+.navigation router-link.selected {
+  background: white;
+  color: red;
+}
+
+a, a:visited,
+.navigation .nav-link:hover,
+.dropdown-nav .nav-link:hover {
+  color: #00afea;
+  border-color: #00afea;
+}
+
+.navigation {
+  background-color: #31363e;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  transition: 0.5x ease all;
+}
+
+.navigation2 {
+  flex-direction: column;
+  margin-left: 2rem;
+}
+
+ul.navigation2 {
+  background-color: white; 
 }
 </style>

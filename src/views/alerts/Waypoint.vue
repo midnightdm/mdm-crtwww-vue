@@ -9,7 +9,7 @@
             <img id="vesselImg" :src="vesselImg" title="Image of the vessel {{vesselName}}">
         </div>
         <div id="shadow3" v-if="supImg">
-            <img id="supImg" :src="supimg" :title="supalt">
+            <img id="supImg" :src="supImg" :title="supalt">
         </div>
         <div id="shadow4">
             <h1 id="overlay1">{{text}}</h1>            
@@ -49,19 +49,22 @@ export default {
             pubDate: "",
             vesselImg: "",
             bgMap: "",
-            supimg: "",
+            supImg: "",
             supalt: "",
             mapOn: false,
             base: process.env.VUE_APP_IMG_URL,
-            bgImg: { backgroundImage: "url("+ process.env.VUE_APP_IMG_URL+"images/bg-pattern-blue.png)"}            
+            bgImg: { backgroundImage: "url("+ process.env.VUE_APP_IMG_URL+"/images/bg-pattern-blue.png)"}            
         }
     },
     props: [ 'apubID'],
     mounted() {
-        document.body.style.backgroundImage = process.env.VUE_APP_IMG_URL+'images/bg-pattern-blue.png'
-        this.getData()
-        this.$store.commit('setSlate', 'WAYPOINT')
-        this.$store.commit('setPageSelected', 'Waypoint')
+      document.body.style.backgroundImage = process.env.VUE_APP_IMG_URL+'/images/bg-pattern-blue.png'
+      this.getData()
+      this.$store.commit('setSlate', 'WAYPOINT')
+      this.$store.commit('setPageSelected', 'Waypoint')
+    },
+    unmounted() {
+       this.$store.commit('setPageSelected', null)
     },
     methods: {
         async getData() {
@@ -84,7 +87,7 @@ export default {
             //Fail gracefully if apubID not found
             if(cnt==0) {
                 this.event = "Not Found"
-                this.bgMap = this.base + "images/charlie-up-map.png";
+                this.bgMap = this.base + "/images/charlie-up-map.png";
 
             } else {
                 //Determine background map by event and direction data
@@ -92,37 +95,37 @@ export default {
                 //Strip waypoint basename as event name
                 this.event = this.event.substr(0, this.event.length-2)
                 let str = this.event + "-" + dir + "-map.png"
-                this.bgMap = this.base +"images/"+str
+                this.bgMap = this.base +"/images/"+str
             }
 
             //Determine dam or bridge image by event
             switch(this.event) {
                 case 'alpha': {
-                    this.supimg = this.base+"images/lock13.jpg"; 
+                    this.supImg = this.base+"/images/lock13.jpg"; 
                     this.supalt = "Image of Lock and Dam 13.";
                     this.mapOn  = false;  
                     break;  
                 }
                 case 'bravo':   {
-                    this.supimg = this.base+"images/lock13.jpg"; 
+                    this.supImg = this.base+"/images/lock13.jpg"; 
                     this.supalt = "Image of Lock and Dam 13.";
                     this.mapOn  = false;  
                     break;
                 }			
                 case 'charlie': {
-                    this.supimg = this.base+"images/drawbridge.jpg";
+                    this.supImg = this.base+"/images/drawbridge.jpg";
                     this.supalt = "Image of the railroad drawbridge.";
                     this.mapOn  = false;  
                     break;
                 }
                 case 'delta':  {
-                    this.supimg = this.base+"images/drawbridge.jpg";
+                    this.supImg = this.base+"/images/drawbridge.jpg";
                     this.supalt = "Image of the railroad drawbridge.";
                     this.mapOn  = false;  
                     break;
                 } 
                 case 'detected': {
-                    this.supimg = this.base+"images/compass.png"
+                    this.supImg = this.base+"/images/compass.png"
                     this.supalt = "Decorative drawing of a compass."
                     this.mapOn  = true; 
                     //$data['position']  = stringToMapPosition($row['apubText']);
@@ -130,7 +133,7 @@ export default {
                     break;
                 }
                 case 'Not Found': {
-                    this.supimg = false
+                    this.supImg = false
                     this.supalt = "Decorative drawing of a compass."
                     this.mapOn = false
                     this.vesselImg = process.env.VUE_APP_NOIMG_URL
@@ -171,6 +174,7 @@ export default {
     top: -20px;
     left: -20px;
     z-index: -2;
+    overflow-y: scroll;
 }
 
 #map {
@@ -285,7 +289,7 @@ export default {
         top: 75%;
         left: 10px;
         width: 55%;
-        height: 8rem;
+        height: 10rem;
         transform: translate(15px, 35px);  
     }
     

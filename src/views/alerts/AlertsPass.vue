@@ -145,7 +145,8 @@ export default {
   },
   unmounted() {
     this.$store.commit('setAlertsLinkActive', false)
-  },
+    this.$store.commit('setPageSelected', null)
+  }, 
   methods: {
     routeWP(arrKey) {
       console.log('routeWB('+arrKey+')')
