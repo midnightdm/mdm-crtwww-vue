@@ -115,7 +115,7 @@ export default {
 <style>
   .detail {
     transform: translateY(40px);
-    width: 80%;
+    width: 100%;
     margin: 20px auto;
     padding: 15px 15px 15px 15px;
   }
@@ -152,7 +152,7 @@ export default {
   }
 
   div.table-container {
-    width: 900px;
+    width: 50vw;
     overflow-x: scroll;
   }
 

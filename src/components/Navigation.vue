@@ -107,28 +107,6 @@ export default {
         },
         makeActive(page) {
           this.$store.commit(page, true)
-          //console.log("active page",this.$store.state.a.pageSelected)
-        },
-        checkTips() {
-          if(this.$store.state.a.alertsLinkActive &&
-          this.$store.state.a.pageSelected === null) {
-            this.alertsTipOn = true
-          } else {
-            this.alertsTipOn = false
-          }
-          if(this.$store.state.a.galleryLinkActive &&
-          this.$store.state.a.pageSelected === null) {
-            this.galleryTipOn = true
-          } else {
-            this.galleryTipOn = false
-          }
-          if(this.$store.state.a.logsLinkActive &&
-          this.$store.state.a.pageSelected === null) {
-            this.logsTipOn = true
-          } else {
-            this.logsTipOn = false
-          }
-          console.log('tips:alert/gallery/logs',this.alertsTipOn, this.galleryTipOn, this.logsTipOn)
         }
     },
     created() {

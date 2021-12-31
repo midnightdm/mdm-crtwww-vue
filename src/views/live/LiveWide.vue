@@ -100,6 +100,7 @@ export default {
 
     onUnmounted(() => {
       store.commit('setLogsLinkActive', false)
+      window.removeEventListener('resize', checkScreen);
     })
 
 
