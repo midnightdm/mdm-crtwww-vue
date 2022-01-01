@@ -2,13 +2,21 @@
   <main>
     <div class="parent" id="content-container">
       <div class="div1">
-        <h2>Welcome River Fans!</h2>
-        <p>This website is for river fans and barge tow spotters of the Clinton, Iowa area. It works by collecting MMSI transponder data sent via a radio device on equipped vessels using a radio receiver and a computer. The information is then parsed and saved to a database for display on these pages. Presently each vessel's location is plotted on a <a href="https://maps.google.com">Google Map</a> while other information is shown along side. Anyone who likes to watch vessels can use the site to figure when one will soon be close to them.</p>
-        <h2>Fully Implemented</h2>
-        <p>All features envisioned for this site are now complete including boat-shaped map icons that rotate with vessel heading updates and text descriptions of vessel locations on the data tiles.We've also solved a software crashing problem that had limited refreshes to once per minute. Now they happen 3 times per minute which is the same frequency as vessels actually send out their data updates.</p>
-        <p>If you play around on the Live page you'll find several interactive featues. Pressing the vessel name on its tile expands the tile to show more data. When you then click its position coordinates the map will zoom into that vessel's location. Click the red highlighted coordinates again to return the Clinton centered map. A button below the tiles will toggle on the mile marker tags. Markers show as green lines all the time.</p>
+        <h2>Welcome River Fans</h2>
+        <p>This website is for river boat spotters in Clinton, Iowa. It works by collecting vessel transponder data by radio. The information is parsed, stored and shown on a map.  Anyone who likes to watch river boats can use this site to figure when one will soon be close to them.</p>
+        <h2>CRT 2.0 Is Here</h2>
+        <p>Welcome to Clinton River Traffic version 2.0 a complete overhaul of the site for 2022. This represents months of work to make the site look better on mobile devices and all features more friendly to use.</p>
+        <p>Some of the improvements include</p>
+        <ul class="bullets">
+          <li>Responsive layout</li>
+          <li>Custom menus for mobile</li>
+          <li>Side scrolling log data</li>
+          <li>Alerts update without refresh</li>
+          <li>Improved notifications</li>
+        </ul>
         <p>  
-        Another feature allows users to subscribe to push notifications to receive notices when vessels are nearing Clinton for viewing. There are two groups with different notice frequency.  The Passenger Vessels group will give you five notices for each vessel, but such vessels arrive only a few times per month. The All Vessels group gives only two alerts per vessel, but there are many vessels each day. There is no cost for the service and it requires giving no personal data. Activate it and get more details on the Alerts page. If you accidentally choose the wrong list, delete this site from your web browser's notification settings, then read the correct one.</p>
+  Alert <router-link :to="{name: 'Manage'}">notifications</router-link> are now reviewable and customiseable. There was previously no way to review which type of notification to which you were subscribed. Now you can see and change notification settings. Plus there are more choices available.  Notifications upon crossing bridge and lock waypoints are still the default, but you can now pick vessel crossings of any river mile marker also. </p>
+  <p>Still more enhancements are planned including a Comments page and enabling the gallery to allow user uploads of images and videos.</p>
 
         <h4>-- Site Owners</h4>
        </div>
@@ -113,6 +121,9 @@ h5.about {
   padding: 0px;
 }
 
+ul.bullets {
+  list-style-type: disc;
+}
 
 @media (min-width: 931px) {
   .parent {

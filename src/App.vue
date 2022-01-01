@@ -1,12 +1,8 @@
 <template>
   <w-app>
-    <div class="topDiv" v-if="isHero">
+    <div class="topDiv" v-if="this.$store.state.a.isHero">
       <Hero></Hero>
     </div>
-    <div class="topDiv" v-if="isTest">
-      <Navigation></Navigation>
-      <router-view/>
-    </div>  
     <div class="topDiv" v-else> 
       <Navigation></Navigation>
       <router-view/>
