@@ -248,19 +248,6 @@ div.dataColumn {
    padding: 4px;
 }
 
-.listMode {
-  height: 16rem;
-  overflow-y: scroll;
-}
-
-
-.listMode ul {
-  padding: 0px 5px;
-  max-width: 30rem;
-}
-
-
-
 .led  {
   height: 10px;
   display: inline-block;

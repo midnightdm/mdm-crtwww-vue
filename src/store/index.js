@@ -240,7 +240,10 @@ function updateVesselHistory(dat) {
   var i, k, objKey, dir, dateArr = [];
   for(objKey in dat.vesselPassages) {
     //Sort passages by dated keys before putting into waypoints
-    if(dat.vesselPassages[objKey].passageMarkerCharlieTS==null)
+    if(dat.vesselPassages[objKey].passageMarkerCharlieTS==null ||
+      dat.vesselPassages[objKey].passageMarkerAlphaTS==null ||
+      dat.vesselPassages[objKey].passageMarkerDeltaTS==null ||
+      dat.vesselPassages[objKey].passageMarkerBravoTS==null)
     {
       console.log("Skipping null passage "+objKey);
       continue;

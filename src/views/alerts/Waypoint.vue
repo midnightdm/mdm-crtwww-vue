@@ -174,7 +174,7 @@ export default {
     top: -20px;
     left: -20px;
     z-index: -2;
-    overflow-y: scroll;
+    
 }
 
 #map {
@@ -263,64 +263,51 @@ export default {
 }
 
 /* Phone */
-@media (max-width: 800px) {
-    #map {
-        width: 260px;
-        height: 700px;
-        top: 9rem;
-        left: 0px;
-    }
-    #shadow1 {
-        left:-60%;
-    }
-    #shadow3 {
-        top: 40%;
-        left: 70%;
-        width: 30%;
-        height: auto;  
-    }
-    
-    #vesselImg {
-        max-width:80%;
-        
-    }
+@media (max-width: 750px) {
+  #map {
+      width: 260px;
+      height: 700px;
+      top: 9rem;
+      left: 0px;
+  }
+  #shadow1 {
+    left:-60%;
+      
+  }
+  #shadow3 {
+    top: 40%;
+    left: 70%;
+    width: 30%;
+    height: auto;  
+  }
+  
+  #vesselImg {
+    max-width:80%;      
+  }
 
-    #shadow4 {
-        top: 75%;
-        left: 10px;
-        width: 55%;
-        height: 10rem;
-        transform: translate(15px, 35px);  
-    }
-    
-    #overlay1 {
-        font-size: 1rem;
-    }
+  #shadow4 {
+    top: 75%;
+    left: 10px;
+    width: 55%;
+    height: 10rem;
+    transform: translate(15px, 35px);  
+  }
+  
+  #overlay1 {
+    font-size: 1rem;
+  }
+
+  img#mapImg {
+    margin: 20vh 0;
+    width: 100%;
+    height: auto;
+    overflow-y: scroll;
+  }
 }
 
- /* Tablet */
- @media (min-width: 801px) {
-    #map {
-        width: 350px;
-        height: 900px;
-        top: 11rem;
-        left: 5%;
-    }
-    
-    #shadow1 {
-        left: -10%;
-    }
-    
-    #shadow2 {
-        top: 18rem
-    }
 
-    #shadow3 {
-        top: 40%;
-        left: 70%;
-        width: 30%;
-        height: auto;  
-    }  
+/* Tablet */
+ @media (min-width: 801px) {
     #shadow4 {
         top: 80%;
         left: 10px;
@@ -331,76 +318,6 @@ export default {
         font-size: 1rem;
     }
 
-
  }
-
- /* Desktop*/
- @media (min-width: 1920px) {
-    #map {
-        width: 475px;
-        height: 1000px;
-        top: 12rem;
-        left: 5%;
-    }
-    
-    #shadow1 {
-        left: 0px;
-    }
-    #shadow3 {
-        top: 50%;
-        left: 70%;
-        width: 30%;
-        height: auto;  
-    }
-    #shadow4 {
-        top: 80%;
-        left: 5%;
-        width: 50%; 
-        transform: translate(550px, -140px); 
-    }  
-    #overlay1 {
-        font-size: 1rem;
-    }
- }
-
  
- /* Wide Screen*/
- @media (min-width: 2800px){
-    #map {
-        width: 1000px;
-        height: 800px;
-        top: 12rem;
-        left: 30px;
-    }
- 
-    #shadow1 {    
-        left: 10px;   
-    }
-  
-    #shadow3 {
-        top: 55%;
-        left: 70%;
-        width: 20%;
-        height: auto;  
-    }  
-    #shadow4 {
-        top: 85%;
-        left: 5%;
-        width: 60%; 
-    }  
-    #overlay1 {
-        font-size: 1.5rem;
-    }
- }
-
- /* Even Wider */
- @media(min-width: 1500px) {
-    #map {
-        width: 1400px;
-        height: 1000px;
-        top: 12rem;
-        left: 30px;
-    }
- 
- }
 </style>

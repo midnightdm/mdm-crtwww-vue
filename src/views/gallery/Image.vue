@@ -1,11 +1,13 @@
 <template>
+  <main id="Image">
+    <section>
+      <h1>Image</h1>
+    </section>
+  </main>
   
-  <h1>Image</h1>
 </template>
 
 <script>
-import GallerySubMenu from '@/components/GallerySubMenu.vue'
-
 export default {
   created: function () {
     //this.$store.dispatch("fetchAllAlerts")
@@ -17,13 +19,20 @@ export default {
   },
   unmounted() {
     this.$store.commit('setGalleryLinkActive', false)
-  },
-  components: {
-    GallerySubMenu
   }
 }
 </script>
 
 <style>
+#Image section { 
+  padding-top: 145px;
 
+}
+
+@media (max-width: 750px) {
+  #Image section {
+    padding-top: 40px;
+    
+  }
+}
 </style>

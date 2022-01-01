@@ -1,17 +1,12 @@
 <template>
-  
-  <main id="local">
-    
-    <h1>Comments</h1>
-    
-
-  
+  <main id="Comments">
+    <section>
+      <h1>Comments</h1>
+    </section>
   </main>
-  
 </template>
 
 <script>
-import GallerySubMenu from '@/components/GallerySubMenu.vue'
 
 export default {
   created: function () {
@@ -24,13 +19,20 @@ export default {
   },
   unmounted() {
     this.$store.commit('setGalleryLinkActive', false)
-  },
-  components: {
-    GallerySubMenu
   }
 }
 </script>
 
 <style>
+#Comments section { 
+  padding-top: 145px;
 
+}
+
+@media (max-width: 750px) {
+  #Comments section {
+    padding-top: 40px;
+    
+  }
+}
 </style>

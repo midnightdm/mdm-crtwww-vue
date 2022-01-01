@@ -32,8 +32,6 @@
 </template>
 
 <script>
-import GallerySubMenu from '@/components/GallerySubMenu.vue'
-
 export default {
   created: function () {
     this.$store.dispatch("fetchGalleryVideo")
@@ -45,9 +43,6 @@ export default {
   },
   unmounted() {
     this.$store.commit('setGalleryLinkActive', false)
-  },
-  components: {
-    GallerySubMenu
   }
 }
 </script>
@@ -55,14 +50,14 @@ export default {
 <style>
 
 #Video section { 
-  padding-top: 130px;
+  padding-top: 75px;
   display: grid;
   grid-template-columns: 20rem 3fr;
 }
 
 @media (max-width: 750px) {
   #Video section {
-    padding-top: 70px;
+    padding-top: 35px;
     display: block;
   }
 }
@@ -99,5 +94,15 @@ li.video-list {
 }
 .col1 p {
   color: rgb(160, 250, 16);
+}
+
+@media (max-width: 500px) {
+  video, 
+  iframe {
+    width: 300px;
+  }
+  .pillLabel {
+    max-width: 300px;
+  }
 }
 </style>

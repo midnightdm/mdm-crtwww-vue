@@ -262,8 +262,11 @@ h5 {
 }
 
 .listMode {
-  height: 20rem;
+  height: 28rem;
   overflow-y: scroll;
+  margin-top: 0;
+  position: relative;
+  top: 0;
 }
 
 .listMode ul {
@@ -329,13 +332,13 @@ h1.noslide {
 }
 
 h4.map-label {
-    background: aquamarine;
-    color: black;
-    padding: 5px 15px;
-    margin: 5px;
-    border-radius: 60%;
-    font-size: 26px;
-    border: 2px solid black;  
+  background: aquamarine;
+  color: black;
+  padding: 5px 15px;
+  margin: 5px;
+  border-radius: 60%;
+  font-size: 26px;
+  border: 2px solid black;  
 }
 
 .middle .slideData {

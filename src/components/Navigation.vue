@@ -13,13 +13,15 @@
       <ul v-show="!mobile" class="navigation">
         <li><a @click="goRoute('/about')" class="nav-link" :href="'/about'" :class="{selected: this.$store.state.a.pageSelected=='About'}">ABOUT</a></li>
         <li><a  @click="goRoute('/alerts')" :href="'/alerts'" class="nav-link" :class="{ 'selected': this.$store.state.a.alertsLinkActive  }" exact>ALERTS</a></li>
-        <li><a @click="goRoute('/gallery')" :href="'/gallery'" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" >GALLERY</a></li>
+        <li><a @click="goRoute('/gallery/video')" :href="'/gallery/video'" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" >GALLERY</a></li>
         <li><a @click="goRoute('/live/mobile')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='LiveMobile'}" :href="'/live'" >LIVE</a></li>
         <li><a @click="goRoute('/logs')" :href="'/logs'" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive }">LOGS</a></li>
       </ul>
 
       <AlertsSubMenu v-show="this.$store.state.a.alertsLinkActive && !mobile"></AlertsSubMenu>
+      <!--
       <GallerySubMenu v-show="this.$store.state.a.galleryLinkActive && !mobile"></GallerySubMenu>
+      -->
       <LogsSubMenu v-show="this.$store.state.a.logsLinkActive && !mobile"></LogsSubMenu>
       
       <div id="title_slate">{{ slate }}</div>
@@ -33,27 +35,23 @@
             <li>
               <span @click="makeActive('setAlertsLinkActive')" class="nav-link" :class="{ 'selected': this.$store.state.a.alertsLinkActive }" exact>ALERTS</span>
               <transition name="alerts-submenu">
-                
-                  <AlertsSubMenu v-show="this.$store.state.a.alertsLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></AlertsSubMenu>
-                
+                  <AlertsSubMenu v-show="this.$store.state.a.alertsLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></AlertsSubMenu>                
               </transition>
             </li>
             <li>
-              <span @click="makeActive('setGalleryLinkActive')" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" >GALLERY</span>
-              <transition name="gallery-submenu">
-                 
-                  <GallerySubMenu v-show="this.$store.state.a.galleryLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></GallerySubMenu>
-                
+              <router-link @click="makeActive('setGalleryLinkActive')" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" :to="{name: 'Video'}">GALLERY</router-link>
+              <!--
+              <transition name="gallery-submenu">                 
+                  <GallerySubMenu v-show="this.$store.state.a.galleryLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></GallerySubMenu>               
               </transition>
+               -->
             </li>
             <li><router-link class="nav-link" :to="{name: 'LiveMobile'}" :class="{selected: this.$store.state.a.pageSelected=='Live'}">LIVE</router-link>
             </li>
             <li>
-              <span @click="makeActive('setLogsLinkActive')" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive}">LOGS</span>
-              <transition name="logs-submenu">
-                
+              <router-link @click="makeActive('setLogsLinkActive')" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive}" :to="{name: 'Logs'}">LOGS</router-link>
+              <transition name="logs-submenu">                
                   <LogsSubMenu v-show="this.$store.state.a.logsLinkActive  && mobileNav" :class="{'navigation2': mobileNav}"></LogsSubMenu>
-                
               </transition>
             </li>
           </ul> 
