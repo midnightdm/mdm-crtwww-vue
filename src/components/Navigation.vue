@@ -211,7 +211,8 @@ li a, li router-link {
 
 .dropdown-nav .nav-link,
 .navigation2 a.nav-link,
-.dropdown-nav .nav-link:visited {
+.dropdown-nav .nav-link:visited,
+.navigation2 a.nav-link:visited {
   background-color: #fff;
   color: #000;
   font-size: 2rem;
