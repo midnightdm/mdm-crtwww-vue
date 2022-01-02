@@ -2,33 +2,24 @@
   <main>
     <div id="wrapper">
 
-    <div id="logo-container">
-      <h1>clinton<span>river</span>traffic</h1>
+      <div id="logo-container">
+        <h1>clinton<span>river</span>traffic</h1>
 
-      <img id="logo-img" :src="logoImgUrl" title="The logo image shows a tow boat pushing 9 barges." alt="The logo image shows a tow boat pushing 9 barges.">
-      <div id="mbbg" class="hasNav">
-      <!-- hidden checkbox is used as click reciever -->
-      <input type="checkbox" />    
-      <!--    Some spans to act as a hamburger. -->
-      <span></span>
-      <span></span>
-      <span></span>
-      <ul id="menu" class="nav">
-              <li><a @click="leaveHero('/about')" class="nav-link" :href="'/about'">ABOUT</a></li>
-              <li><a @click="leaveHero('/alerts')" :href="'/alerts'" class="nav-link">ALERTS</a></li>
-              <li><a @click="leaveHero('/gallery')" :href="'/gallery'" class="nav-link">GALLERY</a></li>
-              <li><a class="nav-link" :href="urlLive">LIVE</a></li>
-              <li><a @click="leaveHero('/logs')" :href="'/logs'"  class="nav-link" >LOGS</a></li>
-          </ul>
+        <img id="logo-img" :src="logoImgUrl" title="The logo image shows a tow boat pushing 9 barges." >
+
+        <ul id="menu" class="nav">
+          <li><a @click="leaveHero('/about')" class="nav-link" :href="'/about'">ABOUT</a></li>
+          <li><a @click="leaveHero('/alerts')" :href="'/alerts'" class="nav-link">ALERTS</a></li>
+          <li><a @click="leaveHero('/gallery')" :href="'/gallery'" class="nav-link">GALLERY</a></li>
+          <li><a class="nav-link" :href="urlLive">LIVE</a></li>
+          <li><a @click="leaveHero('/logs')" :href="'/logs'"  class="nav-link" >LOGS</a></li>
+        </ul>
       </div>
     </div>
    
-
- 
     <video id="videoBG" autoplay muted loop>
       <source :src="bgVidUrl" type="video/mp4">
     </video>
-   
     
     <h1 class="huge">
       <div>
@@ -39,8 +30,7 @@
       </div>
      </h1>
   
-
-  </div>  
+ 
   </main>  
 </template>
 
@@ -72,161 +62,13 @@ export default {
 </script>
 
 <style>
-
-#videoBG {   
-  height: 100%;
-  width: 110vw;
-  transform:translateX(-15%);
-  z-index: -2;
-  background-color: white;
-}
-
-
-
-@media (max-width: 475px) {
-    #videoBG {
-    display: none;
-  }
-}
-
-body{
-   background-color: #FFFFFF;
-   color: #000000;
-   font-family: Arial;
-   font-weight: normal;
-   line-height: 1.1875;
-   margin: 0 0px 0px 0px;
-   padding: 0px;
-}
-
-a{
-   color: #0000FF;
-   text-decoration: underline;
-}
-
-a:visited {
-   color: #800080;
-}
-a:active {
-   color: #FF0000;
-}
-a:hover {
-   color: #0000FF;
-   text-decoration: underline;
-}
-input:focus, textarea:focus, select:focus {
-   outline: none;
-}
-
-
-#logo-container {
-  position: absolute;
-  height: 100px;
-  /* background: rgba(25, 25, 25, .5); */
-}
-
-#logo-img {   
-  position: absolute;
-  left: 0px;
-  z-index: 3;
- }
- 
- #logo-container h1 {     
-  position:absolute;
-  font-family: 'Merriweather Sans', sans-serif;
-  text-shadow: 2px 2px 2px #f3eeee80;
-  z-index: 4;
- }
-  
- #mbbg {
-  position: absolute;
-  left: 0;
-  top: 10;
-  /* top: 125px; */
-  width: 650px;
-  height: 50px;
-  z-index: 2;
-  background: #31363e;
-}
- 
-
- 
- #logo-container h1 span {
-  color: blue;
-  -webkit-background-clip: text;  
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-image: url(https://storage.googleapis.com/www.clintonrivertraffic.com/images/crushpixel-1625816-ID1625816-640x427.jpg);
-
-}
- .nav {
-   margin: 0px 0 2px 0;
-   padding: 0 0 0 0;
-   background: #31363e;
-   z-index: 1;  
- }
- 
-
-#main .nav {
-  position: absolute;
-  margin: -50px -0px 0px 0;
-  padding: 0 0 0 0;
-  background: #31363e;
-  z-index: 4;  
-}
-
- .nav ul { 
-  margin: 0 0 0px 0px;
-  padding: 5px 5px 5px 5px;
-  background: #31363e;
- }
- 
-                         
-.nav li {
-   list-style: none;
-   float: left;
-   margin: 7px;
-   padding: 0;
-   font-family: sans-serif;
-   font-size: 1em;
-   letter-spacing: 2px;  
-   border: 5px;
-   border-color: #31363e; 
- }
- 
-.nav li a {  
-   float: left;
-   vertical-align: middle;
-   padding: 10px 12px;
-   text-decoration: none;
-   color: #e7e3d9;
-   border: none;  
- }
- 
- .nav li a.selected {
-   background: white;
-   color: red;
-  
- }
- 
- .nav li .selected {
-   border: 5px;
-   border-color: #31363e;
- }
- 
- .nav li a:hover {
-   color: red;
-  
- }
-
  /* Animate huge Intro*/
 .huge {
     font-family: 'Rubik', sans-serif;
-    font-size: 90pt;
+    font-size: 6rem;
     position: absolute;
     top: 5%;
     left: 1%;
-    
     border: 0px solid #000000;
     text-align: center;
     z-index: 7;
@@ -243,10 +85,9 @@ input:focus, textarea:focus, select:focus {
 .huge div {
   margin: 0;
   position: relative;
-  height: 145px;
-  width: 1500px;
+  height: 18vh;
+  width: 100vw;
   overflow: hidden;
-
 }
 
 .huge div ul {
@@ -255,8 +96,6 @@ input:focus, textarea:focus, select:focus {
   text-align: left;
   background-color: #FFFF00;
   animation: intro 10s linear forwards;
-
-
 }
 
 .huge  li {
@@ -264,64 +103,15 @@ input:focus, textarea:focus, select:focus {
   height: 125px;
 }
 @keyframes intro {
-  0% {transform: translateY(145px);  opacity: 1; background-color: #FFFF00; }
-  5%  {transform: translateY(145px); opacity: 1; background-color: #FFFF00;}
+  0% {transform: translateY(12vh);  opacity: 1; background-color: #FFFF00; }
+  5%  {transform: translateY(12vh); opacity: 1; background-color: #FFFF00;}
   10% {transform: translateY(0px);  opacity: 1; background-color: #FFFF00;}
   50% {transform: translateY(0px); opacity: 1; background-color: #FFFF00; }
-  55% {transform: translateY(-145px); opacity: 1; background-color: #FFFF00;}
-  95% {transform: translateY(-145px);opacity: 1; background-color: #FFFF00; }
-  100% { transform: translateY(-290px); opacity: 0; background-color: transparent;}
+  55% {transform: translateY(-12vh); opacity: 1; background-color: #FFFF00;}
+  95% {transform: translateY(-12vh);opacity: 1; background-color: #FFFF00; }
+  100% { transform: translateY(-24vh); opacity: 0; background-color: transparent;}
 } 
 
 
-
-
-
-
-
- /* Phone */
- @media (max-width: 400px) {
-  /* Turn off video... */
-  #videoBG {
-    display: none;
-  }
-  
-  /* ...and turn on background image. 
-    background-image: url('https://storage.googleapis.com/www.clintonrivertraffic.com/images/msq-hero-tall.png');
-    background-size: cover;
-    height: 800px;
-  */
-}
-                
-  
-  body {
-  .huge {
-    font-size: 30pt;
-    top: 200px;
-  }
-  #logo-img {
-    top: 10px;
-    width: 175px;
-    height: 70px;
-  }
-  #logo-container h1 {
-    font-size: 16pt;
-    top: 20px;
-    left: 40px;
-  }
-  #title_slate {
-    font-size: .75em;
-    margin: 18px 25px 24px 0;
-    padding: 5px 5px 5px 5px;
-  }
-  #mbbg {
-    top: 70px;
-  }
-  #main {
-    top: 70px;
-  }
-
-
-  }
 
 </style>

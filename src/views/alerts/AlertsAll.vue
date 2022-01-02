@@ -164,23 +164,24 @@ export default {
 
 
 #AlertsAll section {
-  padding-top: 80px;
+  padding-top: 170px;
 }
 
-#mobile {
+.mobile {
   visibility: hidden;
 }
 
 @media (max-width: 750px) {
   #AlertsAll section {
-    padding-top: 70px;
+    padding-top: var(--menu-pad-mobile);
   }
-  #mobile {
-    padding-bottom: 0;
+  .mobile {
+    padding-bottom: 5px;
     visibility: visible;
   }
+
   li:first-child.card {
-    margin-top: 0;
+    margin-top: 5px;
   }
 }
 

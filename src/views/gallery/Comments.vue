@@ -25,13 +25,13 @@ export default {
 
 <style>
 #Comments section { 
-  padding-top: 145px;
+  padding-top: var(--menu-pad-wide-a);
 
 }
 
 @media (max-width: 750px) {
   #Comments section {
-    padding-top: 40px;
+    padding-top: var(--menu-pad-mobile);
     
   }
 }

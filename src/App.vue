@@ -34,5 +34,10 @@ export default {
   background-color: white;
 }
 
+:root {
+  --menu-pad-mobile: 120px;
+  --menu-pad-wide-a: 250px;
+  --menu-pad-wide-b: 175px;
+}
 
 </style>

@@ -419,7 +419,7 @@ export default {
 <style>
 
 #Manage section {
-  padding-top: 130px;
+  padding-top: var(--menu-pad-wide-a);
 }
 
 img.river-map {
@@ -470,7 +470,7 @@ li {
 
 @media (max-width: 750px) {
   #Manage section {
-    padding-top: 80px;
+    padding-top: var(--menu-pad-mobile);
   }
   .boxa, .boxb {
     width: 26rem;

@@ -101,12 +101,12 @@ export default {
 
 <style scoped>
 #LogsList section {
-  padding-top: 175px;
+  padding-top: var(--menu-pad-wide-a);
 }
 
 @media (max-width: 750px) {
   #LogsList section {
-    padding-top: 45px;
+    padding-top: var(--menu-pad-mobile);
   }
 }
 

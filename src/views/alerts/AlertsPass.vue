@@ -2,7 +2,7 @@
   
   <main id="AlertsPass">
     <section>
-      <h1 id="mobile">Passenger Vessels</h1>
+      <h1 class="mobile">Passenger Vessels</h1>
       <ul>
 <transition-group enter-active-class="animate__animated animate__slideInRight">
       <li class="card" v-if="this.$store.state.a.alertsPassenger[19].apubID >-1" :key="this.$store.state.a.alertsPassenger[19].apubID" @click.prevent="routeWP(19)">
@@ -164,18 +164,18 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans:400');
 
 #AlertsPass section {
-  padding-top: 80px;
+  padding-top: 170px;
 }
 
-#mobile {
+.mobile {
   visibility: hidden;
 }
 
 @media (max-width: 750px) {
   #AlertsPass section {
-    padding-top: 70px;
+    padding-top: var(--menu-pad-mobile);
   }
-  #mobile {
+  .mobile {
     padding-bottom: 0;
     visibility: visible;
   }

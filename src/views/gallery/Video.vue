@@ -50,14 +50,14 @@ export default {
 <style>
 
 #Video section { 
-  padding-top: 75px;
+  padding-top: var(--menu-pad-wide-b);
   display: grid;
   grid-template-columns: 20rem 3fr;
 }
 
 @media (max-width: 750px) {
   #Video section {
-    padding-top: 35px;
+    padding-top: var(--menu-pad-mobile);
     display: block;
   }
 }
