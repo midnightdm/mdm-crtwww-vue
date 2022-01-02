@@ -71,6 +71,10 @@ export default {
 }
 </script>
 <style scoped>
+
+div#main {
+  padding-top: 100px;
+}
 .logs {
   width: 80%;
   margin: 20px auto;
@@ -157,5 +161,9 @@ ul.vessels-list li {
   z-index: 105;
 }
 
- 
+@media (max-width: 750px) {
+  div#main {
+    padding-top: 20px;
+  }
+} 
 </style>

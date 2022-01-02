@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav>
+    <nav class="nav-comp">
       <div class="logo">
         <h1>clinton<span :style="'background-image: url('+crushpixel+');'">river</span>traffic</h1>
         <img id="logo-img" :src="logo" title="The logo image shows a tow boat pushing 9 barges.">
@@ -110,7 +110,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 .topDiv {
   background: white;
@@ -127,7 +127,7 @@ header {
   height: 6rem;
 }
 
-nav {
+nav.nav-comp {
   position: relative;
   top: 4.5rem;
   background-color: #31363e;
