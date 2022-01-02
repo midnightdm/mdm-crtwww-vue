@@ -35,8 +35,9 @@
             <li>
               <span @click="makeActive('setAlertsLinkActive')" class="nav-link" :class="{ 'selected': this.$store.state.a.alertsLinkActive }" exact>ALERTS</span>
               >
+               <transition name="logs-submenu">   
                   <AlertsSubMenu v-show="this.$store.state.a.alertsLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></AlertsSubMenu>                
-              
+              </transition>
             </li>
             <li>
               <router-link @click="makeActive('setGalleryLinkActive')" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" :to="{name: 'Video'}">GALLERY</router-link>
@@ -45,9 +46,9 @@
             </li>
             <li>
               <router-link @click="makeActive('setLogsLinkActive')" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive}" :to="{name: 'Logs'}">LOGS</router-link>
-                              
+                <transition name="logs-submenu">              
                   <LogsSubMenu v-show="this.$store.state.a.logsLinkActive  && mobileNav" :class="{'navigation2': mobileNav}"></LogsSubMenu>
-              
+                </transition>
             </li>
           </ul> 
         </div>
@@ -330,8 +331,8 @@ ul.navigation2 {
     opacity: 0;
 }
 
-alerts-submenu-enter-to,
-logs-submenu-enter-to,
+.alerts-submenu-enter-to,
+.logs-submenu-enter-to,
 .gallery-submenu-enter-to {
   opacity: 1;
 }
