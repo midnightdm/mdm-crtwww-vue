@@ -34,25 +34,20 @@
             </li>
             <li>
               <span @click="makeActive('setAlertsLinkActive')" class="nav-link" :class="{ 'selected': this.$store.state.a.alertsLinkActive }" exact>ALERTS</span>
-              <transition name="alerts-submenu">
+              >
                   <AlertsSubMenu v-show="this.$store.state.a.alertsLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></AlertsSubMenu>                
-              </transition>
+              
             </li>
             <li>
               <router-link @click="makeActive('setGalleryLinkActive')" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" :to="{name: 'Video'}">GALLERY</router-link>
-              <!--
-              <transition name="gallery-submenu">                 
-                  <GallerySubMenu v-show="this.$store.state.a.galleryLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></GallerySubMenu>               
-              </transition>
-               -->
             </li>
             <li><router-link class="nav-link" :to="{name: 'LiveMobile'}" :class="{selected: this.$store.state.a.pageSelected=='Live'}">LIVE</router-link>
             </li>
             <li>
               <router-link @click="makeActive('setLogsLinkActive')" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive}" :to="{name: 'Logs'}">LOGS</router-link>
-              <transition name="logs-submenu">                
+                              
                   <LogsSubMenu v-show="this.$store.state.a.logsLinkActive  && mobileNav" :class="{'navigation2': mobileNav}"></LogsSubMenu>
-              </transition>
+              
             </li>
           </ul> 
         </div>

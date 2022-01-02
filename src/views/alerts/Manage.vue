@@ -378,8 +378,8 @@ export default {
       this.dialog1.remove = false;  
     },
     subscribeToEvent() {
-      if(this.user===null)  {
-        alert("You must enable Push service before you can add events.");
+      if(this.user===undefined)  {
+        alert("You must enable (or re-enable) Push service before you can add events.");
         return;
       }
       console.log("subListSelection =", this.mm.subListSelection.key);

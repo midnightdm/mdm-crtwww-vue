@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main id="About">
     <div class="parent" id="content-container">
       <div class="div1">
         <h2>Welcome River Fans</h2>
@@ -57,6 +57,7 @@ export default {
 
 #content-container {   
   margin: 76px .3rem 13rem .3rem;
+  padding-top: 75px;
 }
 
 h1 {  
@@ -148,5 +149,12 @@ ul.bullets {
     grid-area: 3 / 2 / 4 / 3;
   }
 }
+
+@media (max-width: 750px) {
+  #About .parent{
+    padding-top: 25px;
+    }
+}
+
 
 </style>
