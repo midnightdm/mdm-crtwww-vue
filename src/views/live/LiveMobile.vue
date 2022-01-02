@@ -18,8 +18,10 @@
               </div>
 
               <h5>{{live.liveLocation}}</h5>
-              <button class="pill" @click="router.push('/logs/history/'+ live.id )" >History</button>
-                           
+              <div class="btnWrapper">
+                <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+              </div>
+                 
               
               <ul>
                 <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
@@ -97,6 +99,10 @@ export default {
     const store = useStore()
     const inputDelay = ref(null)
     const router = useRouter()
+
+    function route(path) {
+      router.push(path)
+    }
     
     function checkScreen() {
       let windowWidth = window.innerWidth
@@ -185,7 +191,7 @@ export default {
       }
       //let reference = document.getElementById("inputDelay")      
     })
-    return { store, focusMap, toggleList, inputDelay, checkScreen, toggleAuto, router }
+    return { store, focusMap, toggleList, inputDelay, checkScreen, toggleAuto, route }
   },
   watch: {
     currentSlide: function (val) {
@@ -198,10 +204,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .map {
   position: relative;
-  top: -3.7rem;
+  top: 100px;
   padding: 0px .4rem 0 .4rem; 
 }
 
@@ -262,11 +268,11 @@ h5 {
 }
 
 .listMode {
-  height: 28rem;
+  height: 22em;
   overflow-y: scroll;
   margin-top: 0;
   position: relative;
-  top: 0;
+  top: 90px;
 }
 
 .listMode ul {
@@ -309,9 +315,14 @@ img.vesselImg {
 }
 
 .middle {
-  transform: translateY(-60px);
+  transform: translateY(100px);
   max-height: 30vh;
 }
+
+div.btnWrapper {
+  text-align:center;
+}
+
 
 .mobile .slide ul {  
   bottom: 0px;
@@ -401,7 +412,7 @@ section {
   width: 90%;
 }
 
-#mobile-content-wrap > .list-wrap  {
+#mobile-content-wrap .list-wrap  {
   background-color: #2c3e50;
   opacity: 1;
   max-height: 3rem;
@@ -414,6 +425,19 @@ section {
   align-items: center;
   padding: 10px 0.5rem;
   margin: 3px;
+}
+
+.pill {
+  background-color: #ddd;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 16px;
 }
 
 .mobile .pill {

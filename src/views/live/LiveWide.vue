@@ -15,7 +15,9 @@
               </div>
 
               <h5>{{live.liveLocation}}</h5>
-              
+              <div class="btnWrapper">
+                <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+              </div>
               <ul class="mask">
                 <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
                 <li class="dataPoint"><span class="th">SPEED:</span> <span class="td">{{live.speed}} Knots</span></li>
@@ -70,6 +72,9 @@ export default {
     const inputDelay = ref(null)
     const router = useRouter()
     
+    function route(path) {
+      router.push(path)
+    }
     
     function checkScreen() {
       let windowWidth = window.innerWidth
@@ -125,7 +130,7 @@ export default {
         store.commit('setSlate', 'LIVE')
       }  
     })
-    return { store, focusMap,  inputDelay, checkScreen, toggleAuto }
+    return { store, focusMap,  inputDelay, checkScreen, toggleAuto, route }
   },
   watch: {
     currentSlide: function (val) {
@@ -138,13 +143,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .widemap {
   border-radius: 8px;
 }
 
 
 .label-wrap  {
+  height: 3.5rem;
   background-color: #2c3e50;
   opacity: 0.9;
   min-width: 20rem;
@@ -202,17 +208,15 @@ ul.cardWrapper {
   width: 30%;
   height: 100vh;
   min-width: 300px;
-  
 }
 
 .data.column {
   width: 67%;
-  
-  
 }
 
 div.dataColumn {
   width: 100%;
+  text-align: center;
 }
 
 
@@ -278,6 +282,10 @@ img.vesselImg {
   height: auto;
 }
 
+div.btnWrapper {
+  text-align:center;
+}
+
 .slide,
 .dataColumn {
   align-content: center;
@@ -285,8 +293,9 @@ img.vesselImg {
 
 .slide ul,
 .dataColumn ul.mask {
+  margin: 5px;
   position: relative;
-  bottom: -15%;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.4);
 }
 
@@ -354,6 +363,7 @@ section {
   width: 95%;
 }
 
+
 .list-wrap  {
   background-color: #2c3e50;
   opacity: 1;
@@ -368,7 +378,6 @@ section {
   padding: 0 0.5;
   margin: 0px;
 }
-
 
 .list-wrap h5 {
   opacity: 1;
@@ -392,6 +401,17 @@ section {
   margin-left:auto;
   margin-right: auto;
 }
-
+.pill {
+  background-color: #ddd;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 16px;
+}
 
 </style>
