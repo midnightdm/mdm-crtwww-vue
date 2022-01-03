@@ -57,7 +57,7 @@ export default {
 
 #content-container {   
   margin: 76px .3rem 13rem .3rem;
-  padding-top: 75px;
+  padding-top: 65px;
 }
 
 h1 {  
@@ -127,8 +127,9 @@ ul.bullets {
 }
 
 @media (min-width: 931px) {
-  .parent {
-    transform: translateY(10px);
+  
+  #About .parent {
+    padding-top: 75px;
     display: grid;
     grid-template-columns: 75% 25%;
     grid-template-rows: repeat(3, 1fr);
@@ -152,7 +153,7 @@ ul.bullets {
 
 @media (max-width: 750px) {
   #About .parent{
-    padding-top: 25px;
+    padding-top: 50px;
     }
 }
 

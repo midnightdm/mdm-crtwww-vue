@@ -110,7 +110,7 @@ export default {
 <style>
 
 section#History {
-  padding-top: 175px;
+  padding-top: var(--menu-pad-wide-b);
 }
 
 .detail {
@@ -187,7 +187,7 @@ div.table-container {
 
 @media (max-width: 750px) {
   section#History {
-    padding-top: 32px;
+    padding-top: var(--menu-pad-mobile);
   }
 
   .detail {

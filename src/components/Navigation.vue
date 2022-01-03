@@ -30,24 +30,24 @@
         <div v-show="mobileNav" class="mobile-side-menu">  
           <ul class="dropdown-nav">
             <li>
-              <router-link class="nav-link" :to="{name: 'About'}" :class="{selected: this.$store.state.a.pageSelected=='About'}">ABOUT</router-link>
+              <router-link @click="toggleMobileNav" class="nav-link" :to="{name: 'About'}" :class="{selected: this.$store.state.a.pageSelected=='About'}">ABOUT</router-link>
             </li>
             <li>
-              <span @click="makeActive('setAlertsLinkActive')" class="nav-link" :class="{ 'selected': this.$store.state.a.alertsLinkActive }" exact>ALERTS</span>
+              <span @click="toggleAlertsActive" class="nav-link" :class="{ 'selected': this.$store.state.a.alertsLinkActive }" exact>ALERTS</span>
               >
                <transition name="logs-submenu">   
-                  <AlertsSubMenu v-show="this.$store.state.a.alertsLinkActive && mobileNav" :class="{'navigation2': mobileNav}"></AlertsSubMenu>                
+                  <AlertsSubMenu v-show="this.$store.state.a.alertsLinkActive && mobileNav" :class="{'navigation2': mobileNav}" @click="toggleMobileNav"></AlertsSubMenu>                
               </transition>
             </li>
             <li>
-              <router-link @click="makeActive('setGalleryLinkActive')" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" :to="{name: 'Video'}">GALLERY</router-link>
+              <router-link @click="toggleMobileNav" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" :to="{name: 'Video'}">GALLERY</router-link>
             </li>
-            <li><router-link class="nav-link" :to="{name: 'LiveMobile'}" :class="{selected: this.$store.state.a.pageSelected=='Live'}">LIVE</router-link>
+            <li><router-link @click="toggleMobileNav" class="nav-link" :to="{name: 'LiveMobile'}" :class="{selected: this.$store.state.a.pageSelected=='Live'}">LIVE</router-link>
             </li>
             <li>
-              <router-link @click="makeActive('setLogsLinkActive')" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive}" :to="{name: 'Logs'}">LOGS</router-link>
+              <router-link @click="toggleLogsActive" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive}" :to="{name: 'Logs'}">LOGS</router-link>
                 <transition name="logs-submenu">              
-                  <LogsSubMenu v-show="this.$store.state.a.logsLinkActive  && mobileNav" :class="{'navigation2': mobileNav}"></LogsSubMenu>
+                  <LogsSubMenu v-show="this.$store.state.a.logsLinkActive  && mobileNav" :class="{'navigation2': mobileNav}" @click="toggleMobileNav"></LogsSubMenu>
                 </transition>
             </li>
           </ul> 
@@ -62,49 +62,91 @@
 import { useRouter } from 'vue-router'
 
 export default {
-    name: 'Navigation',
-    data() {
-        return {
-            mobile: false,
-            mobileNav : false,
-            windowWidth: null,
-            urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
-            logo: process.env.VUE_APP_IMG_URL+'/images/logo-towboat2.png',
-            crushpixel: process.env.VUE_APP_IMG_URL+'/images/crushpixel-1625816-ID1625816-640x427.jpg',
-            router: useRouter(),
-            galleryTipOn: false,
-            alertsTipOn: false,
-            logsTipOn: false
+  name: 'Navigation',
+  data() {
+      return {
+          mobile: false,
+          mobileNav : false,
+          windowWidth: null,
+          urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
+          logo: process.env.VUE_APP_IMG_URL+'/images/logo-towboat2.png',
+          crushpixel: process.env.VUE_APP_IMG_URL+'/images/crushpixel-1625816-ID1625816-640x427.jpg',
+          router: useRouter(),
+          galleryTipOn: false,
+          alertsTipOn: false,
+          logsTipOn: false,
+          touchstartX: 0,
+          touchstartY: 0,
+          touchendX: 0,
+          touchendY: 0
 
-        }
-    },
-    computed: {
-      slate() {
-        return this.$store.state.a.slate
       }
-    },
-    methods: {
-        toggleMobileNav() {
-            this.mobileNav = !this.mobileNav
-        },
-        checkScreen() {
-            this.windowWidth = window.innerWidth
-            if(this.windowWidth <= 750) {
-                this.mobile = true
-                return
-            }
-            this.mobile = false
-            this.mobileNav = false
-        },   
-        goRoute(path) {
-            this.router.push(path)
-        },
-        makeActive(page) {
-          this.$store.commit(page, true)
+  },
+  computed: {
+    slate() {
+      return this.$store.state.a.slate
+    }
+  },
+  methods: {
+      toggleMobileNav() {
+        this.mobileNav = !this.mobileNav; 
+      }, 
+      closeMobileMenu() {
+        //close menu on left swipe
+        if(this.mobileNav && (this.touchendX < this.touchstartX)) {
+          this.mobileNav = false
+          console.log("closeMobileMenu()")
+        } 
+      },
+      checkScreen() {
+          this.windowWidth = window.innerWidth
+          if(this.windowWidth <= 750) {
+              this.mobile = true
+              return
+          }
+          this.mobile = false
+          this.mobileNav = false
+      },   
+      goRoute(path) {
+          this.router.push(path)
+      },
+      makeActive(page) {
+        this.$store.commit(page, true)
+      },
+      toggleAlertsActive() {
+        if(this.$store.state.a.alertsLinkActive) {
+          this.$store.commit('setAlertsLinkActive', false)
+        } else {
+          this.$store.commit('setAlertsLinkActive', true)
         }
+      },
+      toggleLogsActive() {
+        if(this.$store.state.a.logsLinkActive) {
+          this.$store.commit('setLogsLinkActive', false)
+        } else {
+          this.$store.commit('setLogsLinkActive', true)
+        }
+      },
+      toggleGalleryActive() {
+        if(this.$store.state.a.galleryLinkActive) {
+          this.$store.commit('setGalleryLinkActive', false)
+        } else {
+          this.$store.commit('setGalleryLinkActive', true)
+        }
+      }
     },
     created() {
         window.addEventListener('resize', this.checkScreen)
+        window.addEventListener('touchstart', (event) => {
+          this.touchstartX = event.changedTouches[0].screenX;
+          this.touchstartY = event.changedTouches[0].screenY;
+        })
+
+        window.addEventListener('touchend', (event) => {
+          this.touchendX = event.changedTouches[0].screenX;
+          this.touchendY = event.changedTouches[0].screenY;
+          this.closeMobileMenu();
+        })
         this.checkScreen()
     }
 }
@@ -299,6 +341,30 @@ ul.navigation2 {
 .dropdown-nav li router-link.nav-link.selected {
   background-color: #FFFF00;
   color: red;
+}
+
+.dropdown-nav li span.nav-link {
+  cursor: pointer;
+}
+
+.dropdown-nav li span.nav-link.selected:hover:before {
+
+  content: "";
+
+}
+
+.dropdown-nav li span.nav-link.selected:hover:after {
+
+  margin-left: 10px;
+
+  background: #444;
+  border-radius: 8px;
+  color: #fff;
+  
+  font-size: 16px;
+  padding: 13px;
+  width: 220px;
+  content: "Choose from Sub-Menu";
 }
 
 .alerts-submenu-enter-active,
