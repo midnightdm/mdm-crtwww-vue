@@ -1,11 +1,10 @@
 <template>
   <header>
     <nav class="nav-comp">
-      <div v-show="!isKaios" class="logo">
+      <div class="logo">
         <h1>clinton<span :style="'background-image: url('+crushpixel+');'">river</span>traffic</h1>
         <img id="logo-img" :src="logo" title="The logo image shows a tow boat pushing 9 barges.">
       </div>
-
       <div class="icon">  
           <font-awesome-icon icon="bars" @click="toggleMobileNav" v-show="mobile" class="fa-solid fa-bars" :class="{'icon-active': mobileNav}" />
       </div>
@@ -348,22 +347,17 @@ ul.navigation2 {
 }
 
 .dropdown-nav li span.nav-link.selected:hover:before {
-
   content: "";
-
 }
 
 .dropdown-nav li span.nav-link.selected:hover:after {
-
   margin-left: 10px;
-
   background: #444;
   border-radius: 8px;
   color: #fff;
-  
-  font-size: 16px;
+  font-size: 12px;
   padding: 13px;
-  width: 220px;
+  
   content: "Choose from Sub-Menu";
 }
 
@@ -425,11 +419,11 @@ main #local {
 }
 
 @media (max-width: 750px) {
-  nav {
+  nav.nav-comp {
     top: 3rem;
   }
   #logo-img {
-    top: 1px;
+    top: 10px;
     width: 130px;
     height: 62px;
   }

@@ -207,7 +207,7 @@ export default {
 <style scoped>
 .map {
   position: relative;
-  top: 125px;
+  top: var(--menu-pad-mobile);
   padding: 0px .4rem 0 .4rem; 
 }
 

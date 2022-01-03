@@ -35,7 +35,7 @@ export default {
 }
 
 :root {
-  --menu-pad-mobile: 125px;
+  --menu-pad-mobile: 110px;
   --menu-pad-wide-a: 250px;
   --menu-pad-wide-b: 175px;
 }

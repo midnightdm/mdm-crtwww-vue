@@ -187,7 +187,7 @@ div.table-container {
 
 @media (max-width: 750px) {
   section#History {
-    padding-top: var(--menu-pad-mobile);
+    padding-top:50px;
   }
 
   .detail {
