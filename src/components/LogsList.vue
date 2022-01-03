@@ -72,9 +72,9 @@ export default {
   computed: {
     formattedRange() {
       return "Range is "+
-      format(this.$store.state.a.ranges[this.rangeName].lo*1000, 'h:mmaaa eeee, LLL do') +
+      format(this.$store.state.a.ranges[this.rangeName].lo*1000, 'h:mmaaa eeee, LLL do uu') +
       " to " +
-      format(this.$store.state.a.ranges[this.rangeName].hi*1000, 'h:mmaaa eeee, LLL do')
+      format(this.$store.state.a.ranges[this.rangeName].hi*1000, 'h:mmaaa eeee, LLL do uu')
     }
   },
   methods: {
@@ -173,6 +173,13 @@ h4.title {
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 16px;
+}
+
+img.dir-img {
+  margin-left: auto;
+  margin-right: auto;
+  height: 25px;
+  filter: drop-shadow(2px 2px 4px #4444dd);
 }
 
 .holder {

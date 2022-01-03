@@ -43,7 +43,15 @@ class Ranges {
   constructor() {
     var now = new Date();
     var nowSt = Math.floor( now.getTime()/1000 );
-    var month = now.getMonth();
+    var month = now.getMonth()
+    var lastmonth
+    var yearChange = false
+    if (now.getMonth() == 0) {
+      lastmonth = 11
+      yearChange = true
+    } else {
+      lastmonth = now.getMonth()-1;
+    }
     var self = this;
     this.today = {
       lo: now,
@@ -78,9 +86,13 @@ class Ranges {
 
     this.lastMonth = {
       lo: now,
-      hi: lastDayOfMonth(now.setMonth(month-1))
+      hi: lastDayOfMonth(now.setMonth(lastmonth))
     };
-    this.lastMonth.lo.setMonth(month-1);
+    this.lastMonth.lo.setMonth(lastmonth);
+    if(yearChange) { 
+      this.lastMonth.lo.setYear(now.getFullYear()-1)
+      this.lastMonth.hi.setYear(now.getFullYear())
+    }
     this.lastMonth.lo = Math.floor( this.lastMonth.lo.getTime()/1000 );
     this.lastMonth.hi = Math.floor( this.lastMonth.hi.getTime()/1000 );
   }
@@ -749,11 +761,12 @@ const moduleA = {
         return;
       }
       let thisMonthObj = new Date()
-      let yr = thisMonthObj.getFullYear()
+      let tmYr = thisMonthObj.getFullYear()
       let mo = thisMonthObj.getMonth()
       let lm = mo == 0 ? 11 : mo-1; //Last Month 
-      let thisMonthKey = format(new Date(yr, mo), "yyyyMM")
-      let lastMonthKey = format(new Date(yr, lm), "yyyyMM")
+      let lmYr = lm==11? tmYr-1 : tmYr
+      let thisMonthKey = format(new Date(tmYr, mo), "yyyyMM")
+      let lastMonthKey = format(new Date(lmYr, lm), "yyyyMM")
       const vesselRef1 = doc(db, 'Passages', lastMonthKey)
       const vesselRef2 = doc(db, 'Passages', thisMonthKey)
       const document1 = await getDoc(vesselRef1)

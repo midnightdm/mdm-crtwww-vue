@@ -207,7 +207,7 @@ export default {
 <style scoped>
 .map {
   position: relative;
-  top: 100px;
+  top: 125px;
   padding: 0px .4rem 0 .4rem; 
 }
 
@@ -267,19 +267,6 @@ h5 {
    padding: 4px;
 }
 
-.listMode {
-  height: 22em;
-  overflow-y: scroll;
-  margin-top: 0;
-  position: relative;
-  top: 90px;
-}
-
-.listMode ul {
-  padding: 0px 5px;
-  max-width: 30rem;
-}
-
 .led  {
   height: 10px;
   display: inline-block;
@@ -315,7 +302,7 @@ img.vesselImg {
 }
 
 .middle {
-  transform: translateY(100px);
+  transform: translateY(150px);
   max-height: 30vh;
 }
 
@@ -453,6 +440,19 @@ section {
   text-shadow: 2px 2px #000;
 }
 
+.listMode {
+  height: 35vh;
+  overflow-y: scroll;
+  margin-top: 25px;
+  position: relative;
+  top: 100px;
+}
+
+.listMode ul {
+  padding: 0px 5px;
+  max-width: 30rem;
+}
+
 .list-wrap h4.map-label {
     background: aquamarine;
     color: black;
@@ -466,7 +466,6 @@ section {
   padding: 5px 8px;
   margin: 5px;
 }
-
 
 .list-wrap .tile-title {
   color: white;

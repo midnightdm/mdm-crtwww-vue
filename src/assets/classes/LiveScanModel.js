@@ -79,7 +79,7 @@ export default class LiveScanModel {
       o.imageUrl = dat.imageUrl
       o.type     = dat.type
       o.otherDataLabel = "od"+dat.liveVesselID
-      o.lastMovementTS = new Date()
+      
       //FOR SHIP ICON MOVEMENT
       let coords = self.getShipSpriteCoords(o.course)
       let icon = {
@@ -89,6 +89,7 @@ export default class LiveScanModel {
       }
       if(isNew) {
         o.mapLabel = state.lab[++state.liveScanModel.labelIndex]
+        o.lastMovementTS = new Date()
         o.liveLastScanTS = new Date(dat.liveLastTS*1000)
         let marker = {
           position: o.position,
