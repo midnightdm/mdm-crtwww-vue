@@ -1,7 +1,7 @@
 <template>
   <header>
     <nav class="nav-comp">
-      <div class="logo">
+      <div v-show="!isKaios" class="logo">
         <h1>clinton<span :style="'background-image: url('+crushpixel+');'">river</span>traffic</h1>
         <img id="logo-img" :src="logo" title="The logo image shows a tow boat pushing 9 barges.">
       </div>
@@ -105,7 +105,7 @@ export default {
               return
           }
           this.mobile = false
-          this.mobileNav = false
+          this.mobileNav = false          
       },   
       goRoute(path) {
           this.router.push(path)
