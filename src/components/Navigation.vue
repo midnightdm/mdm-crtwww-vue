@@ -326,6 +326,7 @@ ul.navigation2 {
 
 .dropdown-nav li {
   margin-left: 0;
+  text-align: left;
 }
 
 
