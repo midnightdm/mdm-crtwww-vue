@@ -1,47 +1,72 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { getUserState } from '@/store/firebaseApp.js'
 
-import About from '../views/About.vue'
-import Hero from '../views/Hero.vue'
+//import About from '../views/About.vue'
+const About = () => import('@/views/About.vue')
+//import Hero from '../views/Hero.vue'
+const Hero = () => import('@/views/Hero.vue')
 
-import Logs from '../views/logs/Logs.vue'
-import Detail from '../views/logs/Detail.vue'
-import LastMonth from '../views/logs/LastMonth.vue'
-import Past7 from '../views/logs/Past7.vue'
-import Past24 from '../views/logs/Past24.vue'
-import ThisMonth from '../views/logs/ThisMonth.vue'
-import Today from '../views/logs/Today.vue'
-import Yesterday from '../views/logs/Yesterday.vue'
+//import Logs from '../views/logs/Logs.vue'
+const Logs = () => import('@/views/logs/Logs.vue')
+//import Detail from '../views/logs/Detail.vue'
+const Detail = () => import('@/views/logs/Detail.vue')
+//import LastMonth from '../views/logs/LastMonth.vue'
+const LastMonth = () => import('@/views/logs/LastMonth.vue')
+//import Past7 from '../views/logs/Past7.vue'
+const Past7 = () => import('@/views/logs/Past7.vue')
+//import Past24 from '../views/logs/Past24.vue'
+const Past24 = () => import('@/views/logs/Past24.vue')
+//import ThisMonth from '../views/logs/ThisMonth.vue'
+const ThisMonth = () => import('@/views/logs/ThisMonth.vue')
+//import Today from '../views/logs/Today.vue'
+const Today = () => import('@/views/logs/Today.vue')
+//import Yesterday from '../views/logs/Yesterday.vue'
+const Yesterday = () => import('@/views/logs/Yesterday.vue')
 
+//import AddVess from '../views/admin/AddVess.vue'
+const AddVess = () => import('@/views/admin/AddVess.vue')
+//import AdminLogin from '../views/admin/AdminLogin.vue'
+const AdminLogin = () => import('@/views/admin/AdminLogin.vue')
+//import AdminVessels from '../views/admin/AdminVessels.vue'
+const AdminVessels = () => import('@/views/admin/AdminVessels.vue')
+//import AdminDetail from '../views/admin/AdminDetail.vue'
+const AdminDetail = () => import('@/views/admin/AdminDetail.vue')
+//import Subscriptions from '../views/admin/Subscriptions.vue'
+const Subscriptions = () => import('@/views/admin/Subscriptions.vue')
 
-import AddVess from '../views/admin/AddVess.vue'
-import AdminLogin from '../views/admin/AdminLogin.vue'
-import AdminVessels from '../views/admin/AdminVessels.vue'
-import AdminDetail from '../views/admin/AdminDetail.vue'
-import Subscriptions from '../views/admin/Subscriptions.vue'
+//import AlertsAll from '../views/alerts/AlertsAll.vue'
+const AlertsAll = () => import('@/views/alerts/AlertsAll.vue')
+//import AlertsDemo from '../views/alerts/AlertsDemo.vue'
+const AlertsDemo = () => import('@/views/alerts/AlertsDemo.vue')
+//import AlertsPass from '../views/alerts/AlertsPass.vue'
+const AlertsPass = () => import('@/views/alerts/AlertsPass.vue')
+//import AlertsWatch from '../views/alerts/AlertsWatch'
+const AlertsWatch = () => import('@/views/alerts/AlertsWatch.vue')
+//import Manage from '../views/alerts/Manage.vue'
+const Manage = () => import('@/views/alerts/Manage.vue')
+//import Waypoint from '../views/alerts/Waypoint.vue'
+const Waypoint = () => import('@/views/alerts/Waypoint.vue')
 
-import AlertsAll from '../views/alerts/AlertsAll.vue'
-import AlertsDemo from '../views/alerts/AlertsDemo.vue'
-import AlertsPass from '../views/alerts/AlertsPass.vue'
-import AlertsWatch from '../views/alerts/AlertsWatch'
-import Manage from '../views/alerts/Manage.vue'
-import Waypoint from '../views/alerts/Waypoint.vue'
+//import Comments from '../views/gallery/Comments.vue'
+const Comments = () => import('@/views/gallery/Comments.vue')
+//import Image from '../views/gallery/Image.vue'
+const Image = () => import('@/views/gallery/Image.vue')
+//import Video from '../views/gallery/Video.vue'
+const Video = () => import('@/views/gallery/Video.vue')
 
-import Comments from '../views/gallery/Comments.vue'
-import Image from '../views/gallery/Image.vue'
-import Video from '../views/gallery/Video.vue'
+//import LiveMobile from '../views/live/LiveMobile.vue'
+const LiveMobile = () => import('@/views/live/LiveMobile.vue')
+//import LiveWide from '../views/live/LiveWide.vue'
+const LiveWide = () => import('@/views/live/LiveWide.vue')
 
-import LiveMobile from '../views/live/LiveMobile.vue'
-import LiveWide from '../views/live/LiveWide.vue'
-
-import Msg404 from '../views/Msg404.vue'
-
+//import Msg404 from '../views/Msg404.vue'
+const Msg404 = () => import('@/views/Msg404.vue')
 
 
 const routes = [
   {
     path: '/',
-    name: 'Hero',
+     name: 'Hero',
     component: Hero,
     
   },

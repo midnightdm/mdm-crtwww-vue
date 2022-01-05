@@ -19,8 +19,8 @@
               <tr>
                 <template v-for='alpha in this.$store.getters.getAlpha' :key='alpha.date'>    
                 <td>
-                  <img v-if='alpha.dir == "up"' class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25" />
-                  <img v-if='alpha.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25"/>
+                  <img v-if='alpha.dir == "up"' class="dir-img" :src="this.base+'/images/uparr.png'" alt="Up river indicator is present." height="25" />
+                  <img v-if='alpha.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
                 </td>
                 <td class="time"> {{ alpha.date.toLocaleTimeString() }} </td>
                 </template> 
@@ -28,8 +28,8 @@
               <tr>
                 <template v-for='bravo in this.$store.getters.getBravo' :key='bravo.date'>    
                 <td >
-                  <img v-if='bravo.dir == "up"' class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25"/>
-                  <img v-if='bravo.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25"/>
+                  <img v-if='bravo.dir == "up"' class="dir-img" :src="this.base+'/images/uparr.png'" alt="Up river indicator is present." height="25"/>
+                  <img v-if='bravo.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
                 </td>
                 <td class="time"> {{ bravo.date.toLocaleTimeString() }} </td>
                 </template> 
@@ -37,8 +37,8 @@
               <tr>
                 <template v-for='charlie in this.$store.getters.getCharlie' :key='charlie.date'>    
                 <td >
-                  <img v-if='charlie.dir == "up"'    class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25"/>
-                  <img v-if='charlie.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25" />
+                  <img v-if='charlie.dir == "up"'    class="dir-img" :src="this.base+'/images/uparr.png'" alt="Up river indicator is present." height="25"/>
+                  <img v-if='charlie.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25" />
                   </td>
                 <td class="time"> {{ charlie.date.toLocaleTimeString() }} </td>
                 </template>
@@ -46,8 +46,8 @@
               <tr>
                 <template v-for='delta in this.$store.getters.getDelta' :key='delta.date'>    
                 <td >
-                  <img v-if='delta.dir == "up"' class="dir-img" src='@/assets/images/uparr.png' alt="Up river indicator is present." height="25" />
-                  <img v-if='delta.dir == "down"' class="dir-img" src='@/assets/images/dwnarr.png' alt="Down river indicator is present." height="25" />
+                  <img v-if='delta.dir == "up"' class="dir-img" :src="this.base+'/images/uparr.png'" alt="Up river indicator is present." height="25" />
+                  <img v-if='delta.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25" />
                 </td>
                 <td class="time"> {{ delta.date.toLocaleTimeString() }} </td>
                 </template>
@@ -77,8 +77,8 @@
     <!-- Label Table (Left) -->
     <div class="img-container-2">
       <img :src='this.$store.getters.getVesselUrl' :title='"Shows images of vessel " +this.$store.getters.getVesselName' height="200" />
-      <img src="@/assets/images/lock13.jpg" height="200" title="an ariel view of Lock and Dam 13" />
-      <img src="@/assets/images/drawbridge.jpg" height="200" title="and the Clinton railroad drawbridge" />
+      <img :src="this.base+'/images/lock13.jpg'" height="200" title="an ariel view of Lock and Dam 13" />
+      <img :src="this.base+'/images/drawbridge.jpg'" height="200" title="and the Clinton railroad drawbridge" />
     </div>
   </section>
 </template>
@@ -88,6 +88,11 @@ import LogsSubMenu from '@/components/LogsSubMenu.vue'
 
 export default {
   props: ['id'],
+  data() {
+      return {
+          base: process.env.VUE_APP_IMG_URL,           
+      }
+    },
   created: function () {
     this.$store.dispatch("fetchPassageHistory", this.id)
   },

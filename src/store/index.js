@@ -634,10 +634,11 @@ const moduleA = {
         vesselName: "Makameya",
         vesselOwner: "---",
         vesselPassages: { 
-          alpha:   [{date: new Date(), dir: "images/uparr.png"}],
-          bravo:   [{date: new Date(), dir: "images/uparr.png"}], 
-          charlie: [{date: new Date(), dir: "images/uparr.png"}], 
-          delta:   [{date: new Date(), dir: "images/uparr.png"}]} 
+          alpha:   [{date: new Date()}],
+          bravo:   [{date: new Date()}], 
+          charlie: [{date: new Date()}], 
+          delta:   [{date: new Date()}]
+        } 
       },
       
       galleryVideo: [ {vessel: "loading" }
