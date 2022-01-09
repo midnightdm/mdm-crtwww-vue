@@ -68,6 +68,7 @@ h1 {
 
 h5.about {
   margin: 20px 5px 5px 5px;
+  background-color: rgb(150,250,16);
 }
   
 .div1 { 
@@ -83,9 +84,10 @@ h5.about {
 .div1 li {
   color:darkseagreen;
 }
-.div1 p {
-  
+
+.div1 p {  
   color:rgb(160, 250, 16);
+  text-align: justify;
 }
 
 
@@ -93,7 +95,6 @@ h5.about {
   border-radius: 8px;
   padding: 20px;
   margin-right: .3rem;
-  text-justify: center;
   font-size: 18px;
   background-color: rgb(56, 165, 42);
 }
@@ -117,13 +118,20 @@ h5.about {
 }
 
 .div3 ul {
-  background-color: rgb(69, 141, 69);
+  background-color: rgb(160, 250, 16);
   margin: 20px 5px 5px 5px;
   padding: 0px;
 }
 
 ul.bullets {
   list-style-type: disc;
+}
+
+ul.bullets li {
+  text-align: left;
+  
+  margin-left: 25%; 
+  
 }
 
 @media (min-width: 931px) {

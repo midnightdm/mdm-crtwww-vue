@@ -18,10 +18,7 @@ const Past7 = () => import('@/views/logs/Past7.vue')
 const Past24 = () => import('@/views/logs/Past24.vue')
 //import ThisMonth from '../views/logs/ThisMonth.vue'
 const ThisMonth = () => import('@/views/logs/ThisMonth.vue')
-//import Today from '../views/logs/Today.vue'
-const Today = () => import('@/views/logs/Today.vue')
-//import Yesterday from '../views/logs/Yesterday.vue'
-const Yesterday = () => import('@/views/logs/Yesterday.vue')
+
 const LogsMore = () => import('@/views/logs/LogsMore.vue')
 
 //import AddVess from '../views/admin/AddVess.vue'
@@ -142,11 +139,6 @@ const routes = [
     name: 'Detail',
     props: true,
     component: Detail,
-    
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    //component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
     path: '/logs/more',
@@ -176,17 +168,7 @@ const routes = [
     component: ThisMonth,
     
   },
-  {
-    path: '/logs/today',
-    name: 'Today',
-    component: Today,
-  },
-  {
-    path: '/logs/yesterday',
-    name: 'Yesterday',
-    component: Yesterday,
-    
-  },
+
   {
     path: '/alerts/all',
     name: 'AlertsAll',

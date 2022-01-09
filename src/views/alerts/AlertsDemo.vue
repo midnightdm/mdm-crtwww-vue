@@ -1,6 +1,7 @@
 <template>
   
-  <main>
+  <main id="AlertsDemo">
+    <section>
     <button @click="updateArray">Update</button>
     <ul>
     <transition-group
@@ -44,6 +45,7 @@
     </li>
     </transition-group>
   </ul>
+  </section>
   </main>
 </template>
 
@@ -108,7 +110,9 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans:400');
 
-
+#AlertsDemo section {
+  padding-top: 170px;
+}
 
 li.card {
     list-style: none;
@@ -136,6 +140,20 @@ li.card p {
 li.time {
   display: block;
   padding-left: 25px;
+}
+
+@media (max-width: 750px) {
+  #AlertsDemo section {
+    padding-top: var(--menu-pad-mobile);
+  }
+  .mobile {
+    padding-bottom: 5px;
+    visibility: visible;
+  }
+
+  li:first-child.card {
+    margin-top: 5px;
+  }
 }
 
 </style>
