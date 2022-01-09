@@ -22,6 +22,7 @@ const ThisMonth = () => import('@/views/logs/ThisMonth.vue')
 const Today = () => import('@/views/logs/Today.vue')
 //import Yesterday from '../views/logs/Yesterday.vue'
 const Yesterday = () => import('@/views/logs/Yesterday.vue')
+const LogsMore = () => import('@/views/logs/LogsMore.vue')
 
 //import AddVess from '../views/admin/AddVess.vue'
 const AddVess = () => import('@/views/admin/AddVess.vue')
@@ -148,10 +149,14 @@ const routes = [
     //component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
+    path: '/logs/more',
+    name: 'LogsMore',
+    component: LogsMore,  
+  },
+  {
     path: '/logs/lastmonth',
     name: 'LastMonth',
-    component: LastMonth,
-    
+    component: LastMonth,  
   },
   {
     path: '/logs/past7',
@@ -175,7 +180,6 @@ const routes = [
     path: '/logs/today',
     name: 'Today',
     component: Today,
-    
   },
   {
     path: '/logs/yesterday',

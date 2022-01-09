@@ -658,6 +658,9 @@ const moduleA = {
           passageVesselID: 366961530  
         }
       ],
+      otherMonthCache: [],
+      otherMonthRange: undefined,
+      otherMonthIndex: 202112,
       currentUser: {
         cred: null,
         isLoggedIn: false
@@ -735,8 +738,7 @@ const moduleA = {
               }
               commit("setPassagesList", listArr)  
             }     
-        });
-        
+        });      
       }
     },
 
@@ -809,8 +811,49 @@ const moduleA = {
       } else {
         //console.log("No Passages found for "+lastMonthKey+" "+thisMonthKey)
       }
-
     },
+
+
+    async fetchOtherMonth({ commit, state }, monthKey ) {
+      //if(state.otherMonthIndex==monthKey) {
+      //  return
+      //}
+      let yr = parseInt(monthKey.substring(0,4))
+      let mo = parseInt(monthKey.substring(4,6))-1
+      //console.log("mo/yr", mo, yr)
+      let start = new Date(yr, mo, 1, 0, 0, 0)
+      const vesselRef = doc(db, 'Passages', monthKey)
+      const document = await getDoc(vesselRef)
+      var vessels = [], omData, vkey, dkey, payload, found = false;
+      //Put lastMonth & thisMonth passage in 1 vessels array
+      if(document.exists()) {
+        omData = document.data()  
+        for(dkey in omData) {
+          for(vkey in omData[dkey]) {
+            omData[dkey][vkey]['alphaDO']   = new Date( omData[dkey][vkey].passageMarkerAlphaTS * 1000)
+            omData[dkey][vkey]['bravoDO']   = new Date( omData[dkey][vkey].passageMarkerBravoTS * 1000)
+            omData[dkey][vkey]['charlieDO'] = new Date( omData[dkey][vkey].passageMarkerCharlieTS * 1000)
+            omData[dkey][vkey]['deltaDO']   = new Date( omData[dkey][vkey].passageMarkerDeltaTS * 1000)
+            vessels.push(omData[dkey][vkey])
+          }
+        }
+        found = true
+      }
+      //Sort by passageMarkerCharlieTS
+      vessels.sort( (a,b) => parseInt(a.passageMarkerCharlieTS) < parseInt(b.passageMarkerCharlieTS) ? -1 : 1)
+      payload = {
+        success: found,
+        vessels: vessels,
+        index: monthKey,
+        range: {
+          lo: start,
+          hi: lastDayOfMonth(start)
+        }
+      }
+      //console.log(payload) 
+      commit('setOtherMonthCache', payload)
+    },
+
 
     async fetchAllAlerts({ commit, state }) {
       if(state.alertsAll[0].apubID == "loading") {
@@ -935,6 +978,12 @@ const moduleA = {
     setMonthCache(state, payload) {
       console.log("Ranges: ", state.ranges)
       state.monthCache = payload
+    },
+    setOtherMonthCache(state, payload) {
+      state.otherMonthCache = payload.vessels
+      state.otherMonthIndex = payload.index
+      state.otherMonthRange = payload.range
+      state.otherMonthFound = payload.success
     },
     setSlate(state, val) {
       state.slate = val
@@ -1210,6 +1259,13 @@ const moduleA = {
         return item.passageMarkerCharlieTS > state.ranges.thisMonth.lo && item.passageMarkerCharlieTS < state.ranges.thisMonth.hi
       })
       ret.sort( (a,b) => a.passageMarkerCharlieTS > b.passageMarkerCharlieTS ? -1 : 1) 
+      return ret
+    },
+    getOtherMonth: (state) => {
+      let ret = state.otherMonthCache.filter( (item) => {
+        return parseInt(item.passageMarkerCharlieTS) > (Math.round(state.otherMonthRange.lo/1000)) && parseInt(item.passageMarkerCharlieTS) < (Math.round(state.otherMonthRange.hi/1000))
+      })
+      ret.sort( (a,b) => parseInt(a.passageMarkerCharlieTS) > parseInt(b.passageMarkerCharlieTS) ? -1 : 1) 
       return ret
     },
     getRanges: state => { return state.ranges.past7.lo }   

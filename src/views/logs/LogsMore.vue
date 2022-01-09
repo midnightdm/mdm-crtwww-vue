@@ -1,12 +1,17 @@
 <template>
-  <main id="LogsList">
-    <button v-bind:class="{ active: scrolled}" id="topbtn" @click="topOfPage">Top</button>
+  <main id="LogsMore">
+  <button v-bind:class="{ active: scrolled}" id="topbtn" @click="topOfPage">Top</button>
     <section>
-      <h1>{{this.$store.getters[getterName].length}} Vessel Passage<span v-if="this.$store.getters[getterName].length != 1">s</span>  {{pageTitle}} </h1>
+      <h1>{{this.$store.getters.getOtherMonth.length}} Vessel Passage<span v-if="this.$store.getters.getOtherMonth.length != 1">s</span> In {{pageTitle}} 
+      <w-button
+        class="px4 btnGrpA"
+        @click="getSelection; dialog1.show = true"
+        bg-color="primary"
+        dark>Change Month</w-button></h1>
       <h4>{{ this.formattedRange }}</h4>
+      
 
-
-      <ul class="vessels-list" v-for="vessel in this.$store.getters[getterName]" :key="vessel.vesselID">
+      <ul class="vessels-list" v-for="vessel in this.$store.getters.getOtherMonth" :key="vessel.vesselID">
         <li>
           <div class="shipBox tableBlock">
             <img class="shipBox" :src="vessel.vesselImageUrl" width="200" />
@@ -33,48 +38,90 @@
           
         </li>
       </ul>
+
     </section>
   </main>
+
+<!-- Modal for available list selection -->
+<w-dialog  id="availModal" 
+  v-model="dialog1.show"
+  :width="200"
+  :persistent="dialog1.persistent"
+  :persistent-no-animation="dialog1.persistentNoAnimation"
+  title-class="primary-light1--bg white"
+  >    
+  <template #title>
+    Past Logs 
+  </template>
+<div class="modal-body">
+  <h3>Available Months</h3>  
+  <select v-model="selectedMonth" class="form-select" size="5" >
+    <option v-for='event in listData' v-bind:key="event.key" :value="event.key">{{event.name}}</option>
+  </select> <br> 
+</div>
+  <template #actions>
+    <div class="spacer" />
+    <w-button @click="dialog1.show = false">Close </w-button>&nbsp;
+    <w-button @click="updateMonth(); dialog1.show = false">Submit</w-button>  
+  </template>      
+</w-dialog>
+
 </template>
 
 <script>
-import { format } from 'date-fns'
-//import LogsSubMenu from '@/components/LogsSubMenu.vue'
+import ManageModel from '@/assets/classes/ManageModel.js'
+import LogsSubMenu from '@/components/LogsSubMenu.vue'
+import format from 'date-fns/format'
+
+function getSelection() {
+  let qs = document.querySelector('#sub-list-avail');
+  return qs.key;
+}
 
 export default {
-  name: 'LogsList',
-  props: {
-    getterName: String,
-    rangeName: String,
-    pageSelected: String,
-    pageTitle: String
-  },
   created: function () {
-    this.$store.dispatch("fetchCurrentMonth")
     window.addEventListener('scroll', this.handleScroll)
+    //Calculate key for 2 months ago as default
+    let now = new Date()
+    now.setDate(15) 
+    let mili = now.getTime()
+    let twoago = mili - 5184000000
+    let dt2 = format(new Date(twoago), "yyyyMM")
+    this.$store.dispatch("fetchOtherMonth", dt2)
+    //Create array of months 9/2020 thru present -2
+    let nine20 = new Date('2020-09-01')
+    let nine20mili = nine20.getTime()
+    this.listData = []
+    while(twoago > nine20mili) {
+      if(this.listData.length > 200) break;
+      this.listData.push({
+        key: format(new Date(twoago), 'yyyyMM'),
+        name: format(new Date(twoago), 'MMMM yyyy')
+      })
+      twoago-= 2592000000
+    }
+
   },
   mounted() {
     this.$store.commit('setSlate', 'LOGS')
     this.$store.commit('setLogsLinkActive', true)
-    this.$store.commit('setPageSelected', this.pageSelected)
-  },
-  unmounted() {
-    this.$store.commit('setLogsLinkActive', false)
-  },
-   data: function() {
-    return {
-      upArrUrl: process.env.VUE_APP_IMG_URL+'/images/uparr.png',
-      dnArrUrl: process.env.VUE_APP_IMG_URL+'/images/dwnarr.png',
-      scrolled: false
-  
-    }
+    this.$store.commit('setPageSelected', "LogsMore")
   },
   computed: {
     formattedRange() {
+      if(this.$store.state.a.otherMonthRange == undefined) {
+        return "Undefined"
+      }
       return "Range is "+
-      format(this.$store.state.a.ranges[this.rangeName].lo*1000, 'h:mmaaa eeee, LLL do uu') +
+      format(this.$store.state.a.otherMonthRange.lo, 'h:mmaaa eeee, LLL do uu') +
       " to " +
-      format(this.$store.state.a.ranges[this.rangeName].hi*1000, 'h:mmaaa eeee, LLL do uu')
+      format(this.$store.state.a.otherMonthRange.hi, 'h:mmaaa eeee, LLL do uu')
+    },
+    pageTitle() {
+      if(this.$store.state.a.otherMonthRange==undefined) {
+        return "Change Month"
+      }
+      return format(this.$store.state.a.otherMonthRange.lo, 'MMMM yyyy')
     }
   },
   methods: {
@@ -88,21 +135,43 @@ export default {
       } else {
         this.scrolled = false
       }
+    },
+    updateMonth() {
+      console.log('updateMonth()', this.selectedMonth)
+      this.$store.dispatch("fetchOtherMonth", this.selectedMonth)
     } 
   },
-  destroyed () {
-    window.removeEventListener('scroll', this.handleScroll);
+  data() {
+    return {
+      scrolled: false,
+      upArrUrl: process.env.VUE_APP_IMG_URL+'/images/uparr.png',
+      dnArrUrl: process.env.VUE_APP_IMG_URL+'/images/dwnarr.png',
+      dialog1: {
+        show: false,
+        fullscreen: false,
+        persistent: false,
+        persistentNoAnimation: false,
+        width: 300,
+        remove: false
+      },
+      listAvail: null,
+      listData: [],
+      selectedMonth: ""
+    }
+  },
+  components: {
+    LogsSubMenu
   }
 }
 </script>
 
 <style scoped>
-#LogsList section {
+#LogsMore section {
   padding-top: var(--menu-pad-wide-a);
 }
 
 @media (max-width: 750px) {
-  #LogsList section {
+  #LogsMore section {
     padding-top: var(--menu-pad-mobile);
   }
 }
