@@ -70,6 +70,15 @@ export default {
 </script>
 
 <style>
+main {
+ padding-top: var(--menu-pad-wide-a);
+}
+
+form {
+  margin: auto;
+  width: 80vw;
+}
+
 fieldset {
     width: 5em;
     padding: 1em;

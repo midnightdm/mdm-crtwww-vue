@@ -70,8 +70,7 @@ export default {
   .expendable {
     max-width: 0px;
     visibility: hidden;
-  }
-  
+  }  
 }
 
 

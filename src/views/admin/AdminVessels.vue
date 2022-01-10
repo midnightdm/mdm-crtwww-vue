@@ -1,6 +1,6 @@
 <template>
-<AdminSubMenu></AdminSubMenu>  
-  <main class="local">
+<AdminSubMenu class="adminsub"></AdminSubMenu>  
+  <main id="AdminVessels">
   <div   class="AdminVess">     
 <h2 v-if="isShowing">Admin Vessels</h2>
 <p v-if="isShowing">These are vessels for which images and data have been scraped from <a href="https://www.myshiptracking.com/vessels">myshiptracking.com</a>. They are added automatically
@@ -22,11 +22,11 @@
       <table loading>
         <thead>
           <tr>
-            <th>Index</th>  
+            <th class="expendable">Index</th>  
             <th>Type</th>
             <th>Name</th>
-            <th>MMSI</th>
-            <th>Date Added</th>
+            <th :class="{expendable: pageView!='mmsi'}">MMSI</th>
+            <th class="wider" :class="{expendable: pageView=='mmsi'}">Date Added</th>
             <th>On Watch List?</th>
             <th></th>
           </tr>
@@ -35,10 +35,10 @@
           <!-- Default Sort -->
           <template v-if="pageView=='default'">
             <tr v-for='(vessel, idx) in this.$store.state.b.vesselsList' :key='vessel.vesselID'>
-              <td class="col_r" ><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
+              <td class="col_r expendable" ><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
               <td class="col_r">{{ vessel.vesselType}}</td>
               <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">{{ vessel.vesselName}}</h4></router-link></td>
-              <td  >{{vessel.vesselID}}</td>
+              <td class="expendable">{{vessel.vesselID}}</td>
               <td class="wider">{{ vessel.vesselRecordAddedDate }}</td>     
               <td  :class="{ watchOn: vessel.vesselWatchOn}" class="col_c square">
                   <a href="#" @click.prevent="toggleWatchOn(vessel)" v-if="vessel.vesselWatchOn">Yes</a>
@@ -51,11 +51,11 @@
           <!-- MMSI Sort -->
           <template v-if="pageView=='mmsi'">
             <tr v-for='(vessel, idx) in this.$store.getters.getVesselsSortMMSI' :key='vessel.vesselID'>
-              <td class="col_r" ><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
+              <td class="col_r expendable"><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
               <td class="col_r">{{ vessel.vesselType}}</td>
               <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">{{ vessel.vesselName}}</h4></router-link></td>
-              <td  >{{vessel.vesselID}}</td>
-              <td class="wider">{{ vessel.vesselRecordAddedDate }}</td>     
+              <td>{{vessel.vesselID}}</td>
+              <td class="expendable">{{ vessel.vesselRecordAddedDate }}</td>     
               <td :class="{ watchOn: vessel.vesselWatchOn}" class="col_c square">
                   <a href="#" @click.prevent="toggleWatchOn(vessel)" v-if="vessel.vesselWatchOn">Yes</a>
                   <a href="#" @click.prevent="toggleWatchOn(vessel)" v-else>No</a>
@@ -67,10 +67,10 @@
           <!-- Date Added Sort -->
           <template v-if="pageView=='date'">
             <tr v-for='(vessel, idx) in this.$store.getters.getVesselsSortAdded' :key='vessel.vesselID'>
-              <td class="col_r" ><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
+              <td class="col_r expendable" ><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
               <td class="col_r">{{ vessel.vesselType}}</td>
               <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">{{ vessel.vesselName}}</h4></router-link></td>
-              <td  >{{vessel.vesselID}}</td>
+              <td class="expendable">{{vessel.vesselID}}</td>
               <td class="wider">{{ vessel.vesselRecordAddedDate }}</td>     
               <td  :class="{ watchOn: vessel.vesselWatchOn}" class="col_c square">
                   <a href="#" @click.prevent="toggleWatchOn(vessel)" v-if="vessel.vesselWatchOn">Yes</a>
@@ -83,10 +83,10 @@
           <!-- Passengers Only Filter -->
           <template v-if="pageView=='passenger'">
             <tr v-for='(vessel, idx) in this.$store.getters.getVesselsPassengerOnly' :key='vessel.vesselID'>
-              <td class="col_r" ><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
+              <td class="col_r expendable" ><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
               <td class="col_r">{{ vessel.vesselType}}</td>
               <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">{{ vessel.vesselName}}</h4></router-link></td>
-              <td  >{{vessel.vesselID}}</td>
+              <td class="expendable">{{vessel.vesselID}}</td>
               <td class="wider">{{ vessel.vesselRecordAddedDate }}</td>     
               <td   :class="{ watchOn: vessel.vesselWatchOn}" class="col_c square">
                   <a href="#" @click.prevent="toggleWatchOn(vessel)" v-if="vessel.vesselWatchOn">Yes</a>
@@ -169,6 +169,13 @@ export default {
 </script>
 
 <style>
+main#AdminVessels {
+  padding-top: var(--menu-pad-wide-b);
+}
+
+.expendable {
+  visibility: visible;
+}
 
 p {
     text-align: justify;
@@ -284,22 +291,16 @@ main.local {
   top: 50px;
 }
 
-.sort {
-    transform: translateY(-50spx);
-}
-
 #topbtn {
-    background-color: greenyellow;
-    border: 4px solid black;
-    text-align: center;
-    border-radius: 10%; 
-    padding: 10px;
-
-    font-weight: bold;
-    position: fixed;
-    bottom: 30px;
-    right: 15px;
-
+  background-color: greenyellow;
+  border: 4px solid black;
+  text-align: center;
+  border-radius: 10%; 
+  padding: 10px;
+  font-weight: bold;
+  position: fixed;
+  bottom: 30px;
+  right: 15px;
 }
 
 .navigation .nav-link {
@@ -329,12 +330,16 @@ a, a:visited,
   border-color: #00afea;
 }
 
-.navigation {
-  background-color: #31363e;
+.navigation .sub {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   transition: 0.5x ease all;
+}
+
+#asub {
+  background-color: #31363e;
+  transform: translateY(140px);
 }
 
 .navigation2 {
@@ -345,4 +350,24 @@ a, a:visited,
 ul.navigation2 {
   background-color: white; 
 }
+
+@media (max-width: 800px) {
+  .expendable {
+    max-width: 0px;
+    visibility: hidden;
+  }  
+  .wider {
+    width: 6em;
+  }
+}
+
+@media (max-width: 750px) {
+  #asub {
+    transform: translateY(94px);
+  } 
+  main#AdminVessels {
+    padding-top: var(--menu-pad-mobile);
+  }
+}
+
 </style>
