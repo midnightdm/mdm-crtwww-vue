@@ -7,7 +7,7 @@ module.exports = {
             minSize: 10000,
             maxSize: 250000,
         }
-      }      
+      }     
     },
     chainWebpack: config => {
         config
