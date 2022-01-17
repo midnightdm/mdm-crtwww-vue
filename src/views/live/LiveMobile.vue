@@ -229,6 +229,8 @@ h5 {
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.829);
   padding: .3rem;
+  margin-top: 0px;
+  border-radius: 0px 0px 8px 8px;
   background: rgb(168, 179, 14);
   text-align: center;
   text-shadow: 2px 2px #000;
@@ -404,7 +406,7 @@ section {
   opacity: 1;
   max-height: 3rem;
   min-width: 20rem;
-  border-radius: 8px;
+  border-radius: 8px 8px 0px 0px;
   display: flex;
   font-size: 20pt;
   flex-direction: row;
