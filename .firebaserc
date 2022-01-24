@@ -5,8 +5,8 @@
   "targets": {
     "mdm-qcrt-demo-1": {
       "hosting": {
-        "base": [
-          "mdm-crt-vue2022"
+        "main": [
+          "mdm-crt2022vue"
         ]
       }
     }
