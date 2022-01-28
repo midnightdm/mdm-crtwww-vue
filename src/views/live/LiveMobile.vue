@@ -171,6 +171,7 @@ export default {
       window.addEventListener('resize', checkScreen)
       checkScreen()
       store.commit("initLiveScan", store)
+      store.commit("setInfoOn", true)
       store.commit('setPageSelected', 'Live')
       setTimeout(() =>{
         store.commit('toggleLiveList', {

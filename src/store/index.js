@@ -591,7 +591,7 @@ const moduleA = {
       pageSelected: null,
       isHero: false,
       isTest: true,
-      lab: "ABCDEFGHIJKLMNOPQRSTUVWXYZ*#@&~1234567890abcdefghijklmnopqrstuvwxyz",
+      lab: "_ABCDEFGHIJKLMNOPQRSTUVWXYZ*#@&~1234567890abcdefghijklmnopqrstuvwxyz",
       red: "#ff0000",
       //isZoomed: false,
       map: {
@@ -607,6 +607,7 @@ const moduleA = {
       liveAutoDelay: 7,
       liveAutoLast: 500,
       liveListOn: false,
+      infoOn: true,
       liveMapHeight: 30,
       liveMapWidth: 100,
       liveScanModel: null,
@@ -1017,6 +1018,9 @@ const moduleA = {
     },
     setPageSelected(state, val) {
       state.pageSelected = val
+    },
+    setInfoOn(state, val) {
+      state.infoOn = val
     },
     focusMap(state, payload) {
       if(!state.liveScans.length) {

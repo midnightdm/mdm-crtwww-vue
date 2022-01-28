@@ -16,7 +16,7 @@
     <div v-if="store.state.a.infoOn">
       <Marker v-for="label in store.state.a.mileMarkerLabels" :key="label.title" :options="label"/>
     </div>
- 
+  
    </GoogleMap>
 </template>
 
@@ -33,11 +33,12 @@ export default {
   components: { GoogleMap, Marker, Polyline },
   setup() {
     const apiKey = process.env.VUE_APP_MAP_KEY
-    const store = useStore()
+    const store = useStore()  
   
     function initMap() {
       store.dispatch("initMap")
     }
+
 
     function toggleMileLabels() {
       store.dispatch("toggleMileLabels")
@@ -114,10 +115,10 @@ export default {
  
     onMounted(async () => {
       initMap()
-      setInterval(predictMovement, 1000)
+      setInterval(predictMovement, 1000)  
     })
     
-    return { initMap, store, toggleMileLabels, apiKey}
+    return { initMap, store, toggleMileLabels, apiKey }
     
   }  
 

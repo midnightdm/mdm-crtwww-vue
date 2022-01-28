@@ -2,6 +2,7 @@
   <div id="page-container">
     <div id="content-wrap">
       <Map class="widemap column"></Map>
+      <button @click="toggleLabels">Mile Labels <span class='led' :class="{'on':  store.state.a.infoOn }"></span></button>
       <!--section class="map column"></-section-->
       <section class="data column">
         <div class="dataColumn">
@@ -87,6 +88,14 @@ export default {
       store.dispatch('focusMap', key)
     }
 
+    function toggleLabels() {
+      if(store.state.a.infoOn) {
+        store.commit("setInfoOn", false)
+      } else {
+        store.commit("setInfoOn", true)
+      }
+    }
+
     function toggleAuto() {
       if(store.state.a.liveAutoOn === true) {
         store.commit('toggleLiveAuto', {
@@ -130,7 +139,7 @@ export default {
         store.commit('setSlate', 'LIVE')
       }  
     })
-    return { store, focusMap,  inputDelay, checkScreen, toggleAuto, route }
+    return { store, focusMap,  inputDelay, checkScreen, toggleAuto, route, toggleLabels }
   },
   watch: {
     currentSlide: function (val) {
