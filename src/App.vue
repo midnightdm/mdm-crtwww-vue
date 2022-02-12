@@ -1,10 +1,27 @@
 <template>
   <w-app>
-    <CrtLogo></CrtLogo>
-      
+    <div class="topDiv" v-if="this.$store.state.a.isHero">
+      <Hero></Hero>
+    </div>
+    <div class="topDiv" v-else> 
+      <Navigation></Navigation>
       <router-view/>
+    </div>
   </w-app>
 </template>
+<script>
+
+export default {
+  computed: {
+    isHero() {
+      return this.$store.state.a.isHero
+    },
+    isTest() {
+      return this.$store.state.a.isTest
+    }
+  }  
+}
+</script>
 
 <style>
 #app {
@@ -13,76 +30,14 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  line-height: 18pt;
+  line-height: normal;
+  background-color: white;
 }
 
-#main {
-  position: relative;
+:root {
+  --menu-pad-mobile: 110px;
+  --menu-pad-wide-a: 210px;
+  --menu-pad-wide-b: 175px;
 }
 
-.nav2 {
-  padding: 30px;
-}
-
-.nav2 a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-
-.nav2 { 
-    position: relative;
-    top: 70px;
-    width: 100%;
-    margin: 0px 0px 20px -10px;
-    padding: 0 0 0 0;
-    background-color: #31363e;
-    z-index: 0;  
-    overflow: auto;
-}
-  
-.nav2 ul { 
-   margin: 0 0 0px 0px;
-   padding: 5px 5px 5px 5px;
-   background-color: #31363e;
- }
-  
-                          
-.nav2 li {
-    list-style: none;
-    float: left;
-    margin: 7px;
-    padding: 0;
-    font-family: sans-serif;
-    font-size: 1em;
-    letter-spacing: 2px;  
-    border: 5px;
-    border-color: #31363e; 
-}
-  
-.nav2 li a {  
-    float: left;
-    font-weight: bold;
-    vertical-align: middle;
-    padding: 10px 12px;
-    text-decoration: none;
-    color: #e7e3d9;
-    border: none;   
-}
-  
-.nav2 li a.router-link-exact-active {
-    background: white;
-    color: red;
-   
-}
-  
-.nav2 li .selected {
-    border: 5px;
-    border-color: #31363e;
-}
-  
-.nav2 li a:hover {
-    color: red;
-   
-}
 </style>

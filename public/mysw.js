@@ -20,7 +20,7 @@ self.addEventListener('push', function(event) {
 
 self.addEventListener('notificationclick', function(event) {
   console.log('[Service Worker] Notification click Received.');
-  //console.log(self.notificationURL);
+  console.log(self.notificationURL);
   event.notification.close();
 
   event.waitUntil(
