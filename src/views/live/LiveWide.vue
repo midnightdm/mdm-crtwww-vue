@@ -124,7 +124,7 @@ export default {
       store.commit("initLiveScan", store)
       store.commit('setPageSelected', 'Live')
       store.commit('toggleLiveList', {
-        on: true, 
+        on: false, 
         vh: 90, 
         vw: 30,
         zoom: 12, 
@@ -132,7 +132,7 @@ export default {
       })
       if(store.liveScans != undefined && store.state.liveScans.length) {
         store.commit('setSlate', store.state.a.liveScans.length+' LIVE')
-        store.commit('focusMap', 0)
+        //store.commit('focusMap', 0)
 
       }
       else {
@@ -140,15 +140,15 @@ export default {
       }  
     })
     return { store, focusMap,  inputDelay, checkScreen, toggleAuto, route, toggleLabels }
-  },
-  watch: {
-    currentSlide: function (val) {
-      // when the hash prop changes, this function will be fired.
-      this.$store.commit('focusMap', this.currentSlide)
-      this.$store.commit('setSlate', this.$store.state.a.liveScans.length+' LIVE')
-      console.log("slide:", this.currentSlide)
-    }
   }
+  // watch: {
+  //   currentSlide: function (val) {
+  //     // when the hash prop changes, this function will be fired.
+  //     this.$store.commit('focusMap', this.currentSlide)
+  //     this.$store.commit('setSlate', this.$store.state.a.liveScans.length+' LIVE')
+  //     console.log("slide:", this.currentSlide)
+  //   }
+  // }
 }
 </script>
 
