@@ -3,6 +3,7 @@ import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import App from './App.vue'
 import AlertsSubMenu from '@/components/AlertsSubMenu.vue'
+import AlertsSubMenuWide from '@/components/AlertsSubMenuWide.vue'
 import GallerySubMenu from '@/components/GallerySubMenu.vue'
 import LogsSubMenu from '@/components/LogsSubMenu.vue'
 import Navigation from '@/components/Navigation.vue'
@@ -25,6 +26,7 @@ const registerComponents = (app) => {
   app.component('Hero', Hero);
   app.component('Navigation', Navigation);
   app.component('AlertsSubMenu', AlertsSubMenu);
+  app.component('AlertsSubMenuWide', AlertsSubMenuWide);
   app.component('GallerySubMenu', GallerySubMenu);
   app.component('LogsSubMenu', LogsSubMenu);
   app.component('font-awesome-icon', FontAwesomeIcon);

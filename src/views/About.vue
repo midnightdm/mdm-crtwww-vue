@@ -5,7 +5,7 @@
         <h2>Welcome River Fans</h2>
         <p>This website is for river boat spotters in Clinton, Iowa. It works by collecting each vessel's radio transponder data which is parsed, stored and shown on a map.  You can then use this information to estimate when a riverboat will pass near by.</p>
         <h2>CRT 2.0 Is Here</h2>
-        <p>A complete overhaul of the site for 2022 represents months of work. The goal is to make features more friendly to use and look better on mobile devices.</p>
+        <p>A complete overhaul of the site for 2022 represents months of work. The goal is to make features more friendly to use and look better on mobile devices.</p><br>
         <p>Improvements Include:</p>
         <ul class="bullets">
           <li>Responsive layout</li>
@@ -15,8 +15,9 @@
           <li>Improved notification options</li>
         </ul>
         <p>  
-  <router-link :to="{name: 'Manage'}">Notifications</router-link> are now reviewable and customiseable. There was no way to review which type of notification to which you were subscribed previously. Now you can see and change notification settings. Plus there are more choices available.  Notifications for bridge and lock waypoints are still the default, but you can now pick vessel crossings of any river mile markers also. </p>
-  <p>Still more enhancements are planned including a Comments page and enabling the gallery to allow user uploads of images and videos.</p>
+  <router-link :to="{name: 'Manage'}">Notifications</router-link> are now reviewable and customizable. There was no way to review which type of notification to which you were subscribed previously. Now you can see and change notification settings. Plus there are more choices available.  Notifications for bridge and lock waypoints are still the default, but you can now pick vessel crossings of any river mile markers also. Be advised that if you used our push notifications previously, you'll have to resubscribe on the new page.</p>
+  <br>
+  <p>The <a href="https://dashboard.clintonrivertraffic.com">dashboard</a> lets wide screen users see all available live data in one place. There are no links or buttons for a seemless TV channel like experience. We had a waiting room big screen in mind during the design. It even has audio announcements for each new waypoint passage.</p>
 
         <h4>-- Site Owners</h4>
        </div>

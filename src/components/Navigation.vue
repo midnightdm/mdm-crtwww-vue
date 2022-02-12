@@ -17,7 +17,7 @@
         <li><a @click="goRoute('/logs')" :href="'/logs'" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive }">LOGS</a></li>
       </ul>
 
-      <AlertsSubMenu v-show="this.$store.state.a.alertsLinkActive && !mobile"></AlertsSubMenu>
+      <AlertsSubMenuWide v-show="this.$store.state.a.alertsLinkActive && !mobile"></AlertsSubMenuWide>
       <!--
       <GallerySubMenu v-show="this.$store.state.a.galleryLinkActive && !mobile"></GallerySubMenu>
       -->
