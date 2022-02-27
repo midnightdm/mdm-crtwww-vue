@@ -5,8 +5,9 @@ import { doc, getDoc, getDocs, setDoc, collection, onSnapshot, query, where, lim
 // onSnapshot, collection, query, where
 import { format, lastDayOfMonth, startOfYesterday, endOfYesterday, setHours } from 'date-fns'
 import { GoogleAuthProvider } from 'firebase/auth'
-import LiveScanModel from '@/assets/classes/LiveScanModel.js'
-import { Loader } from '@googlemaps/js-api-loader'
+import { LiveScanModel } from '@/assets/classes/AltLiveScanModel.js'
+//import LiveScanModel from '@/assets/classes/LiveScanModel.js'
+//import { Loader } from '@googlemaps/js-api-loader'
 
 //const MAP_KEY = process.env.VUE_APP_MAP_KEY
 const db = firestore
@@ -580,6 +581,13 @@ function calculateNewPositionFromBearingDistance(lat, lng, bearing, distance) {
   return [180 / Math.PI * lat2 , 180 / Math.PI * lon2];
 }
 
+
+
+
+
+
+
+
 // The shared state object that any vue component can get access to.
 // Has some placeholders that we’ll use further on!
 const moduleA = {
@@ -610,7 +618,7 @@ const moduleA = {
       infoOn: true,
       liveMapHeight: 30,
       liveMapWidth: 100,
-      liveScanModel: null,
+      liveScanModel: LiveScanModel,
       liveScans: [ { liveName: "loading" }
       ], 
       passagesList: [
@@ -713,7 +721,11 @@ const moduleA = {
     }),   
   actions: {
 
-    async fetchPassagesList({ commit, state }) {
+    initializeMap({ commit }) { //ACTION
+      commit('initializeMap')
+    },
+
+    async fetchPassagesList({ commit, state }) { //ACTION
       if(state.passagesList[0].type==="default") {
         const passagesAllRef = doc(db, 'Passages', 'All');
         var plObj, key, listArr = [], tmpArr = {},  nameArr = [], idx = 0, nKey, nObj, i;
@@ -743,7 +755,7 @@ const moduleA = {
       }
     },
 
-    async fetchPassageHistory({ commit }, vesselID) {
+    async fetchPassageHistory({ commit }, vesselID) { //ACTION
       let docKey = 'mmsi'+vesselID 
       //367668810
       const vesselRef = doc(db, 'Vessels', docKey)
@@ -759,7 +771,7 @@ const moduleA = {
       }
     },
 
-    async fetchCurrentMonth({ commit, state } ) {
+    async fetchCurrentMonth({ commit, state } ) { //ACTION
       //Check whether cache is already set to prevent reloading
       if(state.monthCache[0].passageDirection !=="default") {
         return;
@@ -815,7 +827,7 @@ const moduleA = {
     },
 
 
-    async fetchOtherMonth({ commit, state }, monthKey ) {
+    async fetchOtherMonth({ commit, state }, monthKey ) { //ACTION
       //if(state.otherMonthIndex==monthKey) {
       //  return
       //}
@@ -856,7 +868,7 @@ const moduleA = {
     },
 
 
-    async fetchAllAlerts({ commit, state }) {
+    async fetchAllAlerts({ commit, state }) { //ACTION
       if(state.alertsAll[0].apubID == "loading") {
         const apubSnapshot = onSnapshot(doc(db, "Alertpublish", "all"), (querySnapshot) => {
           let tempAlertsAll = []
@@ -883,7 +895,7 @@ const moduleA = {
       
     },
 
-    async fetchPassengerAlerts({ commit, state }) {
+    async fetchPassengerAlerts({ commit, state }) { //ACTION
       if(state.alertsPassenger[0].apubID == "loading") {
         const apubSnapshot = onSnapshot(doc(db, "Alertpublish", "passenger"), (querySnapshot) => {
           let tempAlertsPassenger = []
@@ -910,7 +922,7 @@ const moduleA = {
       }
     },
 
-    async fetchGalleryVideo({ commit, state }) {
+    async fetchGalleryVideo({ commit, state }) { //ACTION
       if(state.galleryVideo[0].vessel==="loading") {
         const vidSnapshot = await getDocs(collection(db, "GalleryVideo"))
         let tempGalleryVideo = []
@@ -924,34 +936,34 @@ const moduleA = {
       }
     },
 
-    initLiveScan({ commit }, payload) {
+    initLiveScan({ commit, state }, payload) { //ACTION
       commit('initLiveScan', payload)
       setInterval(predictMovement(state), 1000)
     },
 
     //Run by initMap()
-    addMileMarkers( { commit } ) {
+    addMileMarkers( { commit } ) { //ACTION
       commit('addMileMarkers')
     },  
       
-    initMap({ dispatch, commit }) {   
+    initMap({ dispatch, commit }) {  //ACTION
       commit('initMap')
       dispatch('addMileMarkers')
     },
 
-    toggleLiveAuto({ commit }, payload) {
+    toggleLiveAuto({ commit }, payload) { //ACTION
       commit('toggleLiveAuto', payload)
     },
 
-    toggleLiveList({ commit }, payload) {
+    toggleLiveList({ commit }, payload) { //ACTION
       commit('toggleLiveList', payload)
     },
       
-    focusMap({ commit }, payload) {
+    focusMap({ commit }, payload) { //ACTION
       commit('focusMap', payload)
     },
 
-    deleteOldScans({ commit, state }) {
+    deleteOldScans({ commit, state }) { //ACTION
       var a, l = 0, arr = [], i = 0, now = Date.now();
       state.livescans.forEach( (obj) => {
         if((now - 1800000)> obj.lastMovementTS.getTime()) {
@@ -970,26 +982,30 @@ const moduleA = {
   },
 
   mutations: {
-    setPassagesList(state, val) {
-      state.passagesList = val
+    initializeMap( state, val ) { //MUTATION
+      state.liveScanModel.initializeMap()
     },
-    setHistoryCache(state, payload) {
+
+    setPassagesList(state, val) { //MUTATION
+      state.passagesList = val 
+    },
+    setHistoryCache(state, payload) { //MUTATION
       state.historyCache = payload
     },
-    setMonthCache(state, payload) {
+    setMonthCache(state, payload) { //MUTATION
       console.log("Ranges: ", state.ranges)
       state.monthCache = payload
     },
-    setOtherMonthCache(state, payload) {
+    setOtherMonthCache(state, payload) { //MUTATION
       state.otherMonthCache = payload.vessels
       state.otherMonthIndex = payload.index
       state.otherMonthRange = payload.range
       state.otherMonthFound = payload.success
     },
-    setSlate(state, val) {
+    setSlate(state, val) { //MUTATION
       state.slate = val
     },
-    setAlertsLinkActive(state, val) {
+    setAlertsLinkActive(state, val) { //MUTATION
       //Clean the slate
       state.alertsLinkActive = false
       state.logsLinkActive = false
@@ -997,7 +1013,7 @@ const moduleA = {
       //Then set new value
       state.alertsLinkActive = val
     },
-    setLogsLinkActive(state, val) {
+    setLogsLinkActive(state, val) { //MUTATION
       //Clean the slate
       state.alertsLinkActive = false
       state.logsLinkActive = false
@@ -1005,7 +1021,7 @@ const moduleA = {
       //Then set new value
       state.logsLinkActive = val
     },
-    setGalleryLinkActive(state, val) {
+    setGalleryLinkActive(state, val) { //MUTATION
       //Clean the slate
       state.alertsLinkActive = false
       state.logsLinkActive = false
@@ -1013,16 +1029,16 @@ const moduleA = {
       //Then set new value
       state.galleryLinkActive = val
     },
-    setIsHero(state, val) {
+    setIsHero(state, val) { //MUTATION
       state.isHero = val
     },
-    setPageSelected(state, val) {
+    setPageSelected(state, val) { //MUTATION
       state.pageSelected = val
     },
-    setInfoOn(state, val) {
+    setInfoOn(state, val) { //MUTATION
       state.infoOn = val
     },
-    focusMap(state, payload) {
+    focusMap(state, payload) { //MUTATION
       if(!state.liveScans.length) {
         return
       }
@@ -1031,7 +1047,7 @@ const moduleA = {
       state.map.zoom = 15
       state.isZoomed = true
     },
-    initMap(state) {
+    initMap(state) { //MUTATION
       state.map =  {
         zoom: 12, 
         center: {lat: 41.857202, lng:-90.184084}, 
@@ -1084,7 +1100,7 @@ const moduleA = {
         }
       ]         
     },
-    addMileMarkers(state) {
+    addMileMarkers(state) { //MUTATION
       var dat = [
         {id:486, lngA:-90.50971806363766, latA:41.52215220467504, lngB:-90.5092203536731, latB:41.51372097487243}, 
         {id:487, lngA:-90.48875678287305, latA:41.521402024002950, lngB:-90.48856266269104, latB:41.5145424556308},
@@ -1172,8 +1188,9 @@ const moduleA = {
         }
       }     
     },
-    async initLiveScan( state, payload) {
-      state.liveScanModel = new LiveScanModel(payload)
+    
+    async initLiveScan( state, payload) { //MUTATION
+      //state.liveScanModel = new LiveScanModel(payload)
       if(state.liveScans[0].liveName == "loading") {
         state.liveScans = []
         const q = query(collection(db, 'LiveScan'), where('liveVesselID', '!=', false));
@@ -1197,13 +1214,13 @@ const moduleA = {
       }
     },
 
-    toggleLiveAuto(state, val) {
+    toggleLiveAuto(state, val) { //MUTATION
       state.liveAutoOn = val.on  
       state.liveAutoLast = state.liveAutoDelay
       state.liveAutoDelay = val.delay
     },
 
-    toggleLiveList(state, val) {
+    toggleLiveList(state, val) {//MUTATION
       state.liveListOn    = val.on
       state.liveMapHeight = val.vh
       state.liveMapWidth  = val.vw

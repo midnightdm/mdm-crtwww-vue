@@ -169,7 +169,7 @@ export default {
     
     onMounted(async () => {
       window.addEventListener('resize', checkScreen)
-      checkScreen()
+      
       store.commit("initLiveScan", store)
       store.commit("setInfoOn", true)
       store.commit('setPageSelected', 'Live')
@@ -190,7 +190,8 @@ export default {
       else {
         store.commit('setSlate', 'LIVE')
       }
-      //let reference = document.getElementById("inputDelay")      
+      //let reference = document.getElementById("inputDelay") 
+      checkScreen()
     })
     return { store, focusMap, toggleList, inputDelay, checkScreen, toggleAuto, route }
   },

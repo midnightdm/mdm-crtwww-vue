@@ -10,6 +10,7 @@ import Navigation from '@/components/Navigation.vue'
 import Hero from '@/views/Hero.vue'
 import router from './router'
 import store from './store'
+import LiveScanModel from '@/assets/classes/AltLiveScanModel.js'
 import WaveUI from 'wave-ui'
 import 'wave-ui/dist/wave-ui.css'
 import timeago from 'vue-timeago3'
@@ -31,6 +32,15 @@ const registerComponents = (app) => {
   app.component('LogsSubMenu', LogsSubMenu);
   app.component('font-awesome-icon', FontAwesomeIcon);
 }
+
+
+/* Alt Map Addition 2/26/22  */
+const liveScanModel = LiveScanModel;
+function initMap() {
+  store.commit("initializeMap", store)
+}
+window.initMap = initMap;
+
 
 const app = createApp(App).use(router).use(store).use(timeago);
 

@@ -1,7 +1,7 @@
 <template>
   <div id="page-container">
     <div id="content-wrap">
-      <Map class="widemap column"></Map>
+      <div class="widemap column" id="map1"></div>
       <button @click="toggleLabels">Mile Labels <span class='led' :class="{'on':  store.state.a.infoOn }"></span></button>
       <!--section class="map column"></-section-->
       <section class="data column">
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import Map from '@/components/Map.vue'
+//import Map from '@/components/Map.vue'
 import { onMounted, onUnmounted, watch, ref } from 'vue'
 import { useStore } from 'vuex'
 import 'vue3-carousel/dist/carousel.css';
@@ -46,13 +46,13 @@ import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 import { useRouter } from 'vue-router'
 
 export default {
-  components: {
-    Map,
+  //components: {
+    //Map,
     //Carousel,
     //Slide,
     //Pagination,
     //Navigation
-  },
+  //},
   data() {
     return {
       currentSlide: 0,
@@ -120,7 +120,12 @@ export default {
 
     onMounted(async () => {
       window.addEventListener('resize', checkScreen)
-      checkScreen()
+      //Add google maps api from CDN
+      let externalScript = document.createElement('script')
+      externalScript.setAttribute('src', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBCrKHbtV_gnPMAbXAHtOPRl-H3M0OG6sY&callback=initMap')
+      document.head.appendChild(externalScript)
+      
+      store.commit("initializeMap")
       store.commit("initLiveScan", store)
       store.commit('setPageSelected', 'Live')
       store.commit('toggleLiveList', {
@@ -137,7 +142,8 @@ export default {
       }
       else {
         store.commit('setSlate', 'LIVE')
-      }  
+      }
+      checkScreen()  
     })
     return { store, focusMap,  inputDelay, checkScreen, toggleAuto, route, toggleLabels }
   }
