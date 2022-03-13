@@ -1,3 +1,5 @@
+import { setLogLevel } from "firebase/app";
+
 export default class LiveScanModel {
   constructor(callback) {
     let self = this;
@@ -15,6 +17,16 @@ export default class LiveScanModel {
     self.markerList   = [];
     self.markersOn    = false; //ko.observable
     self.infoOn       = true; //ko.observable
+
+    self.prevVpubID   = 0;
+    self.playVpub     = false;
+    self.prevApubID   = 0;
+    self.playApub     = false;
+    self.waypoint     = {};
+    self.announcement = {};
+    self.voiceActivatedUrl = "https://storage.googleapis.com/www.clintonrivertraffic.com/voice/voiceactivated.mp3";
+
+    
 
     self.toggleMileLabels = function() {
       if(self.infoOn ==false) {
@@ -81,25 +93,34 @@ export default class LiveScanModel {
       o.otherDataLabel = "od"+dat.liveVesselID
       
       //FOR SHIP ICON MOVEMENT
-      let coords = self.getShipSpriteCoords(o.course)
-      let icon = {
-        url: "https://storage.googleapis.com/www.clintonrivertraffic.com/images/ship-icon-sprite-cyan.png",
-        origin: { x: coords[0], y: coords[1] }, 
-        size: {width: 55, height: 55 }
+      let coords = self.getShipSpriteCoords(o.course), icon
+      if(o.type.includes("assenger")) {
+        icon = {
+          url: "https://storage.googleapis.com/www.clintonrivertraffic.com/images/ship-icon-sprite-yellow.png",
+          origin: { x: coords[0], y: coords[1] }, 
+          size: {width: 55, height: 55 }
+        }
+      } else {
+        icon = {
+          url: "https://storage.googleapis.com/www.clintonrivertraffic.com/images/ship-icon-sprite-cyan.png",
+          origin: { x: coords[0], y: coords[1] }, 
+          size: {width: 55, height: 55 }
+        }
       }
+ 
       if(isNew) {
         o.mapLabel = state.lab[++state.liveScanModel.labelIndex]
-        o.lastMovementTS = new Date()
-        o.liveLastScanTS = new Date(dat.liveLastTS*1000)
-        let marker = {
+        o.marker = {
           position: o.position,
           title: o.name, 
           label: o.mapLabel, 
           icon: icon,
-        }
-        o.marker = marker   
+          map: state.map
+        } 
+        o.lastMovementTS = new Date()
+        o.liveLastScanTS = new Date(dat.liveLastTS*1000)
       } else {
-        let coords = self.getShipSpriteCoords(o.course)
+        // let coords = self.getShipSpriteCoords(o.course)
         o.marker.position = {lat: o.lat, lng: o.lng} 
         o.marker.icon.origin = { x: coords[0], y: coords[1] };
         if(o.speed>0) { //If transponder reported movement...

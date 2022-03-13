@@ -2,7 +2,8 @@
   <div id="page-container">
     <div id="content-wrap">
       <Map class="widemap column"></Map>
-      <button @click="toggleLabels">Mile Labels <span class='led' :class="{'on':  store.state.a.infoOn }"></span></button>
+      <button @click="toggleLabels">Mile Labels <span class='led' :class="{'on':  store.state.a.infoOn }"></span></button>&nbsp;&nbsp;
+      <button @click="toggleLiveVoice">Announcements <span class='led' :class="{'on':  store.state.a.liveVoiceOn }"></span></button>
       <!--section class="map column"></-section-->
       <section class="data column">
         <div class="dataColumn">
@@ -39,7 +40,7 @@
 
 <script>
 import Map from '@/components/Map.vue'
-import { onMounted, onUnmounted, watch, ref } from 'vue'
+import { onMounted, onUnmounted, watchEffect, ref } from 'vue'
 import { useStore } from 'vuex'
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
@@ -72,6 +73,15 @@ export default {
     const store = useStore()
     const inputDelay = ref(null)
     const router = useRouter()
+
+    const stopVoiceWatch = watchEffect( () => {
+      if(store.state.a.liveVoiceOn && store.state.a.playApub) {
+        playWaypoint()
+      }
+      if(store.state.a.liveVoiceOn && store.state.a.playVpub) {
+        playAnnouncement()
+      } 
+    })
     
     function route(path) {
       router.push(path)
@@ -82,6 +92,7 @@ export default {
       if(windowWidth <= 750) {
         router.push('/live/mobile')
       }
+      console.log("checkScreen()")
     }
 
     function focusMap(key) {
@@ -93,6 +104,15 @@ export default {
         store.commit("setInfoOn", false)
       } else {
         store.commit("setInfoOn", true)
+      }
+    }
+
+    function toggleLiveVoice() {
+      if(store.state.a.liveVoiceOn) {
+        store.commit("setLiveVoiceOn", false)
+      } else {
+        store.commit("setLiveVoiceOn", true)
+        playActivated()
       }
     }
 
@@ -112,9 +132,30 @@ export default {
       }
     }
 
+    function playAnnouncement() {
+      let audio = new Audio(store.state.a.liveScanModel.announcement.vpubVoiceUrl);
+      audio.loop = false;
+      audio.play(); 
+      store.commit('togglePlayVpub', false); 
+    }
+
+    function playWaypoint() {
+      let audio = new Audio(store.state.a.liveScanModel.waypoint.apubVoiceUrl);
+      audio.loop = false;
+      audio.play();
+      store.commit('togglePlayApub', false) 
+    }
+
+    function playActivated() {
+      let audio = new Audio(store.state.a.liveScanModel.voiceActivatedUrl);
+      audio.loop = false;
+      audio.play();
+    }
+
     onUnmounted(() => {
       store.commit('setLogsLinkActive', false)
-      window.removeEventListener('resize', checkScreen);
+      window.removeEventListener('resize', checkScreen)
+      stopVoiceWatch()
     })
 
 
@@ -132,6 +173,7 @@ export default {
       })
       if(store.liveScans != undefined && store.state.liveScans.length) {
         store.commit('setSlate', store.state.a.liveScans.length+' LIVE')
+        store.dispatch("fetchVoiceNotices")
         //store.commit('focusMap', 0)
 
       }
@@ -139,7 +181,10 @@ export default {
         store.commit('setSlate', 'LIVE')
       }  
     })
-    return { store, focusMap,  inputDelay, checkScreen, toggleAuto, route, toggleLabels }
+
+    //watch()
+
+    return { store, focusMap,  inputDelay, checkScreen, toggleAuto, route, toggleLabels, toggleLiveVoice, playAnnouncement, playWaypoint, playActivated }
   }
   // watch: {
   //   currentSlide: function (val) {

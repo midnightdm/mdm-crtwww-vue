@@ -542,35 +542,37 @@ function formatTime(ts) {
 }
 
 function predictMovement(state) {
-  console.log('predictMovement()')
-  var speed, distance, bearing, point, coords;
+  //console.log('predictMovement()')
+  var speed, distance, bearing, point, coords, i, o;
   //Loop through live vessels
-  state.liveScans.forEach( (o) => {
+  for(i=0; i<state.liveScans.length; i++) {
+  //state.liveScans.forEach( (o) => {
     //Skip if vessel not moving or bogus position data
+    o = state.liveScans[i]
     if( o.isMoving && (o.lat > 1) && (-o.lng > 1)) {
       //Remove 'kts' from speed & change to int 
       speed = parseInt(o.speed);
       //Multiply knots by 1.852 to get KPH
       speed = speed * 1.852;
       //Ignore unrealistic speed reports.
-      if(speed > 50) {
+      if(speed > 30) {
         return;
       }
       //Divide KPH by 3600 to get kilometers traveled in one second
       distance = speed / 3600;
       //Clean course 
       bearing = parseInt(o.course);
-      //Predict next point
+      //Predict next point from last
       point = calculateNewPositionFromBearingDistance(o.lat, o.lng, bearing, distance);
       //Update view model
       o.lat = point[0];
       o.lng = point[1];
       o.marker.position = { lat: point[0], lng: point[1] };
-      coords = getShipSpriteCoords(bearing);
-      o.marker.icon.origin = {x: coords[0], y: coords[1] }; 
-      console.log(o.name+' '+o.lat+' '+o.lng)    
+      //coords = getShipSpriteCoords(bearing);
+      //o.marker.icon.origin = {x: coords[0], y: coords[1] }; 
+      console.log(o.name+' -> '+o.lat+' '+o.lng)    
     } 
-  });  
+  }  
 }
 
 function calculateNewPositionFromBearingDistance(lat, lng, bearing, distance) {
@@ -599,6 +601,7 @@ const moduleA = {
         center: {lat: 41.857202, lng:-90.184084}, 
         mapTypeId: "hybrid"
       },
+      mapInterval: null,
       focusPosition: {lat: 41.857202, lng:-90.184084},
       polylines: [],
       mileMarkersList: [],
@@ -606,8 +609,12 @@ const moduleA = {
       liveAutoOn: true, 
       liveAutoDelay: 7,
       liveAutoLast: 500,
+
+      //Toggle switches
       liveListOn: false,
       infoOn: true,
+      liveVoiceOn: false,
+
       liveMapHeight: 30,
       liveMapWidth: 100,
       liveScanModel: null,
@@ -910,6 +917,57 @@ const moduleA = {
       }
     },
 
+    async fetchVoiceNotices({ commit, state} ) {
+      if(state.liveScanModel.prevVpubID == 0) {
+        const adminSnapshot = onSnapshot(doc(db, "Passages", "Admin"), (snap) => {
+          //Func run on each data change
+          let dataSet = snap.data()
+          let apubID  = parseInt(dataSet.lastApubID)
+          let vpubID  = parseInt(dataSet.lastVpubID)
+          let lsLen   = dataSet.livescanLength
+
+          //Compare lsLen to liveScan array size
+          if(lsLen < state.liveScans.length) {
+            //Reset array if update is less
+            state.liveScans.splice(0, state.liveScans.length)
+            //and labelIndex to avoid escalating labels
+            state.liveScanModel.labelIndex = 0
+          }
+          //On 1st load initiate previous placeholders
+          if(state.liveScanModel.prevVpubID==0) {
+            state.liveScanModel.prevApubID = apubID
+            state.liveScanModel.prevVpubID = vpubID
+          }
+          //Get published documents for updated IDs
+          getDoc(doc(db, "Alertpublish", apubID))
+          .then( (document) => {
+            if(document.exists()) {
+              state.liveScanModel.waypoint = document.data()
+              let dt = new Date()
+              let ts = Math.round(dt.getTime()/1000)
+              let diff = ts - liveScanModel.waypoint.apubTS
+              if(vpubID > liveScanModel.prevApubID && diff < 300) {
+                state.liveScanModel.playApub = true
+              }
+            }
+          })
+
+          getDoc(doc(db, "Voicepublish", vpubID))
+          .then( (document) => {
+            if(document.exists()) {
+              state.liveScanModel.announcement = document.data()
+              let dt = new Date()
+              let ts = Math.round(dt.getTime()/1000)
+              let diff = ts - liveScanModel.announcement.vpubTS
+              if(vpubID > liveScanModel.prevVpubID && diff < 300) {
+                state.liveScanModel.playVpub = true
+              }
+            }
+          })
+        })
+      }
+    },
+
     async fetchGalleryVideo({ commit, state }) {
       if(state.galleryVideo[0].vessel==="loading") {
         const vidSnapshot = await getDocs(collection(db, "GalleryVideo"))
@@ -926,7 +984,7 @@ const moduleA = {
 
     initLiveScan({ commit }, payload) {
       commit('initLiveScan', payload)
-      setInterval(predictMovement(state), 1000)
+      //setInterval(predictMovement(state), 1000)
     },
 
     //Run by initMap()
@@ -946,6 +1004,18 @@ const moduleA = {
     toggleLiveList({ commit }, payload) {
       commit('toggleLiveList', payload)
     },
+
+    // toggleLiveVoice({ commit }, payload) {
+    //   commit('setLiveVoiceOn', payload)
+    // },
+
+    togglePlayApub({ commit }, payload) {
+      commit('setPlayApub', payload)
+    },
+
+    togglePlayVpub({commit}, payload) {
+      commit('setPlayVpub', payload)
+    },
       
     focusMap({ commit }, payload) {
       commit('focusMap', payload)
@@ -953,7 +1023,7 @@ const moduleA = {
 
     deleteOldScans({ commit, state }) {
       var a, l = 0, arr = [], i = 0, now = Date.now();
-      state.livescans.forEach( (obj) => {
+      state.liveScans.forEach( (obj) => {
         if((now - 1800000)> obj.lastMovementTS.getTime()) {
           arr.push(i); //array of indexes to remove    
         }
@@ -962,7 +1032,7 @@ const moduleA = {
       l = arr.length
       if(l) { //proceed only if any found above
         for(a in arr) {
-          state.livescans = state.livescans.splice(a,1)
+          state.liveScans = state.liveScans.splice(a,1)
         }    
       }  
     },
@@ -1021,6 +1091,15 @@ const moduleA = {
     },
     setInfoOn(state, val) {
       state.infoOn = val
+    },
+    setLiveVoiceOn(state, val) {
+      state.liveVoiceOn = val 
+    },
+    setPlayApub(state, val) {
+      state.liveScanModel.playApub = val
+    },
+    setPlayVpub(state, val) {
+      state.liveScanModel.playVpub = val
     },
     focusMap(state, payload) {
       if(!state.liveScans.length) {
@@ -1185,10 +1264,13 @@ const moduleA = {
             //Create & Push
             if(key==-1) {
               state.liveScans.push(state.liveScanModel.mapper(new LiveScan(state), dat, true, state))
+              state.mapInterval = setInterval(predictMovement(state), 1000)
             }
             //Find & Update
             else {
+              clearInterval(state.mapInterval)
               state.liveScans[key] = state.liveScanModel.mapper(state.liveScans[key], dat, false, state)
+              state.mapInterval = setInterval(predictMovement(state), 1000)
             }    
           })
         })

@@ -22,7 +22,7 @@
 
 <script>
 
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watchEffect } from 'vue'
 import { useStore } from 'vuex'
 //import { firestore } from '@/store/firebaseApp.js'
 
@@ -33,7 +33,13 @@ export default {
   components: { GoogleMap, Marker, Polyline },
   setup() {
     const apiKey = process.env.VUE_APP_MAP_KEY
-    const store = useStore()  
+    const store = useStore();  
+    // const stopMapUpdate = watchEffect( () => {
+    //   if(store.state.a.liveScans) {
+    //     setInterval(predictMovement, 1000)
+    //   }    
+    // });
+  
   
     function initMap() {
       store.dispatch("initMap")
@@ -65,14 +71,14 @@ export default {
       //Predict next point
       point = calculateNewPositionFromBearingDistance(o.lat, o.lng, bearing, distance);
       //Update view model
-      o.lat = point[0];
-      o.lng = point[1];
+      //o.lat = point[0];
+      //o.lng = point[1];
       o.marker.position = { lat: point[0], lng: point[1] };
-      coords = getShipSpriteCoords(bearing);
-      o.marker.icon.origin = {x: coords[0], y: coords[1] }; 
+      //coords = getShipSpriteCoords(bearing);
+      //o.marker.icon.origin = {x: coords[0], y: coords[1] }; 
       //Reintegrate updated object into original array
-      map[key] = o;
-      console.log(o.name+' '+o.lat+' '+o.lng)    
+      //map[key] = o;
+      console.log(o.name+': '+point[0]+' '+point[1])    
     } 
 
     function calculateNewPositionFromBearingDistance(lat, lng, bearing, distance) {
@@ -115,10 +121,12 @@ export default {
  
     onMounted(async () => {
       initMap()
-      setInterval(predictMovement, 1000)  
+      //setInterval(predictMovement, 1000)  
     })
+
+    //onUnmounted(() => stopMapUpdate())
     
-    return { initMap, store, toggleMileLabels, apiKey }
+    return { initMap, store, toggleMileLabels, apiKey, predictMovement }
     
   }  
 
