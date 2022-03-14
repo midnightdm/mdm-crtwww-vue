@@ -121,8 +121,9 @@ export default class LiveScanModel {
         o.liveLastScanTS = new Date(dat.liveLastTS*1000)
       } else {
         // let coords = self.getShipSpriteCoords(o.course)
-        o.marker.position = {lat: o.lat, lng: o.lng} 
-        o.marker.icon.origin = { x: coords[0], y: coords[1] };
+        //o.marker.position = {lat: o.lat, lng: o.lng} 
+        //o.marker.icon.origin = { x: coords[0], y: coords[1] };
+        o.origin = { x: coords[0], y: coords[1] };
         if(o.speed>0) { //If transponder reported movement...
           if((o.lng != o.prevLng) || (o.lat != o.prevLat)) { //...did its location change?           
             //Yes means the transponder report is current. Update time value.

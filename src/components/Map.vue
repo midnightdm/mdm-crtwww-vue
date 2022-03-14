@@ -9,7 +9,12 @@
    
    >
     <div class="vesselMarkers" v-if="store.state.a.liveScans.length">
-      <Marker  v-for="vessel in store.state.a.liveScans" :key="vessel.id" :options="vessel.marker" />
+      <Marker
+        :ref="setMarkersRef" 
+        v-for="vessel in store.state.a.liveScans" 
+        :key="vessel.id" 
+        :options="vessel.marker"
+      />
     </div>
     <Polyline v-for="item in store.state.a.polylines" :key="item.name" :options="item" />
     <Polyline v-for="mile in store.state.a.mileMarkersList" :key="mile.name" :options="mile"/>
@@ -22,7 +27,7 @@
 
 <script>
 
-import { computed, ref, onMounted, onUnmounted, watchEffect } from 'vue'
+import { onBeforeUpdate, onUpdated, computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import { useStore } from 'vuex'
 //import { firestore } from '@/store/firebaseApp.js'
 
@@ -33,12 +38,29 @@ export default {
   components: { GoogleMap, Marker, Polyline },
   setup() {
     const apiKey = process.env.VUE_APP_MAP_KEY
-    const store = useStore();  
-    // const stopMapUpdate = watchEffect( () => {
-    //   if(store.state.a.liveScans) {
-    //     setInterval(predictMovement, 1000)
-    //   }    
-    // });
+    const store = useStore()
+    let markersRef = []
+    let i=0
+    const setMarkersRef = el => {
+      if(el) {
+        markersRef.push(el)
+      }
+    }
+    onBeforeUpdate(() => {
+      markersRef = []
+    })
+    onUpdated(() => {
+      for(i=0; i<markersRef.length; i++) {
+        let m = markersRef[i]
+        //Pipes marker position updates from liveScans to the map view
+        m.options.position = { 
+          lat: store.state.a.liveScans[i].lat,
+          lng: store.state.a.liveScans[i].lng
+        }
+        m.options.icon.origin = store.state.a.liveScans[i].origin
+        
+      }
+    })
   
   
     function initMap() {
@@ -74,6 +96,7 @@ export default {
       //o.lat = point[0];
       //o.lng = point[1];
       o.marker.position = { lat: point[0], lng: point[1] };
+
       //coords = getShipSpriteCoords(bearing);
       //o.marker.icon.origin = {x: coords[0], y: coords[1] }; 
       //Reintegrate updated object into original array
@@ -126,7 +149,7 @@ export default {
 
     //onUnmounted(() => stopMapUpdate())
     
-    return { initMap, store, toggleMileLabels, apiKey, predictMovement }
+    return { initMap, store, toggleMileLabels, apiKey, setMarkersRef, predictMovement }
     
   }  
 

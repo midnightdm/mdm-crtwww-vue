@@ -158,9 +158,21 @@ export default {
       stopVoiceWatch()
     })
 
+    let keysPressed = {}
 
     onMounted(async () => {
       window.addEventListener('resize', checkScreen)
+      //Keypress event listeners
+      document.addEventListener('keydown', (event) => {
+        keysPressed[event.key] = true;
+        if (keysPressed['Control'] && event.code == 'Space') {
+            playWaypoint();
+        }
+        if (keysPressed['Shift'] && event.code == 'Space') {
+          playAnnouncement();
+        }
+      });
+      
       checkScreen()
       store.commit("initLiveScan", store)
       store.commit('setPageSelected', 'Live')
@@ -184,7 +196,7 @@ export default {
 
     //watch()
 
-    return { store, focusMap,  inputDelay, checkScreen, toggleAuto, route, toggleLabels, toggleLiveVoice, playAnnouncement, playWaypoint, playActivated }
+    return { store, focusMap, keysPressed, inputDelay, checkScreen, toggleAuto, route, toggleLabels, toggleLiveVoice, playAnnouncement, playWaypoint, playActivated }
   }
   // watch: {
   //   currentSlide: function (val) {

@@ -59,6 +59,7 @@
         <input @change="updateDelay" type="range" name="inputDelay" ref="inputDelay" value="7" min="2" max="60">
         {{delayDisplay}} Sec
         <button @click="toggleList">List <span class='led' :class="{'on':  store.state.a.liveListOn }"></span></button>
+        <button @click="toggleLiveVoice">Announce <span class='led' :class="{'on':  store.state.a.liveVoiceOn }"></span></button>
       </div>
     </section>
   </div>
@@ -66,7 +67,7 @@
 
 <script>
 import Map from '@/components/Map.vue'
-import { onMounted, onUnmounted, watch, ref } from 'vue'
+import { onMounted, onUnmounted, watch, watchEffect, ref } from 'vue'
 import { useStore } from 'vuex'
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
@@ -100,6 +101,15 @@ export default {
     const inputDelay = ref(null)
     const router = useRouter()
 
+    const stopVoiceWatch = watchEffect( () => {
+      if(store.state.a.liveVoiceOn && store.state.a.playApub) {
+        playWaypoint()
+      }
+      if(store.state.a.liveVoiceOn && store.state.a.playVpub) {
+        playAnnouncement()
+      } 
+    })
+
     function route(path) {
       router.push(path)
     }
@@ -109,10 +119,20 @@ export default {
       if(windowWidth >= 751) {
         router.push('/live/wide')
       }
+      console.log("checkScreen()")
     }
     
     function focusMap(key) {
       store.dispatch('focusMap', key)
+    }
+
+    function toggleLiveVoice() {
+      if(store.state.a.liveVoiceOn) {
+        store.commit("setLiveVoiceOn", false)
+      } else {
+        store.commit("setLiveVoiceOn", true)
+        playActivated()
+      }
     }
 
     function toggleAuto() {
@@ -162,13 +182,54 @@ export default {
       }
     }
 
+
+    function playAnnouncement() {
+      let audio = new Audio(store.state.a.liveScanModel.announcement.vpubVoiceUrl);
+      audio.loop = false;
+      audio.play(); 
+      store.commit('togglePlayVpub', false); 
+    }
+
+    function playWaypoint() {
+      let audio = new Audio(store.state.a.liveScanModel.waypoint.apubVoiceUrl);
+      audio.loop = false;
+      audio.play();
+      store.commit('togglePlayApub', false) 
+    }
+
+    function playActivated() {
+      let audio = new Audio(store.state.a.liveScanModel.voiceActivatedUrl);
+      audio.loop = false;
+      audio.play();
+    }
+
     onUnmounted(() => {
       store.commit('setLogsLinkActive', false)
       window.removeEventListener('resize', checkScreen)
+      stopVoiceWatch()
     })
     
+    let keysPressed = {};
+
     onMounted(async () => {
       window.addEventListener('resize', checkScreen)
+
+      //Keypress event listeners
+      document.addEventListener('keydown', (event) => {
+        keysPressed[event.key] = true;
+
+        if (keysPressed['Control'] && event.code == 'Space') {
+            playWaypoint();
+        }
+        if (keysPressed['Shift'] && event.code == 'Space') {
+          playAnnouncement();
+        }
+      });
+
+      document.addEventListener('keyup', (event) => {
+        keysPressed[event.key] = false;
+      });
+
       checkScreen()
       store.commit("initLiveScan", store)
       store.commit("setInfoOn", true)
@@ -186,13 +247,14 @@ export default {
       if(store.liveScans != undefined && store.state.liveScans.length>0) {
         store.commit('setSlate', store.state.a.liveScans.length+' LIVE')
         store.commit('focusMap', 0)
+        store.dispatch("fetchVoiceNotices")
       }
       else {
         store.commit('setSlate', 'LIVE')
       }
       //let reference = document.getElementById("inputDelay")      
     })
-    return { store, focusMap, toggleList, inputDelay, checkScreen, toggleAuto, route }
+    return { store, keysPressed, focusMap, toggleList, inputDelay, checkScreen, toggleAuto, route,  toggleLiveVoice, playAnnouncement, playWaypoint, playActivated  }
   },
   watch: {
     currentSlide: function (val) {
