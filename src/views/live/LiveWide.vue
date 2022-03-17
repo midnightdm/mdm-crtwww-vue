@@ -48,11 +48,7 @@ import { useRouter } from 'vue-router'
 
 export default {
   components: {
-    Map,
-    //Carousel,
-    //Slide,
-    //Pagination,
-    //Navigation
+    Map
   },
   data() {
     return {
@@ -75,14 +71,17 @@ export default {
     const router = useRouter()
 
     const stopVoiceWatch = watchEffect( () => {
-      if(store.state.a.liveVoiceOn && store.state.a.playApub) {
+      if(store.state.a.liveVoiceOn && store.state.a.liveScanModel.playApub) {
         playWaypoint()
       }
-      if(store.state.a.liveVoiceOn && store.state.a.playVpub) {
+      if(store.state.a.liveVoiceOn && store.state.a.liveScanModel.playVpub) {
         playAnnouncement()
       } 
     })
     
+ 
+
+
     function route(path) {
       router.push(path)
     }
@@ -92,7 +91,7 @@ export default {
       if(windowWidth <= 750) {
         router.push('/live/mobile')
       }
-      console.log("checkScreen()")
+      //console.log("checkScreen()")
     }
 
     function focusMap(key) {
@@ -132,25 +131,31 @@ export default {
       }
     }
 
-    function playAnnouncement() {
+    function playAnnouncement(wasBtn=false) {
       let audio = new Audio(store.state.a.liveScanModel.announcement.vpubVoiceUrl);
       audio.loop = false;
       audio.play(); 
-      store.commit('togglePlayVpub', false); 
+      if(!wasBtn) { 
+        store.commit('togglePlayVpub', false)
+      }
     }
 
-    function playWaypoint() {
+    function playWaypoint(wasBtn=false) {
       let audio = new Audio(store.state.a.liveScanModel.waypoint.apubVoiceUrl);
       audio.loop = false;
       audio.play();
-      store.commit('togglePlayApub', false) 
+      if(!wasBtn) { 
+        store.commit('togglePlayApub', false)
+      } 
     }
 
     function playActivated() {
       let audio = new Audio(store.state.a.liveScanModel.voiceActivatedUrl);
       audio.loop = false;
-      audio.play();
+      audio.play().then(() => alert("Enable browser's audio play permission if you don't hear an activation announcement."))     
     }
+
+    
 
     onUnmounted(() => {
       store.commit('setLogsLinkActive', false)
@@ -165,12 +170,17 @@ export default {
       //Keypress event listeners
       document.addEventListener('keydown', (event) => {
         keysPressed[event.key] = true;
-        if (keysPressed['Control'] && event.code == 'Space') {
-            playWaypoint();
+        if (keysPressed['Control'] && keysPressed['Shift'] && event.code == "Digit1") {
+          console.log("keypress playWaypoint", event.code)
+          playWaypoint(true);
         }
-        if (keysPressed['Shift'] && event.code == 'Space') {
-          playAnnouncement();
+        if (keysPressed['Control'] && keysPressed['Shift'] && event.code == 'Digit2') {
+          console.log("keypress playAnnouncement", event.code)
+          playAnnouncement(true);
         }
+      });
+      document.addEventListener('keyup', (event) => {
+        keysPressed[event.key] = false;
       });
       
       checkScreen()
@@ -183,14 +193,21 @@ export default {
         zoom: 12, 
         center: store.state.a.liveScanModel.clinton
       })
-      if(store.liveScans != undefined && store.state.liveScans.length) {
+      //console.log("liveScans.length", store.state.a.liveScans.length)
+      if(store.state.a.liveScans != undefined && store.state.a.liveScans.length) {
         store.commit('setSlate', store.state.a.liveScans.length+' LIVE')
         store.dispatch("fetchVoiceNotices")
         //store.commit('focusMap', 0)
 
       }
       else {
-        store.commit('setSlate', 'LIVE')
+        setTimeout( () => {
+          if(store.state.a.liveScans != undefined && store.state.a.liveScans.length) {
+            store.commit('setSlate', store.state.a.liveScans.length+' LIVE');
+            store.dispatch("fetchVoiceNotices");
+          }
+        }, 1500);
+        //store.commit('setSlate', 'LIVE')
       }  
     })
 

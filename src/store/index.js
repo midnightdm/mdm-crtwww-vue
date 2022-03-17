@@ -434,7 +434,7 @@ function getSubList() {
           let document = deviceRef.doc(vm.userID);
           /*   BLOCK START                 */
           document.onSnapshot((snapshot) => {
-            console.log('snapshot exists? ', snapshot.exists, snapshot.data());
+            //console.log('snapshot exists? ', snapshot.exists, snapshot.data());
             if(!snapshot.exists) {
               user = { 
                 events: [],
@@ -759,7 +759,7 @@ const moduleA = {
       const document = await getDoc(vesselRef)
             
       if(document.exists()) {
-        console.log("Data: ", document.data())
+        //console.log("Data: ", document.data())
         var data = document.data()
         var obj = updateVesselHistory(data)
         commit('setHistoryCache', obj)
@@ -926,7 +926,7 @@ const moduleA = {
           let dataSet = snap.data()
           let apubID  = parseInt(dataSet.lastApubID)
           let vpubID  = parseInt(dataSet.lastVpubID)
-          let lsLen   = dataSet.livescanLength
+          let lsLen   = dataSet.liveScanLength
 
           //Compare lsLen to liveScan array size
           if(lsLen < state.liveScans.length) {
@@ -941,27 +941,28 @@ const moduleA = {
             state.liveScanModel.prevVpubID = vpubID
           }
           //Get published documents for updated IDs
-          getDoc(doc(db, "Alertpublish", apubID))
+          getDoc( doc(db, "Alertpublish", apubID.toString()))
           .then( (document) => {
+  
             if(document.exists()) {
               state.liveScanModel.waypoint = document.data()
               let dt = new Date()
               let ts = Math.round(dt.getTime()/1000)
-              let diff = ts - liveScanModel.waypoint.apubTS
-              if(vpubID > liveScanModel.prevApubID && diff < 300) {
+              let diff = ts - state.liveScanModel.waypoint.apubTS
+              if(vpubID > state.liveScanModel.prevApubID && diff < 300) {
                 state.liveScanModel.playApub = true
               }
             }
           })
 
-          getDoc(doc(db, "Voicepublish", vpubID))
+          getDoc(doc(db, "Voicepublish", vpubID.toString()))
           .then( (document) => {
             if(document.exists()) {
               state.liveScanModel.announcement = document.data()
               let dt = new Date()
               let ts = Math.round(dt.getTime()/1000)
-              let diff = ts - liveScanModel.announcement.vpubTS
-              if(vpubID > liveScanModel.prevVpubID && diff < 300) {
+              let diff = ts - state.liveScanModel.announcement.vpubTS
+              if(vpubID > state.liveScanModel.prevVpubID && diff < 300) {
                 state.liveScanModel.playVpub = true
               }
             }
@@ -1012,11 +1013,11 @@ const moduleA = {
     // },
 
     togglePlayApub({ commit }, payload) {
-      commit('setPlayApub', payload)
+      commit('togglePlayApub', payload)
     },
 
     togglePlayVpub({commit}, payload) {
-      commit('setPlayVpub', payload)
+      commit('togglePlayVpub', payload)
     },
       
     focusMap({ commit }, payload) {
@@ -1097,10 +1098,10 @@ const moduleA = {
     setLiveVoiceOn(state, val) {
       state.liveVoiceOn = val 
     },
-    setPlayApub(state, val) {
+    togglePlayApub(state, val) {
       state.liveScanModel.playApub = val
     },
-    setPlayVpub(state, val) {
+    togglePlayVpub(state, val) {
       state.liveScanModel.playVpub = val
     },
     focusMap(state, payload) {

@@ -183,24 +183,28 @@ export default {
     }
 
 
-    function playAnnouncement() {
+    function playAnnouncement(wasBtn=false) {
       let audio = new Audio(store.state.a.liveScanModel.announcement.vpubVoiceUrl);
       audio.loop = false;
       audio.play(); 
-      store.commit('togglePlayVpub', false); 
+      if(!wasBtn) { 
+        store.commit('togglePlayVpub', false)
+      }
     }
 
-    function playWaypoint() {
+    function playWaypoint(wasBtn=false) {
       let audio = new Audio(store.state.a.liveScanModel.waypoint.apubVoiceUrl);
       audio.loop = false;
       audio.play();
-      store.commit('togglePlayApub', false) 
+      if(!wasBtn) { 
+        store.commit('togglePlayApub', false)
+      } 
     }
 
     function playActivated() {
       let audio = new Audio(store.state.a.liveScanModel.voiceActivatedUrl);
       audio.loop = false;
-      audio.play();
+      audio.play().then(() => alert("Enable browser's audio play permission if you don't hear an activation announcement."))     
     }
 
     onUnmounted(() => {
@@ -217,12 +221,13 @@ export default {
       //Keypress event listeners
       document.addEventListener('keydown', (event) => {
         keysPressed[event.key] = true;
-
-        if (keysPressed['Control'] && event.code == 'Space') {
-            playWaypoint();
+        if (keysPressed['Control'] && keysPressed['Shift'] && event.code == "Digit1") {
+          console.log("keypress playWaypoint", event.code)
+          playWaypoint(true);
         }
-        if (keysPressed['Shift'] && event.code == 'Space') {
-          playAnnouncement();
+        if (keysPressed['Control'] && keysPressed['Shift'] && event.code == 'Digit2') {
+          console.log("keypress playAnnouncement", event.code)
+          playAnnouncement(true);
         }
       });
 
