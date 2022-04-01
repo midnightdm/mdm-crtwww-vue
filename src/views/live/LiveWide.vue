@@ -1,7 +1,7 @@
 <template>
   <div id="page-container">
     <div id="content-wrap">
-      <Map class="widemap column"></Map>
+      <iframe id="imap" class="widemap column" src="https://dashboard.clintonrivertraffic.com/map.html" width="300" height="240" frameborder="0" seamless></iframe>
       <button @click="toggleLabels">Mile Labels <span class='led' :class="{'on':  store.state.a.infoOn }"></span></button>&nbsp;&nbsp;
       <button @click="toggleLiveVoice">Announcements <span class='led' :class="{'on':  store.state.a.liveVoiceOn }"></span></button>
       <!--section class="map column"></-section-->
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import Map from '@/components/Map.vue'
+//import Map from '@/components/Map.vue'
 import { onMounted, onUnmounted, watchEffect, ref } from 'vue'
 import { useStore } from 'vuex'
 import 'vue3-carousel/dist/carousel.css';
@@ -47,9 +47,9 @@ import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 import { useRouter } from 'vue-router'
 
 export default {
-  components: {
-    Map
-  },
+  // components: {
+  //   Map
+  // },
   data() {
     return {
       currentSlide: 0,
