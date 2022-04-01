@@ -8,8 +8,11 @@ export default class LiveScanModel {
     //self.url       = "..livescanjson";
     self.INTERVAL  = 20000;
     self.labelIndex = 0;
+    self.fetchUrl = "https://us-central1-mdm-qcrt-demo-1.cloudfunctions.net/livescans/json";
 
     //Status vars
+    self.tock         = 0;
+    self.numVessels   = 0;
     self.selectedView = {view: 'viewList', idx: null};//ko.observable
     self.nowPage      = 'list'; //ko.observable
     self.lastPage     = 'list'; //ko.observable
@@ -25,6 +28,11 @@ export default class LiveScanModel {
     self.waypoint     = {};
     self.announcement = {};
     self.voiceActivatedUrl = "https://storage.googleapis.com/www.clintonrivertraffic.com/voice/voiceactivated.mp3";
+    self.news         = [ 
+      {key: "00", text: "Clinton's Riverview Park is a great place to view Mississippi River boat traffic."},
+      {key: "01", text: "Welcome to the new <em>dashboard</em> page. It's optimized for HD wide screens."}
+    ];
+    self.newsKey     = 0;
 
     
 
@@ -124,7 +132,7 @@ export default class LiveScanModel {
         //o.marker.position = {lat: o.lat, lng: o.lng} 
         //o.marker.icon.origin = { x: coords[0], y: coords[1] };
         o.origin = { x: coords[0], y: coords[1] };
-        if(o.speed>0) { //If transponder reported movement...
+        if(o.speed>1) { //If transponder reported movement...
           if((o.lng != o.prevLng) || (o.lat != o.prevLat)) { //...did its location change?           
             //Yes means the transponder report is current. Update time value.
             let now = Date.now()          
