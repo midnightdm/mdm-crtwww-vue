@@ -8,6 +8,10 @@
       "**/node_modules/**"
     ],
     "rewrites":[
+      {
+        "source": "/frame/map.html",
+        "destination": "/frame/map.html"
+      },
 			{
 				"source":"**",
 				"destination":"/index.html"

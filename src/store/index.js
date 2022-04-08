@@ -114,8 +114,12 @@ class LiveScan {
     this.liveLastScanTS = null
     this.plotTS         = null
     this.position       = null
+    this.segment        = null
+    this.detail         = false
     this.lat            = null
     this.lng            = null
+    this.rndLat         = null
+    this.rndLng         = null
     this.id             = null
     this.name           = null
     this.liveLocation   = null
@@ -126,6 +130,7 @@ class LiveScan {
     this.callsign       = null
     this.timerOutput    = null
     this.speed          = null
+    this.spd            = null
     this.course         = null
     this.length         = null
     this.width          = null
@@ -177,6 +182,14 @@ class LiveScan {
         case "downriver"   : return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/dwnarr.png"; break;
       }
     }
+    this.setRndSpd = (speed, dir) => {
+      let spd =  ""
+      if(dir !== "undetermined") {
+        spd = Math.round(speed)
+      }
+      return spd
+    }
+
     this.alphaTime = () => {
       if(this.liveMarkerAlphaTS===null) {
         return "Not Yet Reached";
@@ -584,6 +597,10 @@ function calculateNewPositionFromBearingDistance(lat, lng, bearing, distance) {
   return [180 / Math.PI * lat2 , 180 / Math.PI * lon2];
 }
 
+function compareSeg(a, b) {
+  return b.lat - a.lat;
+}
+
 // The shared state object that any vue component can get access to.
 // Has some placeholders that we’ll use further on!
 const moduleA = {
@@ -620,8 +637,8 @@ const moduleA = {
       liveMapHeight: 30,
       liveMapWidth: 100,
       liveScanModel: null,
-      liveScans: [ { liveName: "loading" }
-      ], 
+      liveScans: [ { liveName: "loading" } ],
+      segments: [[],[],[],[],[]], 
       passagesList: [
         {
           date: "",
@@ -722,7 +739,7 @@ const moduleA = {
     }),   
   actions: {
 
-    async fetchPassagesList({ commit, state }) {
+    async fetchPassagesList({ commit, state }) { //Action
       if(state.passagesList[0].type==="default") {
         const passagesAllRef = doc(db, 'Passages', 'All');
         var plObj, key, listArr = [], tmpArr = {},  nameArr = [], idx = 0, nKey, nObj, i;
@@ -752,7 +769,7 @@ const moduleA = {
       }
     },
 
-    async fetchPassageHistory({ commit }, vesselID) {
+    async fetchPassageHistory({ commit }, vesselID) { //Action
       let docKey = 'mmsi'+vesselID 
       //367668810
       const vesselRef = doc(db, 'Vessels', docKey)
@@ -768,7 +785,7 @@ const moduleA = {
       }
     },
 
-    async fetchCurrentMonth({ commit, state } ) {
+    async fetchCurrentMonth({ commit, state } ) { //Action
       //Check whether cache is already set to prevent reloading
       if(state.monthCache[0].passageDirection !=="default") {
         return;
@@ -824,7 +841,7 @@ const moduleA = {
     },
 
 
-    async fetchOtherMonth({ commit, state }, monthKey ) {
+    async fetchOtherMonth({ commit, state }, monthKey ) { //Action
       //if(state.otherMonthIndex==monthKey) {
       //  return
       //}
@@ -865,7 +882,7 @@ const moduleA = {
     },
 
 
-    async fetchAllAlerts({ commit, state }) {
+    async fetchAllAlerts({ commit, state }) { //Action
       if(state.alertsAll[0].apubID == "loading") {
         const apubSnapshot = onSnapshot(doc(db, "Alertpublish", "all"), (querySnapshot) => {
           let tempAlertsAll = []
@@ -892,7 +909,7 @@ const moduleA = {
       
     },
 
-    async fetchPassengerAlerts({ commit, state }) {
+    async fetchPassengerAlerts({ commit, state }) { //Action
       if(state.alertsPassenger[0].apubID == "loading") {
         const apubSnapshot = onSnapshot(doc(db, "Alertpublish", "passenger"), (querySnapshot) => {
           let tempAlertsPassenger = []
@@ -919,7 +936,7 @@ const moduleA = {
       }
     },
 
-    async fetchVoiceNotices({ commit, state} ) {
+    async fetchVoiceNotices({ commit, state} ) { //Action
       if(state.liveScanModel.prevVpubID == 0) {
         const adminSnapshot = onSnapshot(doc(db, "Passages", "Admin"), (snap) => {
           //Func run on each data change
@@ -949,7 +966,7 @@ const moduleA = {
               let dt = new Date()
               let ts = Math.round(dt.getTime()/1000)
               let diff = ts - state.liveScanModel.waypoint.apubTS
-              if(vpubID > state.liveScanModel.prevApubID && diff < 300) {
+              if(apubID > state.liveScanModel.prevApubID && diff < 300) {
                 state.liveScanModel.playApub = true
               }
             }
@@ -971,7 +988,7 @@ const moduleA = {
       }
     },
 
-    async fetchGalleryVideo({ commit, state }) {
+    async fetchGalleryVideo({ commit, state }) { //Action
       if(state.galleryVideo[0].vessel==="loading") {
         const vidSnapshot = await getDocs(collection(db, "GalleryVideo"))
         let tempGalleryVideo = []
@@ -985,26 +1002,49 @@ const moduleA = {
       }
     },
 
-    initLiveScan({ commit }, payload) {
-      commit('initLiveScan', payload)
-      //setInterval(predictMovement(state), 1000)
+
+    initLiveScan({ dispatch, commit, state }, context) { //Action
+      commit('initLiveScan', context)
+      const q = query(collection(db, 'LiveScan'), where('liveVesselID', '!=', false));
+      const liveScanSnapshot = onSnapshot(q, (querySnapshot)=> {
+        let key, o, marker, coords, course
+        querySnapshot.forEach( (doc) => {
+          let dat = doc.data()
+          key = getKeyOfId(state.liveScans, dat.liveVesselID)
+          //Create & Push
+          if(key==-1) {
+            let len = state.liveScans.length
+            let obj = state.liveScanModel.mapper(new LiveScan(state), dat, true, state, len)
+            commit('pushLiveScan', {key: key, obj: obj })
+          }
+          //Find & Update
+          else {
+            //clearInterval(state.mapInterval)
+            let obj = state.liveScanModel.mapper(state.liveScans[key], dat, false, state, key)            
+            commit('updateLiveScan', {key: key, obj: obj})
+          }
+        })
+        //Divide liveScans by river segment
+        dispatch('refreshSegments')
+      })    
+      
     },
 
     //Run by initMap()
-    addMileMarkers( { commit } ) {
+    addMileMarkers( { commit } ) { //Action
       commit('addMileMarkers')
     },  
       
-    initMap({ dispatch, commit }) {   
+    initMap({ dispatch, commit }) { //Action  
       commit('initMap')
       dispatch('addMileMarkers')
     },
 
-    toggleLiveAuto({ commit }, payload) {
+    toggleLiveAuto({ commit }, payload) { //Action
       commit('toggleLiveAuto', payload)
     },
 
-    toggleLiveList({ commit }, payload) {
+    toggleLiveList({ commit }, payload) { //Action
       commit('toggleLiveList', payload)
     },
 
@@ -1012,19 +1052,19 @@ const moduleA = {
     //   commit('setLiveVoiceOn', payload)
     // },
 
-    togglePlayApub({ commit }, payload) {
+    togglePlayApub({ commit }, payload) { //Action
       commit('togglePlayApub', payload)
     },
 
-    togglePlayVpub({commit}, payload) {
+    togglePlayVpub({commit}, payload) { //Action
       commit('togglePlayVpub', payload)
     },
       
-    focusMap({ commit }, payload) {
+    focusMap({ commit }, payload) { //Action
       commit('focusMap', payload)
     },
 
-    deleteOldScans({ commit, state }) {
+    deleteOldScans({ commit, state }) { //Action
       var a, l = 0, arr = [], i = 0, now = Date.now();
       state.liveScans.forEach( (obj) => {
         if((now - 1800000)> obj.lastMovementTS.getTime()) {
@@ -1040,29 +1080,53 @@ const moduleA = {
       }  
     },
 
+    refreshSegments({ commit, state}) { //Action
+      commit('clearSegments')
+      for(let vessel in state.liveScans) {
+        let obj = state.liveScans[vessel]
+        switch(obj.segment) {
+          case 0: { commit('pushSegment', {key: 0, obj: obj }); break; }
+          case 1: { commit('pushSegment', {key: 1, obj: obj }); break; }
+          case 2: { commit('pushSegment', {key: 2, obj: obj }); break; }
+          case 3: { commit('pushSegment', {key: 3, obj: obj }); break; }
+          case 4: { commit('pushSegment', {key: 4, obj: obj }); break; }
+        }
+      }
+      commit('sortSegments')
+    },
+
+    toggleDetail( { commit, state }, key) { //Action
+      if(state.liveScans[key].detail===false) {
+        commit('toggleDetail', {key: key, value: true})
+      } else if(state.liveScans[key].detail===true){
+        commit('toggleDetail', {key: key, value: false})
+      }
+
+    }
+
   },
 
   mutations: {
-    setPassagesList(state, val) {
+    setPassagesList(state, val) { //Mutation
       state.passagesList = val
     },
-    setHistoryCache(state, payload) {
+    setHistoryCache(state, payload) { //Mutation
       state.historyCache = payload
     },
-    setMonthCache(state, payload) {
+    setMonthCache(state, payload) { //Mutation
       console.log("Ranges: ", state.ranges)
       state.monthCache = payload
     },
-    setOtherMonthCache(state, payload) {
+    setOtherMonthCache(state, payload) { //Mutation
       state.otherMonthCache = payload.vessels
       state.otherMonthIndex = payload.index
       state.otherMonthRange = payload.range
       state.otherMonthFound = payload.success
     },
-    setSlate(state, val) {
+    setSlate(state, val) { //Mutation
       state.slate = val
     },
-    setAlertsLinkActive(state, val) {
+    setAlertsLinkActive(state, val) { //Mutation
       //Clean the slate
       state.alertsLinkActive = false
       state.logsLinkActive = false
@@ -1070,7 +1134,7 @@ const moduleA = {
       //Then set new value
       state.alertsLinkActive = val
     },
-    setLogsLinkActive(state, val) {
+    setLogsLinkActive(state, val) { //Mutation
       //Clean the slate
       state.alertsLinkActive = false
       state.logsLinkActive = false
@@ -1078,7 +1142,7 @@ const moduleA = {
       //Then set new value
       state.logsLinkActive = val
     },
-    setGalleryLinkActive(state, val) {
+    setGalleryLinkActive(state, val) { //Mutation
       //Clean the slate
       state.alertsLinkActive = false
       state.logsLinkActive = false
@@ -1086,25 +1150,25 @@ const moduleA = {
       //Then set new value
       state.galleryLinkActive = val
     },
-    setIsHero(state, val) {
+    setIsHero(state, val) { //Mutation
       state.isHero = val
     },
-    setPageSelected(state, val) {
+    setPageSelected(state, val) { //Mutation
       state.pageSelected = val
     },
-    setInfoOn(state, val) {
+    setInfoOn(state, val) { //Mutation
       state.infoOn = val
     },
-    setLiveVoiceOn(state, val) {
+    setLiveVoiceOn(state, val) { //Mutation
       state.liveVoiceOn = val 
     },
-    togglePlayApub(state, val) {
+    togglePlayApub(state, val) { //Mutation
       state.liveScanModel.playApub = val
     },
-    togglePlayVpub(state, val) {
+    togglePlayVpub(state, val) { //Mutation
       state.liveScanModel.playVpub = val
     },
-    focusMap(state, payload) {
+    focusMap(state, payload) { //Mutation
       if(!state.liveScans.length) {
         return
       }
@@ -1112,8 +1176,9 @@ const moduleA = {
       state.map.center = state.focusPosition
       state.map.zoom = 15
       state.isZoomed = true
+      console.log('key/pos', payload, state.focusPosition)
     },
-    initMap(state) {
+    initMap(state) { //Mutation
       state.map =  {
         zoom: 12, 
         center: {lat: 41.857202, lng:-90.184084}, 
@@ -1166,7 +1231,7 @@ const moduleA = {
         }
       ]         
     },
-    addMileMarkers(state) {
+    addMileMarkers(state) { //Mutation
       var dat = [
         {id:486, lngA:-90.50971806363766, latA:41.52215220467504, lngB:-90.5092203536731, latB:41.51372097487243}, 
         {id:487, lngA:-90.48875678287305, latA:41.521402024002950, lngB:-90.48856266269104, latB:41.5145424556308},
@@ -1256,49 +1321,47 @@ const moduleA = {
         }
       }     
     },
-    async initLiveScan( state, payload) {
-      state.liveScanModel = new LiveScanModel(payload)
-      if(state.liveScans[0].liveName == "loading") {
-        state.liveScans = []
-        const q = query(collection(db, 'LiveScan'), where('liveVesselID', '!=', false));
-        const liveScanSnapshot = onSnapshot(q, (querySnapshot)=> {
-          var key, o, marker, coords, course
-          querySnapshot.forEach( (doc) => {
-            let dat = doc.data()
-            key = getKeyOfId(state.liveScans, dat.liveVesselID)
-            //Create & Push
-            if(key==-1) {
-              state.liveScans.push(state.liveScanModel.mapper(new LiveScan(state), dat, true, state))
-              //state.mapInterval = setInterval(predictMovement(state), 1000)
-            }
-            //Find & Update
-            else {
-              //clearInterval(state.mapInterval)
-              let newVal = state.liveScanModel.mapper(state.liveScans[key], dat, false, state)
-              //console.log("newval", newVal)
-              state.liveScans.splice(key, 1, newVal)
-              //state.liveScans[key] = state.liveScanModel.mapper(state.liveScans[key], dat, false, state)
-              //state.mapInterval = setInterval(predictMovement(state), 1000)
-            }    
-          })
-        })
-        
-        console.log("map center:", state.map )     
-      }
+    async initLiveScan( state, context) { //Mutation
+      state.liveScanModel = new LiveScanModel(context)
+      state.liveScans = []
     },
 
-    toggleLiveAuto(state, val) {
+    pushLiveScan( state, val ) { //Mutation
+      state.liveScans.push(val.obj)
+    },
+
+    updateLiveScan( state, val ) { //Mutation
+      state.liveScans.splice(val.key, 1, val.obj)
+    },
+
+    toggleLiveAuto(state, val) { //Mutation
       state.liveAutoOn = val.on  
       state.liveAutoLast = state.liveAutoDelay
       state.liveAutoDelay = val.delay
     },
 
-    toggleLiveList(state, val) {
+    toggleLiveList(state, val) { //Mutation
       state.liveListOn    = val.on
       state.liveMapHeight = val.vh
       state.liveMapWidth  = val.vw
       state.map.zoom      = val.zoom
       state.map.center    = val.center
+    },
+    clearSegments( state ) { //Mutation
+      state.segments = [[],[],[],[],[]]
+    },
+    pushSegment( state, payload ) {
+      state.segments[payload.key].push(payload.obj)
+    },
+    sortSegments( state ) { //Mutation
+      for(let i=4; i>-1; i--) {
+        if(state.segments[i].length) {
+          state.segments[i] = state.segments[i].sort(compareSeg);
+        }
+      }   
+    },
+    toggleDetail( state, val) { //Mutation
+      state.liveScans[val.key].detail = val.value
     }
 
   },

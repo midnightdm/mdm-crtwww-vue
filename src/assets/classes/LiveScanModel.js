@@ -77,16 +77,21 @@ export default class LiveScanModel {
       else                               return [  0,   0];
     };
 
-    self.mapper = function(o, dat, isNew, state) {
+    self.mapper = function(o, dat, isNew, state, lsKey) {
+      o.lsKey = lsKey
       o.position = {lat: dat.liveLastLat, lng: dat.liveLastLon}
-      o.lat = dat.liveLastLat
-      o.lng = dat.liveLastLon
+      o.segment = dat.liveSegment
+      o.lat = dat.liveLastLat || dat.liveInitLat
+      o.lng = dat.liveLastLon || dat.liveInitLon
+      o.rndLat = o.lat.toFixed(7)
+      o.rndLng = o.lng.toFixed(7)
       o.id = dat.liveVesselID
       o.name = dat.liveName
       o.liveLocation = dat.liveLocation
       o.dir = dat.liveDirection
       o.dirImg = o.setDirImg()
       o.speed = dat.liveSpeed
+      o.spd = o.setRndSpd(dat.liveSpeed, dat.liveDirection)
       o.course = dat.liveCourse
       o.imageUrl = dat.imageUrl
       o.type     = dat.type

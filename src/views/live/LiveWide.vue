@@ -1,31 +1,42 @@
 <template>
   <div id="page-container">
     <div id="content-wrap">
-      <iframe id="imap" class="widemap column" src="https://dashboard.clintonrivertraffic.com/map.html" width="300" height="240" frameborder="0" seamless></iframe>
-      <button @click="toggleLabels">Mile Labels <span class='led' :class="{'on':  store.state.a.infoOn }"></span></button>&nbsp;&nbsp;
+      <iframe id="imap" class="widemap column" src="https://dashboard.clintonrivertraffic.com/map.html" scrolling="no" frameborder="0" seamless></iframe>
+      <!--button @click="toggleLabels">Mile Labels <span class='led' :class="{'on':  store.state.a.infoOn }"></span></-button-->&nbsp;&nbsp;
       <button @click="toggleLiveVoice">Announcements <span class='led' :class="{'on':  store.state.a.liveVoiceOn }"></span></button>
       <!--section class="map column"></-section-->
       <section class="data column">
         <div class="dataColumn">
           <ul v-if="store.state.a.liveScans.length" class="cardWrapper">
-            <li  v-for="live in store.state.a.liveScans" :key="live.id">
-              <div class="slideData" :style="'background-image: url('+live.imageUrl+');'">
-              <div class="label-wrap">
+            <li  class="listMode" v-for="live in store.state.a.liveScans" :key="live.id">
+              <div class="slideData">
+              <div class="list-wrap">
                 <h4 class="map-label">{{live.mapLabel}}</h4>
                 <h4 class="tile-title">{{live.name}}</h4> 
-                <img class="dir-img" :src="live.dirImg"/>              
+                <div class="dir-container">
+                  <img class="dir-img" :src="live.dirImg"/>
+                  <span class="speed">{{live.spd}}</span> 
+                </div>               
               </div>
-
+              <div class="data-cont grid2-container">
+                <div id="data-table">
+                  <ul id="selected-vessel">
+                    <li class="dataPoint"><span class="th">TYPE:</span> <span class="td">{{live.type}}</span></li>
+                    <li class="dataPoint"><span class="th">MMSI #:</span> <span class="td">{{live.id}}</span></li>
+                    <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
+                    <li class=dataPoint><span class=th>SPEED:</span> <span class=td>{{live.speed}} Knots</span></li>
+                    <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
+                    <li class="dataPoint"><span class="th">COORDINATES:</span></li>
+                    <li class="dataPoint"><span class="th"></span> <span class="td dir">{{live.rndLat}}, {{live.rndLng}}</span>  
+                    </li>
+                  </ul>
+                </div>
+                <div id="img-frame"><img id="data-image" :src="live.imageUrl"></div><br>
+              </div>
               <h5>{{live.liveLocation}}</h5>
               <div class="btnWrapper">
                 <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
-              </div>
-              <ul class="mask">
-                <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
-                <li class="dataPoint"><span class="th">SPEED:</span> <span class="td">{{live.speed}} Knots</span></li>
-                <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
-              </ul>
-              
+              </div>             
             </div>
           </li>
           </ul>
@@ -236,7 +247,7 @@ export default {
   height: 3.5rem;
   background-color: #2c3e50;
   opacity: 0.9;
-  min-width: 20rem;
+  min-width: 10rem;
   border-radius: 8px;
   display: flex;
   font-size: 20pt;
@@ -249,11 +260,13 @@ export default {
 
 h5 {
   font-size: 1rem;
+  border-radius: 0px 0px 8px 8px;
   color: rgba(255, 255, 255, 0.829);
   padding: .3rem;
+  margin-top: 0px;
   background: rgb(168, 179, 14);
   text-align: center;
-  text-shadow: 2px 2px #000;
+  text-shadow: 1px 1px #000;
 }
 
 
@@ -263,7 +276,65 @@ ul.cardWrapper {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+}
 
+
+/* Data frame styling*/
+.grid2-container {
+  background-color: black;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-gap: .07rem;
+  padding: .01rem;  
+}
+#data-table {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start:1;
+  grid-row-end:3;
+  width: 15rem;  height: auto;
+}
+#img-frame {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start:2;
+  grid-row-end:  3;
+  background-color: black;
+  width: 6.5rem;  height: auto;
+}
+div#img-frame img {
+  max-width: 100%; overflow: hidden;
+}
+
+
+ul#all-vessels {  
+  list-style-type: none;
+  bottom: 0px;
+  padding: 1px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  background: rgba(0, 0, 0, 0.4);
+}
+#selected-vessel > li {
+  text-align: left;
+  line-height: .2rem;
+  margin: 5px 5%;
+  
+}
+.th {
+  
+  font-size: 1rem;
+  color:rgb(255, 165, 56);
+}
+.td {
+  color: white;
+  font-size: 1rem;
+  float: right;
+  overflow-wrap: break-word;
+}
+.td.dir {
+  text-transform: capitalize;
 }
 
 
@@ -400,6 +471,8 @@ h1.noslide {
     border: 2px solid black;  
 }
 
+
+/* Inside the slide  */
 .slideData {
   color:  var(--vc-clr-white);
   font-size: 20px;
@@ -452,13 +525,13 @@ section {
   opacity: 1;
   max-height: 3rem;
   min-width: 20rem;
-  border-radius: 8px;
+  border-radius: 8px 8px 0px 0px;
   display: flex;
   font-size: 20pt;
   flex-direction: row;
   justify-content: left;
   align-items: center;
-  padding: 0 0.5;
+  padding: 0.5rem 0.5rem;
   margin: 0px;
 }
 
@@ -473,17 +546,39 @@ section {
 .list-wrap .map-label {
     background: aquamarine;
     color: black;
-    padding: 5px 15px;
+    padding: 5px 10px;
     border-radius: 60%;
     font-size: 15px;
     border: 2px solid black;  
 }
 
 .list-wrap .tile-title {
+  /* font-size: var(--h4vsli); */
   color: white;
+  margin: auto;
+  margin-bottom: 2px;
   margin-left:auto;
   margin-right: auto;
 }
+
+
+.list-wrap div.dir-container {
+  position: relative;
+  text-align: center;
+}
+
+.list-wrap span.speed {
+  color: white;
+  font-size: small;
+  display: inline-block; 
+  position: absolute; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
 .pill {
   background-color: #ddd;
   border: none;
