@@ -2,8 +2,9 @@
   <div id="page-container">
     <div id="mobile-content-wrap" class="mobile">
       <!--Map class="map"></ Map-->
-      <iframe name="imap" id="imap" class="map" :class="{active: store.state.a.liveListOn}" src="../../map.html" scrolling="no" frameborder="0" seamless></iframe>
+      <iframe name="imap" id="imap" class="map" :class="{active: store.state.a.liveListOn}" src="../../map.html" scrolling="no" frameborder="0" seamless></iframe>  
       <section class="middle" v-show="!store.state.a.liveListOn">
+
         <carousel v-if="store.state.a.liveScans.length" 
         v-model="currentSlide" 
         :items-to-show="1" 
@@ -301,11 +302,13 @@ export default {
       store.dispatch('toggleDetail', key)
     }
 
+
+
     function toggleLiveVoice() {
-      if(store.state.a.liveVoiceOn) {
-        store.commit("setLiveVoiceOn", false)
-      } else {
-        store.commit("setLiveVoiceOn", true)
+      if(store.state.a.liveVoiceOn==true) {
+        store.dispatch("toggleLiveVoice", false)
+      } else if(store.state.a.liveVoiceOn==false) {
+        store.dispatch("toggleLiveVoice", true)
         playActivated()
       }
     }
@@ -363,7 +366,7 @@ export default {
       audio.loop = false;
       audio.play(); 
       if(!wasBtn) { 
-        store.commit('togglePlayVpub', false)
+        store.dispatch('togglePlayVpub', false)
       }
     }
 
@@ -372,9 +375,10 @@ export default {
       audio.loop = false;
       audio.play();
       if(!wasBtn) { 
-        store.commit('togglePlayApub', false)
+        store.dispatch('togglePlayApub', false)
       } 
     }
+
 
     function playActivated() {
       let audio = new Audio(store.state.a.liveScanModel.voiceActivatedUrl);
@@ -384,7 +388,7 @@ export default {
 
     onUnmounted(() => {
       store.commit('setLogsLinkActive', false)
-      window.removeEvent('resize', checkScreen)
+      window.removeEventListener('resize', checkScreen)
       stopVoiceWatch()
     })
     
@@ -424,8 +428,8 @@ export default {
           })
       }, 1500)
       
-      if(store.liveScans != undefined && store.state.a.liveScans.length>0) {
-        store.commit('setSlate', store.state.a.liveScans.length+' LIVE')
+      if(true || store.liveScans != undefined) {
+        store.commit('setSlate', 'LIVE')
         store.commit('focusMap', 0)
         store.dispatch("fetchVoiceNotices")
         console.log("liveScans.length",store.state.a.liveScans.length)
@@ -435,7 +439,7 @@ export default {
       }
       //let reference = document.getElementById("inputDelay")      
     })
-    return { store, keysPressed, focusMap, showDetail, toggleList, toggleMarkers, inputDelay, checkScreen, toggleAuto, route,  toggleLiveVoice, playAnnouncement, playWaypoint, playActivated  }
+    return { store, keysPressed, focusMap, showDetail, toggleList, toggleMarkers, inputDelay, checkScreen, toggleAuto, route,  toggleLiveVoice, playAnnouncement, playWaypoint, playActivated }
   },
   watch: {
     currentSlide: function () {
@@ -448,7 +452,7 @@ export default {
       window.frames["imap"].window.liveScanModel.map.setCenter(pos)
       window.frames["imap"].window.liveScanModel.map.setZoom(14)
       //this.$store.commit('setSlate', this.$store.state.a.liveScans.length+' LIVE')
-      console.log("slide:", this.currentSlide, pos)
+      //console.log("slide:", this.currentSlide, pos)
     }
   }
 }

@@ -82,10 +82,10 @@ export default {
     const router = useRouter()
 
     const stopVoiceWatch = watchEffect( () => {
-      if(store.state.a.liveVoiceOn && store.state.a.liveScanModel.playApub) {
+      if(store.state.a.liveVoiceOn && store.state.a.playApub) {
         playWaypoint()
       }
-      if(store.state.a.liveVoiceOn && store.state.a.liveScanModel.playVpub) {
+      if(store.state.a.liveVoiceOn && store.state.a.playVpub) {
         playAnnouncement()
       } 
     })
@@ -118,10 +118,10 @@ export default {
     }
 
     function toggleLiveVoice() {
-      if(store.state.a.liveVoiceOn) {
-        store.commit("setLiveVoiceOn", false)
-      } else {
-        store.commit("setLiveVoiceOn", true)
+      if(store.state.a.liveVoiceOn==true) {
+        store.dispatch("toggleLiveVoice", false)
+      } else if(store.state.a.liveVoiceOn==false) {
+        store.dispatch("toggleLiveVoice", true)
         playActivated()
       }
     }
@@ -147,7 +147,7 @@ export default {
       audio.loop = false;
       audio.play(); 
       if(!wasBtn) { 
-        store.commit('togglePlayVpub', false)
+        store.dispatch('togglePlayVpub', false)
       }
     }
 
@@ -156,7 +156,7 @@ export default {
       audio.loop = false;
       audio.play();
       if(!wasBtn) { 
-        store.commit('togglePlayApub', false)
+        store.dispatch('togglePlayApub', false)
       } 
     }
 
@@ -204,7 +204,7 @@ export default {
         zoom: 12, 
         center: store.state.a.liveScanModel.clinton
       })
-      //console.log("liveScans.length", store.state.a.liveScans.length)
+      console.log("liveScans.length", store.state.a.liveScans.length)
       if(store.state.a.liveScans != undefined && store.state.a.liveScans.length) {
         store.commit('setSlate', store.state.a.liveScans.length+' LIVE')
         store.dispatch("fetchVoiceNotices")

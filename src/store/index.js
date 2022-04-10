@@ -633,6 +633,8 @@ const moduleA = {
       liveListOn: false,
       infoOn: true,
       liveVoiceOn: false,
+      playApub: false,
+      playVpub: false,
 
       liveMapHeight: 30,
       liveMapWidth: 100,
@@ -937,6 +939,7 @@ const moduleA = {
     },
 
     async fetchVoiceNotices({ commit, state} ) { //Action
+      console.log("fetchVoiceNotices()")
       if(state.liveScanModel.prevVpubID == 0) {
         const adminSnapshot = onSnapshot(doc(db, "Passages", "Admin"), (snap) => {
           //Func run on each data change
@@ -950,7 +953,7 @@ const moduleA = {
             //Reset array if update is less
             state.liveScans.splice(0, state.liveScans.length)
             //and labelIndex to avoid escalating labels
-            state.liveScanModel.labelIndex = 0
+            state.liveScanModel.labelIndex = state.liveScans.length
           }
           //On 1st load initiate previous placeholders
           if(state.liveScanModel.prevVpubID==0) {
@@ -967,7 +970,7 @@ const moduleA = {
               let ts = Math.round(dt.getTime()/1000)
               let diff = ts - state.liveScanModel.waypoint.apubTS
               if(apubID > state.liveScanModel.prevApubID && diff < 300) {
-                state.liveScanModel.playApub = true
+                state.playApub = true
               }
             }
           })
@@ -980,7 +983,7 @@ const moduleA = {
               let ts = Math.round(dt.getTime()/1000)
               let diff = ts - state.liveScanModel.announcement.vpubTS
               if(vpubID > state.liveScanModel.prevVpubID && diff < 300) {
-                state.liveScanModel.playVpub = true
+                state.playVpub = true
               }
             }
           })
@@ -1048,16 +1051,16 @@ const moduleA = {
       commit('toggleLiveList', payload)
     },
 
-    // toggleLiveVoice({ commit }, payload) {
-    //   commit('setLiveVoiceOn', payload)
-    // },
+    toggleLiveVoice({ commit }, payload) { //Action
+      commit('setLiveVoiceOn', payload)
+    },
 
     togglePlayApub({ commit }, payload) { //Action
-      commit('togglePlayApub', payload)
+      commit('setPlayApub', payload)
     },
 
     togglePlayVpub({commit}, payload) { //Action
-      commit('togglePlayVpub', payload)
+      commit('setPlayVpub', payload)
     },
       
     focusMap({ commit }, payload) { //Action
@@ -1162,11 +1165,11 @@ const moduleA = {
     setLiveVoiceOn(state, val) { //Mutation
       state.liveVoiceOn = val 
     },
-    togglePlayApub(state, val) { //Mutation
-      state.liveScanModel.playApub = val
+    setPlayApub(state, val) { //Mutation
+      state.playApub = val
     },
-    togglePlayVpub(state, val) { //Mutation
-      state.liveScanModel.playVpub = val
+    setPlayVpub(state, val) { //Mutation
+      state.playVpub = val
     },
     focusMap(state, payload) { //Mutation
       if(!state.liveScans.length) {

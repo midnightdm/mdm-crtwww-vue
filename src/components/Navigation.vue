@@ -23,7 +23,7 @@
       -->
       <LogsSubMenu v-show="this.$store.state.a.logsLinkActive && !mobile"></LogsSubMenu>
       
-      <div id="title_slate">{{ slate }}</div>
+      <div id="title_slate"><span v-if="slate=='LIVE'">{{this.$store.state.a.liveScans.length}}</span> {{ slate }}</div>
       
       <transition name="mobile-navi">
         <div v-show="mobileNav" class="mobile-side-menu">  

@@ -19,9 +19,9 @@ export default class LiveScanModel {
     self.infoOn       = true; //ko.observable
 
     self.prevVpubID   = 0;
-    self.playVpub     = false;
+    //self.playVpub     = false;
     self.prevApubID   = 0;
-    self.playApub     = false;
+    //self.playApub     = true;
     self.waypoint     = {};
     self.announcement = {};
     self.voiceActivatedUrl = "https://storage.googleapis.com/www.clintonrivertraffic.com/voice/voiceactivated.mp3";
@@ -81,8 +81,9 @@ export default class LiveScanModel {
       o.lsKey = lsKey
       o.position = {lat: dat.liveLastLat, lng: dat.liveLastLon}
       o.segment = dat.liveSegment
-      o.lat = dat.liveLastLat || dat.liveInitLat
-      o.lng = dat.liveLastLon || dat.liveInitLon
+      o.lat = dat.liveLastLat!==undefined ? dat.liveLastLat : dat.liveInitLat;
+      o.lng = dat.liveLastLon!==undefined ? dat.liveLastLon : dat.liveInitLon;
+      
       o.rndLat = o.lat.toFixed(7)
       o.rndLng = o.lng.toFixed(7)
       o.id = dat.liveVesselID
