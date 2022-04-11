@@ -4,15 +4,15 @@
       <!--Map class="map"></ Map-->
       <iframe name="imap" id="imap" class="map" :class="{active: store.state.a.liveListOn}" src="../../map.html" scrolling="no" frameborder="0" seamless></iframe>  
       <section class="middle" v-show="!store.state.a.liveListOn">
-
         <carousel v-if="store.state.a.liveScans.length" 
         v-model="currentSlide" 
         :items-to-show="1" 
         :wrap-around="true"
         :autoplay="parseInt(store.state.a.liveAutoDelay)*1000"
         >
-          <slide class="slide" v-for="live in store.state.a.liveScans" :key="live.id">
-
+         
+          <slide class="slide" v-for='(live, idxa) in store.state.a.liveScans' :key="live.id">
+            
             <div class="list-wrap">
               <h4 class="map-label" >{{live.mapLabel}}</h4> 
               <h4 class="tile-title">{{live.name}}</h4> 
@@ -30,15 +30,17 @@
                   <li class=dataPoint><span class=th>SPEED:</span> <span class=td>{{live.speed}} Knots</span></li>
                   <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
                   <li class="dataPoint"><span class="th">COORDINATES:</span></li>
-                  <li class="dataPoint"><span class="td">{{live.rndLat}}, {{live.rndLng}}</span>  
+                  <li class="dataPoint"><span class="td co">{{live.rndLat}}, {{live.rndLng}}</span>  
                   </li>
                 </ul>
               </div>
-              <div id="img-frame">
-                <img id="data-image" :src="live.imageUrl">
-                    <div class="btnWrapper">
-                <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
-              </div>
+              <div class="img-frame">                
+                <a href="#" @click="setSelectedA(idxa)">
+                <img class="data-image" :class="{ bigger: selectedA==idxa}" :src="live.imageUrl" >      
+                </a>
+                <div class="btnWrapper">
+                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                </div>
               </div>
         
             </div>
@@ -57,7 +59,7 @@
 
         <ul id="all-vessels">
           <template v-if="store.state.a.segments[4].length">
-          <li v-for="live in store.state.a.segments[4]" :key="live.id">
+          <li class="ctr" v-for="(live,idx4) in store.state.a.segments[4]" :key="live.id">
             <div class="list-wrap">
               <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
@@ -80,7 +82,14 @@
                   </li>
                 </ul>
               </div>
-              <div id="img-frame"><img id="data-image" :src="live.imageUrl"></div><br>
+              <div class="img-frame">
+                <a href="#" @click="setSelectedB(4, idx4)">
+                  <img class="data-image" :class="{bigger: selectedB[4]==idx4}" :src="live.imageUrl" >      
+                </a>
+                <div class="btnWrapper">
+                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                </div>
+              </div>
             </div>
             <h5>{{live.liveLocation}}</h5>
           </li>
@@ -88,7 +97,7 @@
           <li><span class="waypoint">3 NORTH</span></li>
 
           <template v-if="store.state.a.segments[3].length">
-          <li v-for="live in store.state.a.segments[3]" :key="live.id">
+          <li class="ctr" v-for="(live, idx3) in store.state.a.segments[3]" :key="live.id">
             <div class="list-wrap">
               <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
@@ -111,14 +120,22 @@
                   </li>
                 </ul>
               </div>
-              <div id="img-frame"><img id="data-image" :src="live.imageUrl"></div><br>
+              <div class="img-frame">
+                <a href="#" @click="setSelectedB(3, idx3)">
+                  <img class="data-image" :class="{bigger: selectedB[3]==idx3}" :src="live.imageUrl" >      
+                </a>
+                <div class="btnWrapper">
+                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                </div>
+              </div>
             </div>
             <h5>{{live.liveLocation}}</h5>
           </li>
           </template>
           <li><span class="waypoint">LOCK 13</span></li>
+          
           <template v-if="store.state.a.segments[2].length">
-          <li v-for="live in store.state.a.segments[2]" :key="live.id">
+          <li class="ctr" v-for="(live, idx2) in store.state.a.segments[2]" :key="live.id">
             <div class="list-wrap">
               <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
@@ -141,14 +158,22 @@
                   </li>
                 </ul>
               </div>
-              <div id="img-frame"><img id="data-image" :src="live.imageUrl"></div><br>
+              <div class="img-frame">
+                <a href="#" @click="setSelectedB(2, idx2)">
+                  <img class="data-image" :class="{bigger: selectedB[2]==idx2}" :src="live.imageUrl" >      
+                </a>
+                <div class="btnWrapper">
+                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                </div>
+              </div>
             </div>
             <h5>{{live.liveLocation}}</h5>
           </li>
           </template>
           <li><span class="waypoint">RR  BRIDGE</span></li>
+
           <template v-if="store.state.a.segments[1].length">
-          <li v-for="live in store.state.a.segments[1]" :key="live.id">
+          <li class="ctr" v-for="(live, idx1) in store.state.a.segments[1]" :key="live.id">
             <div class="list-wrap">
              <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
@@ -171,14 +196,22 @@
                   </li>
                 </ul>
               </div>
-              <div id="img-frame"><img id="data-image" :src="live.imageUrl"></div><br>
+              <div class="img-frame">
+                <a href="#" @click="setSelectedB(1, idx1)">
+                  <img class="data-image" :class="{bigger: selectedB[1]==idx1}" :src="live.imageUrl" >      
+                </a>
+                <div class="btnWrapper">
+                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                </div>
+              </div>
             </div>
             <h5>{{live.liveLocation}}</h5>
           </li>
           </template>
           <li><span class="waypoint">3 SOUTH</span></li>
+
           <template v-if="store.state.a.segments[0].length">
-          <li v-for="live in store.state.a.segments[0]" :key="live.id">
+          <li class="ctr" v-for="(live, idx0) in store.state.a.segments[0]" :key="live.id">
             <div class="list-wrap">
             <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
@@ -201,7 +234,14 @@
                   </li>
                 </ul>
               </div>
-              <div id="img-frame"><img id="data-image" :src="live.imageUrl"></div><br>
+              <div class="img-frame">
+                <a href="#" @click="setSelectedB(0, idx0)">
+                  <img class="data-image" :class="{bigger: selectedB[0]==idx0}" :src="live.imageUrl" >      
+                </a>
+                <div class="btnWrapper">
+                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                </div>
+              </div>
             </div>
             <h5>{{live.liveLocation}}</h5>
           </li>
@@ -242,7 +282,11 @@ export default {
   data() {
     return {
       currentSlide: 0,
-      delayDisplay: 7     
+      delayDisplay: 7,
+      selectedA: undefined,
+      selectedB: [
+        undefined, undefined, undefined, undefined, undefined
+        ]        
     }
   },
   methods: {
@@ -252,13 +296,36 @@ export default {
         on: true,
         delay: this.delayDisplay 
       })
+    },
+    setSelectedA(t) {
+      if(t==this.selectedA) {
+        this.selectedA=undefined
+      } else {
+        this.selectedA = t
+        setTimeout(this.restoreSelectedA, 10000)  
+      }
+    },
+    restoreSelectedA() {
+      this.selectedA=undefined
+    },
+    setSelectedB(key, val) {
+      if(val==this.selectedB[key]) {
+        this.selectedB[key]=undefined
+      } else {
+        this.selectedB[key] = val
+        setTimeout(this.restoreSelectedB, 20000, key, val)  
+      }
+    },
+    restoreSelectedB(key, val) {
+      this.selectedB[key]=undefined
     }
   },
+
   setup() {
     const store = useStore()
     const inputDelay = ref(null)
     const router = useRouter()
-
+    
     const stopVoiceWatch = watchEffect( () => {
       if(store.state.a.liveVoiceOn && store.state.a.playApub) {
         playWaypoint()
@@ -386,6 +453,7 @@ export default {
       audio.play().then(() => alert("Enable browser's audio play permission if you don't hear an activation announcement."))     
     }
 
+
     onUnmounted(() => {
       store.commit('setLogsLinkActive', false)
       window.removeEventListener('resize', checkScreen)
@@ -461,53 +529,70 @@ export default {
 <style scoped>
 .map {
   position: relative;
-  top: var(--menu-pad-mobile);
-  height: 30vh;
+  top: 95px;/* var(--menu-pad-mobile); */
+  height: 35vh;
   width: 100vw;
-  padding: 0px .4rem 0 .4rem; 
+  padding: 0px 0rem 0 0rem; 
 }
 
 .map .active {
   height: 37vh;
 }
 
-img.vesselImg {
-  width: 30vw;
+img.data-image  {
+  width: 80%;
   height: auto;
-  max-height: 10vh;
+  max-height: 20vh;
+  transition: transform .5s ease-in-out;
 }
+
+img.data-image.bigger {
+  transform: scale(3) translate(-40%, 30%);
+  transition: transform .5s ease-in-out;
+}
+
+
 
 .mobile .slide ul {  
   bottom: 0px;
-  padding: 1px;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  padding: 2px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
   background: rgba(0, 0, 0, 0.4);
 }
 
+/* List Mode  */
 
 .listMode {
-  height: 35vh;
+  height: 40vh;
   overflow-y: scroll;
-  margin-top: 25px;
+  margin-top: 5px;
   position: relative;
   top: 100px;
 }
 
 .listMode ul {
   padding: 0px 0.2rem;
-  max-width: 80vw;
-  /*  max-height: var(--list-ht); */
+  max-width: 100vw;
   overflow: hidden;
 }
 
-/*
 .listMode ul li {
-  margin: 0px;
+  margin: .3rem 0rem;
   padding: 0px;
+  max-width: 100vw;
 }
-*/
+
+.listMode .list-wrap {
+  max-width: 85vw;
+}
+
+.listMode .ctr {
+  margin-left: 2%;
+  margin-right: auto;
+}
+
 
 .list-wrap span.speed {
   color: white;
@@ -529,67 +614,11 @@ span.waypoint {
   padding: 2px;
 }
 
-h5 {
-  font-size: 1rem;
-  border-radius: 0px 0px 8px 8px;
-  color: rgba(255, 255, 255, 0.829);
-  padding: .3rem;
-  margin-top: 0px;
-  background: rgb(168, 179, 14);
-  text-align: center;
-  text-shadow: 1px 1px #000;
-  max-width: 80vw;
-}
 
-.slide h5 {
-  margin: auto;
-}
-
-
-
-h4.map-label {
-  background: aquamarine;
-  color: black;
-  padding: 5px 15px;
-  margin: 5px;
-  border-radius: 60%;
-  font-size: 26px;
-  border: 2px solid black;  
-}
-
-
-#mobile-content-wrap .list-wrap  {
-  background-color: #2c3e50;
-  opacity: 1;
-  max-height: 3rem;
-  min-width: 20rem;
-  max-width: 80vw;
-  border-radius: 8px 8px 0px 0px;
-  display: flex;
-  font-size: 20pt;
-  flex-direction: row;
-  justify-content: left;
-  align-items: center;
-  padding: 10px 0.5rem;
-  margin: 0px;
-}
-
-#mobile-content-wrap .slide .list-wrap {
-  margin: auto;
-}
-
-.dataPoint {
-  max-width: 80vw;
-}
-.listMode .list-wrap h4.map-label {
-  padding: 5px 8px;
-  margin: 5px;
-}
 
 .list-wrap .tile-title {
   color: white;
-  margin: auto;
-  margin-left:auto;
+  margin-left: auto;
   margin-right: auto;
 }
 
@@ -604,33 +633,84 @@ h4.map-label {
   text-align: center;
 }
 
+
+h5 {
+  font-size: 1rem;
+  border-radius: 0px 0px 8px 8px;
+  color: rgba(255, 255, 255, 0.829);
+  padding: .3rem;
+  margin-top: 0px;
+  background: rgb(168, 179, 14);
+  text-align: center;
+  text-shadow: 1px 1px #000;
+  max-width: 85vw;
+}
+
+.slide h5 {
+  margin: auto;
+}
+
+
+
+h4.map-label {
+  background: aquamarine;
+  color: black;
+  padding: 4px 8px;
+  margin: 4px;
+  border-radius: 60%;
+  font-size: 12pt;
+  border: 2px solid black;  
+}
+
+.listMode .list-wrap h4.map-label {
+  padding: 5px 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+h4.tile-title {
+  font-size: 16pt;
+}
+
+#mobile-content-wrap .list-wrap  {
+  background-color: #2c3e50;
+  opacity: 1;
+  height: 3rem;
+  min-width: 20rem;
+  max-width: 85vw;
+  border-radius: 8px 8px 0px 0px;
+  display: flex;
+  font-size: 18pt;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  padding: 0px .2rem;
+  margin: 0px;
+}
+
+#mobile-content-wrap .slide .list-wrap {
+  margin: auto;
+}
+
+.dataPoint {
+  max-width: 85vw;
+}
+
+
 img.dir-img {
   margin-left: auto;
   margin-right: auto;
   height: 25px;
   filter: drop-shadow(2px 2px 4px #4444dd);
 }
-/*
-.tile-title {
-  margin-left:auto;
-  margin-right: auto;
-}
 
-/*
-.label-wrap h4.tile-title {
-  margin: 5px 5px 5px 15px;
-}*/
 
 .middle {
   transform: translateY(150px);
   max-height: 30vh;
 }
 
-img.vesselImg {
-  width: 30vw;
-  height: auto;
-  max-height: 10vh;
-}
+
 
 
 /* Next 3 ensure footer on bottom of page */
@@ -661,7 +741,11 @@ img.vesselImg {
   color: white;
   font-size: 1rem;
   float: right;
-  overflow-wrap: break-word;
+  overflow: visible; 
+}
+
+.td.co {
+  font-size: .8rem;
 }
 
 .td.dir {
@@ -691,7 +775,6 @@ img.vesselImg {
 
 
 /** List */
-
 ul#all-vessels {  
   list-style-type: none;
   bottom: 0px;
@@ -703,78 +786,65 @@ ul#all-vessels {
 }
 
 
+.selected-vessel > li {
+  text-align: left;
+  line-height: .2rem;
+  margin: 5px 5%;
+  max-width: 85vw;
+}
 
-.slide .grid2-container {
-  margin: auto;
+.listMode .selected-vessel > li {
+  line-height: normal;
+}
+
+
+
+/* Data frame styling*/
+
+.grid2-container {
+  /* margin: auto; */
   background-color: black;
-  max-width: 80vw;
+  max-width: 85vw;
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-gap: .07rem;
   padding: .02rem;  
 }
 
-.selected-vessel > li {
-  text-align: left;
-  line-height: .2rem;
-  margin: 5px 5%;
-  max-width: 80vw;
+.slide .grid2-container {
+  margin: auto;
 }
 
-
-.slide #data-table {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start:1;
-  grid-row-end:3;
-  width: 17rem;  height: auto;
-}
-.slide #img-frame {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end:  3;
-  background-color: black;
-  width: 6.5rem;  height: auto;
-}
-
-.slide .selected-vessel > li {
-  max-width: 80vw;
-  margin: 5px 2%;
-  line-height: .2rem;
-}
-
-/* Data frame styling*/
-.grid2-container {
-  background-color: black;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-gap: .07rem;
-  padding: .01rem;  
-}
 .data-table {
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start:1;
   grid-row-end:3;
-  width: 15rem;  height: auto;
+  width: 100%;  height: auto;
+  padding: 0rem 0rem;
+  margin: .02rem .02rem;
 }
-#img-frame {
+
+.listMode .data-table {
+  padding: .5rem;
+  margin: 0;
+}
+
+.img-frame {
   grid-column-start: 2;
   grid-column-end: 3;
-  grid-row-start:2;
-  grid-row-end:  3;
+  grid-row-start: 1;
+  grid-row-end:  2;
   background-color: black;
-  width: 6.5rem;  height: auto;
+  width: 100%;  height: auto;
+  padding-top: 5%;
 }
-div#img-frame img {
+
+div.img-frame img {
   max-width: 100%; overflow: hidden;
 }
 
 /** Button Related */
-.listMode .list-wrap {
- cursor: pointer;
-}
 
 .shade {
   opacity: 0.3;
