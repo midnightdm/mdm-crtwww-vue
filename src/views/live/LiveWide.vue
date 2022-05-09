@@ -206,7 +206,51 @@ export default {
       })
       console.log("liveScans.length", store.state.a.liveScans.length)
       if(store.state.a.liveScans != undefined && store.state.a.liveScans.length) {
+            onMounted(async () => {
+      window.addEventListener('resize', checkScreen)
+      //Keypress event listeners
+      document.addEventListener('keydown', (event) => {
+        keysPressed[event.key] = true;
+        if (keysPressed['Control'] && keysPressed['Shift'] && event.code == "Digit1") {
+          console.log("keypress playWaypoint", event.code)
+          playWaypoint(true);
+        }
+        if (keysPressed['Control'] && keysPressed['Shift'] && event.code == 'Digit2') {
+          console.log("keypress playAnnouncement", event.code)
+          playAnnouncement(true);
+        }
+      });
+      document.addEventListener('keyup', (event) => {
+        keysPressed[event.key] = false;
+      });
+      
+      checkScreen()
+      store.commit("initLiveScan", store)
+      store.commit('setPageSelected', 'Live')
+      store.commit('toggleLiveList', {
+        on: false, 
+        vh: 90, 
+        vw: 30,
+        zoom: 12, 
+        center: store.state.a.liveScanModel.clinton
+      })
+      console.log("liveScans.length", store.state.a.liveScans.length)
+      if(store.state.a.liveScans != undefined && store.state.a.liveScans.length) {
         store.commit('setSlate', store.state.a.liveScans.length+' LIVE')
+        store.dispatch("fetchVoiceNotices")
+        //store.commit('focusMap', 0)
+
+      }
+      else {
+        setTimeout( () => {
+          if(store.state.a.liveScans != undefined && store.state.a.liveScans.length) {
+            store.commit('setSlate', store.state.a.liveScans.length+' LIVE');
+            store.dispatch("fetchVoiceNotices");
+          }
+        }, 1500);
+        //store.commit('setSlate', 'LIVE')
+      }  
+    })
         store.dispatch("fetchVoiceNotices")
         //store.commit('focusMap', 0)
 

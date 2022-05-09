@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { getUserState } from '@/store/firebaseApp.js'
+//import { useStore } from 'vuex'
+import store from '@/store/index.js';
+
 
 //import About from '../views/About.vue'
 const About = () => import('@/views/About.vue')
@@ -237,6 +239,7 @@ const routes = [
   
 ]
 
+///const store = useStore()
 
 const router = createRouter({
   history: createWebHistory(),
@@ -245,11 +248,11 @@ const router = createRouter({
 
 router.beforeEach( async (to, from, next) => {
   //redirects to login page if not logged in for admin pages specified in router meta data
-  const isAuth = await getUserState()
+  
   const requiresAuth   = to.matched.some(record => record.meta.requiresAuth)
   //const requiresUnauth = to.matched.some(record => record.meta.requiresUnauth)
 
-  if(requiresAuth && !isAuth) {
+  if(requiresAuth && !store.state.c.loggeduserIsAdmin) {    
     next('/admin/login')
   } else {
     next()

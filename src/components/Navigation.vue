@@ -4,10 +4,32 @@
       <div class="logo">
         <h1>clinton<span :style="'background-image: url('+crushpixel+');'">river</span>traffic</h1>
         <img id="logo-img" :src="logo" title="The logo image shows a tow boat pushing 9 barges.">
+  
       </div>
       <div class="icon">  
           <font-awesome-icon icon="bars" @click="toggleMobileNav" v-show="mobile" class="fa-solid fa-bars" :class="{'icon-active': mobileNav}" />
       </div>
+
+      <div class="loggedBtn" v-show="$store.state.c.loggeduserSignedIn">
+        <w-button
+          class="px4 btnGrpA"
+          @click="logOut"
+          bg-color="primary"
+          dark>
+              LOG OUT
+        </w-button>
+        <span class="user-label" :class="genColorClass()">{{$store.state.c.loggeduserName[0]}}</span> 
+      </div>
+
+        <w-button
+        v-show="$store.state.a.pageSelected=='Comments' &&
+        !$store.state.c.loggeduserSignedIn"
+        class="px4 btnGrpA loggedBtn"
+        @click="logIn"
+        bg-color="primary"
+        dark>
+            LOG IN
+      </w-button> 
 
       <ul v-show="!mobile" class="navigation">
         <li><a @click="goRoute('/about')" class="nav-link" :href="'/about'" :class="{selected: this.$store.state.a.pageSelected=='About'}">ABOUT</a></li>
@@ -77,7 +99,8 @@ export default {
           touchstartX: 0,
           touchstartY: 0,
           touchendX: 0,
-          touchendY: 0
+          touchendY: 0,
+          userLtr: ''
 
       }
   },
@@ -132,7 +155,29 @@ export default {
         } else {
           this.$store.commit('setGalleryLinkActive', true)
         }
+      },
+      logOut() {
+        this.$store.dispatch('logOut')
+        if(this.$store.state.a.slate.includes('ADMIN')) {
+          this.$router.push('/admin/login')
+        }
+      },
+      logIn() {
+        this.$store.dispatch('logIn')
+        this.usrLtr = this.$store.state.c.loggeduserName[1]
+      },
+      genColorClass() { //Input a letter
+        let lc = this.$store.state.c.loggeduserName.toLowerCase()
+        let ascii = lc.charCodeAt(0)
+        if(ascii <  97 || ascii > 122) return 'v0';
+        if(ascii >  96 && ascii < 101) return 'v1';
+        if(ascii > 100 && ascii < 106) return 'v2';
+        if(ascii > 105 && ascii < 110) return 'v3';
+        if(ascii > 109 && ascii < 114) return 'v4';
+        if(ascii > 113 && ascii < 119) return 'v5';
+        if(ascii > 118 && ascii < 123) return 'v6';
       }
+
     },
     created() {
         window.addEventListener('resize', this.checkScreen)
@@ -205,9 +250,7 @@ div.logo {
   font-family: 'Merriweather Sans', sans-serif;
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.50);
   z-index: 100;
-  
 }
-
 
 .logo h1 span {
   color: blue;
@@ -237,17 +280,17 @@ li a, li router-link {
 }
 
 .nav-link, .nav-link:visited {
-    font-weight: 500;
-    list-style: none;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 8px;
+  font-weight: 500;
+  list-style: none;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
 }
 
 .navigation .nav-link {
-    font-size: 1.2em;
-    padding-bottom: 4px;
-    text-transform: uppercase;
+  font-size: 1.2em;
+  padding-bottom: 4px;
+  text-transform: uppercase;
 }
 
 .dropdown-nav .nav-link,
@@ -297,12 +340,55 @@ ul.navigation2 {
   height: 100%;   
 }
 
+.loggedBtn {
+  position: absolute !important;
+  right: 2rem;
+  top: -60px;
+}
+
+.user-label {
+  text-transform: uppercase;
+  transform: translateY(15px);
+  color: white;
+  padding: 2px 6px 2px 6px;
+  border-radius: 60%;
+  font-size: 18px; 
+  margin: 3px; 
+}
+
+.user-label.v0 {
+  background-color: black;
+}
+
+.user-label.v1 {
+  background-color: navy;
+}
+
+.user-label.v2 {
+  background-color: maroon;
+}
+
+.user-label.v3 {
+  background-color: rgba(255, 255, 0, 0.603);
+}
+
+.user-label.v4 {
+  background-color: green;
+}
+
+.user-label.v5 {
+  background-color: salmon;
+}
+
+.user-label.v6 {
+  background-color: orangered;
+}
+
 .icon .fa-bars {
   cursor: pointer;
   font-size: 2.5rem;
   z-index: 100;
-  transition: 0.8s ease all; 
-        
+  transition: 0.3s ease all;    
 }
 
 .icon-active {
@@ -367,7 +453,7 @@ ul.navigation2 {
 .gallery-submenu-enter-active,
 .mobile-navi-enter-active,
 .mobile-navi-leave-active {
-    transition: 0.5s ease all;
+  transition: 0.5s ease all;
 }
 
 .alerts-submenu-leave-active,
@@ -378,11 +464,11 @@ ul.navigation2 {
 
 .mobile-navi-enter-from,
 .mobile-navi-leave-to {
-    transform: translateX(-550px);
+  transform: translateX(-550px);
 }
 
 .mobile-navi-enter-to {
-    transform: translateX(0px);
+  transform: translateX(0px);
 }
 
 .alerts-submenu-enter-from,
@@ -436,6 +522,10 @@ main #local {
   }
   #title_slate {
     top: .2rem;
+  }
+  .loggedBtn {
+    top: -35px;
+    right: 1rem;
   }
 }
 

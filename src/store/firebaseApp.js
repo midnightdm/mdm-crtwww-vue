@@ -1,9 +1,9 @@
 // firebaseApp.js
 import { initializeApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore, doc, getDoc } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-//import { Loader } from '@googlemaps/js-api-loader'
+
 
 const config = {
     apiKey: "AIzaSyA6KlSt8IQBSm7TiDszs29bhKaVev-e1Tw",
@@ -18,34 +18,42 @@ const firebaseApp = initializeApp(config)
 export let firestore = getFirestore(firebaseApp)
 
 
-//const MAP_KEY = process.env.VUE_APP_MAP_KEY 
-//const loader = new Loader({ apiKey: MAP_KEY, version: "weekly" })
-//export let google = async ()=> { await loader.load() }
 
 
 export const userAuthState = () => {
   const user = ref(null)
   const error = ref(null)
-
+  
   const auth = getAuth(firebaseApp)
   let unsubscribe
-  onMounted(()=> {
+  
+  onMounted(async ()=> {
     unsubscribe = onAuthStateChanged(
       auth,
-      u => (user.value = u),
-      e => (error.value = e)
+      async u => {
+        user.value = u;
+      },
+      e => {error.value = e}
     )
   })
   onUnmounted(() => unsubscribe())
 
-  const isAuthenticated = computed(()=> user.value != null )
 
-  return { user, error, isAuthenticated}
+  return { user, error, auth}
 }
 
+//For Admin pages
 export const getUserState = () =>
   new Promise((resolve, reject) =>
     onAuthStateChanged(getAuth(), resolve, reject)
-  )
+)
+
+//For loggedUser page(s)
+export const getLoggedState = () =>
+  new Promise((resolve, reject) =>
+    onAuthStateChanged(getAuth(), resolve, reject)
+)
+
+
 
 

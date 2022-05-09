@@ -1,8 +1,8 @@
 <template>
 <main>
   <div class="title4 mb2">    
-    <h2>Administrator Login Required</h2>
-    <form @submit.prevent="handleSubmit">
+    <h2>Administrator Login Required</h2><br>
+    <form @submit.prevent="handleSigninSubmit">
 
         <w-input
         class="mb2"
@@ -26,46 +26,82 @@
         :inner-icon-right="isPassword ? 'mdi mdi-eye-off' : 'mdi mdi-eye'"
         @click:inner-icon-right="isPassword = !isPassword">
         </w-input>
-        <button type="submit">Login</button>
+        <br>
+        <w-button
+            class="px4 btnGrpA"
+            type="submit"
+            bg-color="primary"
+            dark>
+            Login
+          </w-button> 
     </form>
+    <br>
+    <h3 v-show="store.getters.getIsAuthenticated && !store.getters.getIsAdmin" style="color: red">The logged user does not have administrative priveleges.</h3>
+
 </div>
 </main>
 </template>
 
 <script>
 
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { signInWithEmailAndPassword } from "firebase/auth"
 import { useRouter } from 'vue-router'
-import store from '@/store/index.js'
+import { ref, onMounted } from 'vue'
+//import store from '@/store/index.js'
+import { useStore } from 'vuex'
+import {userAuthState} from '@/store/firebaseApp.js'
 
 export default {
-    setup() {
-        const auth = getAuth()
-        const router = useRouter()
+  setup() {
+    const uas = userAuthState()
+    const router = useRouter()
+    const store = useStore()
 
-        const handleSubmit = async e => {
-            const { email, password } = e.target.elements
-            try {
-                await signInWithEmailAndPassword(auth, email.value, password.value)
-                .then((adminCredentials) => {
-                    store.commit('saveAdminCredentials', adminCredentials)
-                    console.log('adminUser: ', adminCredentials)
-                    router.push('/admin/vessels')
-                })
-                .catch((error) => {
-                    alert(error.message)
-                })
-            } catch(e) {
-                alert(e.message)
-            }
-        }
-        return { handleSubmit }
-    },
-    data: function() {
-        return {
-            isPassword: true
-        }
+    const dialogOn = ref(false)
+    const dialogFullscreen = false
+    const dialogPersistent = false
+    const dialogPersistentNoAnimation = false
+    const dialogWidth = 399
+    const dialogRemove = false
+
+    const handleSigninSubmit = async e => {
+      const { email, password } = e.target.elements
+      try {
+        dialogOn.value = false
+        await signInWithEmailAndPassword(uas.auth, email.value, password.value)
+        .then(async (userCredentials) => {
+            await store.dispatch('saveLoggeduserCredentials', userCredentials)
+            await store.dispatch('testLoggeduserIsAdmin', userCredentials.user.uid)    
+          })
+          .catch((error) => {
+              alert(error.message)
+          })
+        .then(()=>{
+          router.push('/admin/vessels')
+          } )
+      } catch(e) {
+          alert(e.message)
+      }
     }
+
+
+    onMounted(async () => {
+
+      store.commit('setPageSelected', 'AdminLogin')
+      store.commit('setSlate', 'ADMIN LOGIN')
+
+    })
+
+    return { handleSigninSubmit, 
+      dialogOn, dialogFullscreen, dialogPersistent, dialogPersistentNoAnimation, dialogWidth, dialogRemove, router, store, uas
+    }
+  },
+
+  data: function() {
+    return {
+        isPassword: true
+    }
+  }
 }
 </script>
 

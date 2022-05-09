@@ -4,9 +4,9 @@ import { firestore } from './firebaseApp.js'
 import { doc, getDoc, getDocs, setDoc, collection, onSnapshot, query, where, limit, orderBy } from 'firebase/firestore'
 // onSnapshot, collection, query, where
 import { format, lastDayOfMonth, startOfYesterday, endOfYesterday, setHours } from 'date-fns'
-import { GoogleAuthProvider } from 'firebase/auth'
+//import { GoogleAuthProvider } from 'firebase/auth'
 import LiveScanModel from '@/assets/classes/LiveScanModel.js'
-import { Loader } from '@googlemaps/js-api-loader'
+//import { Loader } from '@googlemaps/js-api-loader'
 
 //const MAP_KEY = process.env.VUE_APP_MAP_KEY
 const db = firestore
@@ -1560,12 +1560,78 @@ const moduleB = {
 }
 
 const moduleC = {
-  state: () => ({  }),
-  mutations: {  },
-  actions: {  },
-  getters: {  }
-}
+  //This module for logged User pages
+  state: () => ({
+    loggeduserSignedIn: false,
+    loggeduserIsAdmin: false,
+    loggeduserCredentials: null,
+    loggeduserEmail: null,
+    loggeduserName: '',
+    loggeduserColor: 0,
+    loggeduserShowForm: false
+    
 
+  }),
+  mutations: { 
+    SAVE_LOGGEDUSER_CREDENTIALS(state, value) {
+      state.loggeduserSignedIn = true
+      state.loggeduserCredentials = value
+      let emailArr = value.user.email.split('@')
+      state.logeduserEmail = value.user.email
+      state.loggeduserName = emailArr[0]
+      state.loggeduserColor = state.loggeduserName.charCodeAt(1)
+      state.loggeduserShowForm = false
+    },
+    SAVE_LOGGEDUSER_ISADMIN(state, value) {
+      state.loggeduserIsAdmin = value
+    },
+    LOG_OUT_USER(state) {
+      state.loggeduserSignedIn = false
+      state.loggeduserIsAdmin = false
+      state.loggeduserCredentials = null
+      state.loggeduserEmail= null,
+      state.loggeduserName= '',
+      state.loggeduserColor= 0
+    },
+    SHOW_LOG_IN_FORM(state, value) {
+      state.loggeduserShowForm = value
+    }
+  },
+  actions: {
+    saveLoggeduserCredentials: async ({commit, state} , value) => {
+      commit('SAVE_LOGGEDUSER_CREDENTIALS', value)  
+    },
+    testLoggeduserIsAdmin: async({commit, state}, value) => {
+      //Check if uid in admin list
+      const adminRef = doc(db, 'Passages', 'Admin')
+      const doc1 = await getDoc(adminRef)
+      if(doc1.exists()) {
+        const adminObj = doc1.data()
+        let adminUsers = adminObj.adminUsers //array
+        if(adminUsers.length) {
+          let boolAnswer = adminUsers.includes(value)
+          await commit('SAVE_LOGGEDUSER_ISADMIN', boolAnswer) 
+        }
+      }
+    },
+    logOut: ({commit, state}) => {
+      commit('LOG_OUT_USER')
+    },
+    logIn: ({commit, state}) => {
+      commit('SHOW_LOG_IN_FORM', true)
+    }  
+
+
+  },
+  getters: {
+    getIsAuthenticated: state => state.loggeduserSignedIn,
+    getIsAdmin: state => state.loggeduserIsAdmin,
+    getCredentials: state => state.loggeduserCredentials,
+    getEmail: state => state.loggeduserEmail,
+    getUserName: state => state.loggeduserName,
+    getUserColor: state => state.loggeduserColor
+  },
+}
 const moduleD = {
   state: () => ({  }),
   mutations: { },
