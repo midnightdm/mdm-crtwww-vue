@@ -1,8 +1,8 @@
 // firebaseApp.js
 import { initializeApp } from 'firebase/app'
-import { getFirestore, doc, getDoc } from 'firebase/firestore'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { getFirestore } from 'firebase/firestore'
+//import { getAuth, onAuthStateChanged } from 'firebase/auth'
+//import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 
 const config = {
@@ -17,8 +17,7 @@ const config = {
 const firebaseApp = initializeApp(config)
 export let firestore = getFirestore(firebaseApp)
 
-
-
+/*  VUEX STORE NOW USED FOR AUTH STATE  
 
 export const userAuthState = () => {
   const user = ref(null)
@@ -54,6 +53,6 @@ export const getLoggedState = () =>
     onAuthStateChanged(getAuth(), resolve, reject)
 )
 
-
+*/
 
 

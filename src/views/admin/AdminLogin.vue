@@ -47,7 +47,6 @@
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
-//import store from '@/store/index.js'
 import { useStore } from 'vuex'
 import {userAuthState} from '@/store/firebaseApp.js'
 
