@@ -1,7 +1,7 @@
 // firebaseApp.js
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
-//import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
 //import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 
@@ -17,13 +17,15 @@ const config = {
 const firebaseApp = initializeApp(config)
 export let firestore = getFirestore(firebaseApp)
 
-/*  VUEX STORE NOW USED FOR AUTH STATE  
+/*  VUEX STORE NOW USED FOR AUTH STATE
+     firebase auth object still exported  */
 
 export const userAuthState = () => {
-  const user = ref(null)
-  const error = ref(null)
+  //const user = ref(null)
+  //const error = ref(null)
   
   const auth = getAuth(firebaseApp)
+  /*
   let unsubscribe
   
   onMounted(async ()=> {
@@ -36,10 +38,12 @@ export const userAuthState = () => {
     )
   })
   onUnmounted(() => unsubscribe())
+ */
 
-
-  return { user, error, auth}
+  return { auth }
 }
+
+/*
 
 //For Admin pages
 export const getUserState = () =>
