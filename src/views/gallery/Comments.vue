@@ -122,7 +122,7 @@ export default {
       try {
           dialogOn.value = false
           await signInWithEmailAndPassword(uas.auth, email.value, password.value)
-          .then((userCredentials) => {
+          .then(async (userCredentials) => {
             await store.dispatch('saveLoggeduserCredentials', userCredentials)
             await store.dispatch('testLoggeduserIsAdmin', userCredentials.user.uid)               
           })
@@ -140,7 +140,7 @@ export default {
       dialogOn.value = false
         try {
             await createUserWithEmailAndPassword(uas.auth, email.value, password.value)
-            .then((userCredentials) => {
+            .then(async (userCredentials) => {
                 if(userCredentials.user.email == email.value)
                 await store.dispatch('saveLoggeduserCredentials', userCredentials)
                 await store.dispatch('testLoggeduserIsAdmin', userCredentials.user.uid)   
