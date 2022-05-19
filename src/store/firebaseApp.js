@@ -1,8 +1,9 @@
 // firebaseApp.js
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
-//import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useStore } from 'vuex'
 
 
 const config = {
@@ -21,42 +22,35 @@ export let firestore = getFirestore(firebaseApp)
      firebase auth object still exported  */
 
 export const userAuthState = () => {
-  //const user = ref(null)
-  //const error = ref(null)
-  
+  const user = ref(null)
+  const error = ref(null)
+  const store = useStore()
   const auth = getAuth(firebaseApp)
-  /*
+  
   let unsubscribe
   
   onMounted(async ()=> {
     unsubscribe = onAuthStateChanged(
       auth,
-      async u => {
+      async (u) => {
         user.value = u;
+        console.log("userAuthState:", u)
+        if(u !== null) {
+          let payload = { user: u, type: "uas"}
+          await store.dispatch('saveLoggeduserCredentials', payload)
+          await store.dispatch('testLoggeduserIsAdmin', u.uid) 
+        }
+        store.commit('SHOW_LOG_IN_FORM', false)
       },
       e => {error.value = e}
     )
   })
   onUnmounted(() => unsubscribe())
- */
+ 
 
-  return { auth }
+  return { auth, user, error }
 }
 
-/*
 
-//For Admin pages
-export const getUserState = () =>
-  new Promise((resolve, reject) =>
-    onAuthStateChanged(getAuth(), resolve, reject)
-)
-
-//For loggedUser page(s)
-export const getLoggedState = () =>
-  new Promise((resolve, reject) =>
-    onAuthStateChanged(getAuth(), resolve, reject)
-)
-
-*/
 
 

@@ -1,17 +1,16 @@
 import { createStore } from 'vuex'
-//import { mapGetters } from 'vuex'
 import { firestore } from './firebaseApp.js'
 import { doc, getDoc, getDocs, setDoc, collection, onSnapshot, query, where, limit, orderBy } from 'firebase/firestore'
 // onSnapshot, collection, query, where
 import { format, lastDayOfMonth, startOfYesterday, endOfYesterday, setHours } from 'date-fns'
-//import { GoogleAuthProvider } from 'firebase/auth'
+
 import LiveScanModel from '@/assets/classes/LiveScanModel.js'
-//import { Loader } from '@googlemaps/js-api-loader'
+import {userAuthState} from '@/store/firebaseApp.js'
 
 //const MAP_KEY = process.env.VUE_APP_MAP_KEY
 const db = firestore
 //const loader = new Loader({ apiKey: MAP_KEY })
-
+const uas = userAuthState()
 
 /* * * * * * * * * * * * * *
  *
@@ -1568,17 +1567,24 @@ const moduleC = {
     loggeduserEmail: null,
     loggeduserName: '',
     loggeduserColor: 0,
-    loggeduserShowForm: false
-    
-
+    loggeduserShowForm: false,
+    loggeduserPhotoUrl: ''
   }),
   mutations: { 
     SAVE_LOGGEDUSER_CREDENTIALS(state, value) {
       state.loggeduserSignedIn = true
       state.loggeduserCredentials = value
-      let emailArr = value.user.email.split('@')
-      state.logeduserEmail = value.user.email
-      state.loggeduserName = emailArr[0]
+      console.log("SAVE_LOGGEDUSER_CREDENTIALS", value)     
+      if(value.email !== null) {
+        state.loggeduserEmail = value.email 
+        let emailArr = value.email.split('@') 
+        state.loggeduserName = emailArr[0]
+      } else {
+        state.loggeduserName = value.displayName
+        state.loggeduserPhotoUrl = value.photoURL
+      }
+      
+      
       state.loggeduserColor = state.loggeduserName.charCodeAt(1)
       state.loggeduserShowForm = false
     },
@@ -1591,7 +1597,9 @@ const moduleC = {
       state.loggeduserCredentials = null
       state.loggeduserEmail= null,
       state.loggeduserName= '',
-      state.loggeduserColor= 0
+      state.loggeduserColor= 0,
+      state.loggeduserShowForm = true
+      state.loggeduserPhotoUrl = ''
     },
     SHOW_LOG_IN_FORM(state, value) {
       state.loggeduserShowForm = value
@@ -1599,7 +1607,13 @@ const moduleC = {
   },
   actions: {
     saveLoggeduserCredentials: async ({commit, state} , value) => {
-      commit('SAVE_LOGGEDUSER_CREDENTIALS', value)  
+      let user
+      if(value.type=="cred") {
+        user = { value }
+      } else if(value.type="uas") {
+        user = value.user
+      }
+      commit('SAVE_LOGGEDUSER_CREDENTIALS', user)  
     },
     testLoggeduserIsAdmin: async({commit, state}, value) => {
       //Check if uid in admin list
@@ -1615,10 +1629,16 @@ const moduleC = {
       }
     },
     logOut: ({commit, state}) => {
-      commit('LOG_OUT_USER')
+      uas.auth.signOut().then(commit('LOG_OUT_USER'))
     },
     logIn: ({commit, state}) => {
       commit('SHOW_LOG_IN_FORM', true)
+    },
+    restoreAuthState: ({commit, state}) => {
+      if(uas.user.length) {
+        commit('SAVE_LOGGEDUSER_CREDENTIALS', uas.user)
+      }
+      
     }  
 
 

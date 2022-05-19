@@ -73,7 +73,7 @@ export default {
             await store.dispatch('testLoggeduserIsAdmin', userCredentials.user.uid)    
           })
           .catch((error) => {
-              alert(error.message)
+              console.log("AdminLogin Error:", error.message)
           })
         .then(()=>{
           router.push('/admin/vessels')

@@ -10,7 +10,7 @@
           <font-awesome-icon icon="bars" @click="toggleMobileNav" v-show="mobile" class="fa-solid fa-bars" :class="{'icon-active': mobileNav}" />
       </div>
 
-      <div class="loggedBtn" v-show="$store.state.c.loggeduserSignedIn">
+      <div class="loggedBtn" :class="{'user-img': $store.state.c.loggeduserPhotoUrl}" v-show="$store.state.c.loggeduserSignedIn">
         <w-button
           class="px4 btnGrpA"
           @click="logOut"
@@ -18,7 +18,12 @@
           dark>
               LOG OUT
         </w-button>
-        <span class="user-label" :class="genColorClass()">{{$store.state.c.loggeduserName[0]}}</span> 
+        <div class="label-holder-i" v-if="$store.state.c.loggeduserPhotoUrl !==''">
+          <img :src="$store.state.c.loggeduserPhotoUrl" class="user-photo"/>
+        </div>
+        <div class="label-holder-l" v-else>
+          <span class="user-label" :class="genColorClass()">{{$store.state.c.loggeduserName[0]}}</span>
+        </div>
       </div>
 
         <w-button
@@ -81,6 +86,8 @@
 <script>
 
 import { useRouter } from 'vue-router'
+//import {userAuthState} from '@/store/firebaseApp.js'
+
 
 export default {
   name: 'Navigation',
@@ -192,6 +199,8 @@ export default {
           this.closeMobileMenu();
         })
         this.checkScreen()
+        
+
     }
 }
 </script>
@@ -342,13 +351,36 @@ ul.navigation2 {
 
 .loggedBtn {
   position: absolute !important;
-  right: 2rem;
+  right: 1rem;
   top: -60px;
+}
+
+
+.user-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 60%;
+  padding: 5px;
+}
+
+.label-holder-i > img {
+  display: inline;
+  transform: translate(75px,-38px);
+ 
+}
+
+.label-holder-l {
+  display: inline;
+  transform: translateY(20px);
+}
+
+.loggedBtn.user-img {
+  top: -60px;
+  right: 50px;
 }
 
 .user-label {
   text-transform: uppercase;
-  transform: translateY(15px);
   color: white;
   padding: 2px 6px 2px 6px;
   border-radius: 60%;
@@ -527,6 +559,15 @@ main #local {
     top: -35px;
     right: 1rem;
   }
+
+  .loggedBtn.user-img {
+    top: -35px;
+    right: 50px;
+  }
+  /*
+  .px4.loggedBtn {
+  top: -35px;
+  }*/
 }
 
 </style>
