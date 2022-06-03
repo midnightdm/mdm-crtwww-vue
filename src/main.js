@@ -17,10 +17,11 @@ import timeago from 'vue-timeago3'
 import 'animate.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faThumbsUp, faThumbsDown, faCaretRight } from '@fortawesome/free-solid-svg-icons'
 
 
-library.add(faBars);
+
+library.add(faBars, faThumbsUp, faThumbsDown, faCaretRight);
 
 //register components
 const registerComponents = (app) => { 

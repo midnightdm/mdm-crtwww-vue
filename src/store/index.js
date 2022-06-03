@@ -6,6 +6,7 @@ import { format, lastDayOfMonth, startOfYesterday, endOfYesterday, setHours } fr
 
 import LiveScanModel from '@/assets/classes/LiveScanModel.js'
 import {userAuthState} from '@/store/firebaseApp.js'
+import { faBullseye } from '@fortawesome/free-solid-svg-icons'
 
 //const MAP_KEY = process.env.VUE_APP_MAP_KEY
 const db = firestore
@@ -608,6 +609,7 @@ const moduleA = {
       alertsLinkActive: false,
       logsLinkActive: false,
       galleryLinkActive: false,
+      commentsLinkActive: false,
       pageSelected: null,
       isHero: false,
       isTest: true,
@@ -638,7 +640,9 @@ const moduleA = {
       liveMapHeight: 30,
       liveMapWidth: 100,
       liveScanModel: null,
+      user: {},
       liveScans: [ { liveName: "loading" } ],
+      comments: [],
       segments: [[],[],[],[],[]], 
       passagesList: [
         {
@@ -1032,6 +1036,49 @@ const moduleA = {
       
     },
 
+
+
+    initComments({ commit, state }) { //Action
+      const q = query(collection(db, 'Comments'), where('ts', '!=', 0), orderBy('ts', 'desc'), limit(20));
+      const commentSnapshot = onSnapshot(q, (querySnapshot)=> {
+        let key, len, dat, i=0, j=0
+        console.log("Current User:", state.user)
+        querySnapshot.forEach( (doc) => {
+          dat = doc.data()
+          if(state.comments.length>i) {
+            dat['showreplies'] = state.comments[i].showreplies
+            dat['showreplyform'] = state.comments[i].showreplyform
+            dat['selfLiked'] = dat.likes.includes(state.user)
+            dat['selfDisliked'] = dat.dislikes.includes(state.user)
+            if(dat.repliesData.length>j) {
+              for(j=0; j<dat.repliesData.length; j++) {
+                dat.repliesData[j]['showsubreplyform'] = state.comments[i].repliesData[j].showsubreplyform || false
+                dat.repliesData[j]['selfLiked'] = dat.repliesData[j].likes.includes(state.user)
+                dat.repliesData[j]['selfDisliked'] = dat.repliesData[j].dislikes.includes(state.user)
+              }
+            } 
+            commit('updateComment', {key: i, val: dat})
+          } else {
+            dat['showreplies'] = false
+            dat['showreplyform'] = false
+            dat['selfLiked'] = false
+            dat['selfDisliked'] = false
+            if(dat.repliesData.length>j) {
+              for(j=0; j<dat.repliesData.length; j++) {
+                dat.repliesData[j]['showsubreplyform'] = false
+                dat.repliesData[j]['selfLiked'] = dat.repliesData[j].likes.includes(state.user)
+                dat.repliesData[j]['selfDisliked'] = dat.repliesData[j].dislikes.includes(state.user)
+              }
+            }
+            //Create & Push
+            commit('pushComment', dat)
+          }          
+          i++
+        })
+      })    
+      
+    },
+
     //Run by initMap()
     addMileMarkers( { commit } ) { //Action
       commit('addMileMarkers')
@@ -1103,8 +1150,47 @@ const moduleA = {
       } else if(state.liveScans[key].detail===true){
         commit('toggleDetail', {key: key, value: false})
       }
+    },
 
-    }
+    toggleReplies( { commit, state }, key) { //Action
+      if(state.comments[key].showreplies===false) {
+        commit('toggleRepliesM', {key: key, value: true})
+      } else if(state.comments[key].showreplies===true){
+        commit('toggleRepliesM', {key: key, value: false})
+      }
+    },
+
+    toggleReplyForm( { commit, state }, key) { //Action
+      if(state.comments[key].showreplyform ===false) {
+        console.log("toggleReplyForm(true)", key)
+        commit('toggleReplyFormM', {key: key, value: true})
+      } else if(state.comments[key].showreplyform===true){
+        console.log("toggleReplyForm(false)", key)
+        commit('toggleReplyFormM', {key: key, value: false})
+        
+      }
+    },
+
+    toggleSubReplyForm( { commit, state }, context) { //Action
+      if(state.comments[context.idx].repliesData[context.rIdx].showsubreplyform ===false) {
+        console.log("toggleSubReplyForm(true)", context)
+        commit('toggleSubReplyFormM', {idx: context.idx, rIdx: context.rIdx, value: true})
+      } else if(state.comments[context.idx].repliesData[context.rIdx].showsubreplyform===true){
+        console.log("toggleSubReplyForm(false)", context)
+        commit('toggleSubReplyFormM', {idx: context.idx, rIdx: context.rIdx, value: false})
+      }
+    },
+
+    saveUserToA: async ({commit, state} , value) => {
+      // let user
+      // if(value.type=="cred") {
+      //   user = { value }
+      // } else if(value.type="uas") {
+      //   user = value.user
+      // }
+      commit('SAVE_USER_TO_A', value)  
+    },
+
 
   },
 
@@ -1131,14 +1217,25 @@ const moduleA = {
     setAlertsLinkActive(state, val) { //Mutation
       //Clean the slate
       state.alertsLinkActive = false
+      state.commentsLinkActive = false
       state.logsLinkActive = false
       state.galleryLinkActive = false
       //Then set new value
       state.alertsLinkActive = val
     },
+    setCommentsLinkActive(state, val) { //Mutation
+      //Clean the slate
+      state.alertsLinkActive = false
+      state.commentsLinkActive = false
+      state.logsLinkActive = false
+      state.galleryLinkActive = false
+      //Then set new value
+      state.commentsLinkActive = val
+    },
     setLogsLinkActive(state, val) { //Mutation
       //Clean the slate
       state.alertsLinkActive = false
+      state.commentsLinkActive = false
       state.logsLinkActive = false
       state.galleryLinkActive = false
       //Then set new value
@@ -1147,6 +1244,7 @@ const moduleA = {
     setGalleryLinkActive(state, val) { //Mutation
       //Clean the slate
       state.alertsLinkActive = false
+      state.commentsLinkActive = false
       state.logsLinkActive = false
       state.galleryLinkActive = false
       //Then set new value
@@ -1336,6 +1434,14 @@ const moduleA = {
       state.liveScans.splice(val.key, 1, val.obj)
     },
 
+    pushComment( state, val ) { //Mutation
+      state.comments.push(val)
+    },
+
+    updateComment( state, val) { //Mutation
+      state.comments[val.key] = val.val
+    },
+
     toggleLiveAuto(state, val) { //Mutation
       state.liveAutoOn = val.on  
       state.liveAutoLast = state.liveAutoDelay
@@ -1364,7 +1470,20 @@ const moduleA = {
     },
     toggleDetail( state, val) { //Mutation
       state.liveScans[val.key].detail = val.value
-    }
+    },
+    toggleRepliesM( state, val) { //Mutation
+      state.comments[val.key].showreplies = val.value
+    },
+    toggleReplyFormM( state, val) { //Mutation
+      state.comments[val.key].showreplyform = val.value
+    },
+    toggleSubReplyFormM( state, val) { //Mutation
+      state.comments[val.idx].repliesData[val.rIdx].showsubreplyform = val.value
+    },
+    SAVE_USER_TO_A(state, value) {
+      state.user = value
+    },
+  
 
   },
 
@@ -1583,8 +1702,6 @@ const moduleC = {
         state.loggeduserName = value.displayName
         state.loggeduserPhotoUrl = value.photoURL
       }
-      
-      
       state.loggeduserColor = state.loggeduserName.charCodeAt(1)
       state.loggeduserShowForm = false
     },

@@ -34,10 +34,11 @@ export const userAuthState = () => {
       auth,
       async (u) => {
         user.value = u;
-        console.log("userAuthState:", u)
+        //console.log("userAuthState:", u)
         if(u !== null) {
           let payload = { user: u, type: "uas"}
           await store.dispatch('saveLoggeduserCredentials', payload)
+          await store.dispatch('saveUserToA', u.uid)
           await store.dispatch('testLoggeduserIsAdmin', u.uid) 
         }
         store.commit('SHOW_LOG_IN_FORM', false)

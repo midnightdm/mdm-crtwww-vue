@@ -39,6 +39,7 @@
       <ul v-show="!mobile" class="navigation">
         <li><a @click="goRoute('/about')" class="nav-link" :href="'/about'" :class="{selected: this.$store.state.a.pageSelected=='About'}">ABOUT</a></li>
         <li><a  @click="goRoute('/alerts')" :href="'/alerts'" class="nav-link" :class="{ 'selected': this.$store.state.a.alertsLinkActive  }" exact>ALERTS</a></li>
+        <li><a @click="goRoute('/comments')" :href="'/comments'" class="nav-link" :class="{'selected': this.$store.state.a.commentsLinkActive}" >COMMENTS</a></li>
         <li><a @click="goRoute('/gallery/video')" :href="'/gallery/video'" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" >GALLERY</a></li>
         <li><a @click="goRoute('/live/mobile')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='Live'}" :href="'/live/wide'" >LIVE</a></li>
         <li><a @click="goRoute('/logs')" :href="'/logs'" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive }">LOGS</a></li>
@@ -65,6 +66,10 @@
                   <AlertsSubMenu v-show="this.$store.state.a.alertsLinkActive && mobileNav" :class="{'navigation2': mobileNav}" @click="toggleMobileNav"></AlertsSubMenu>                
               </transition>
             </li>
+
+            <li>
+              <router-link @click="toggleMobileNav" class="nav-link" :class="{'selected': this.$store.state.a.commentsLinkActive}" :to="{name: 'Comments'}">COMMENTS</router-link>
+            </li>     
             <li>
               <router-link @click="toggleMobileNav" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" :to="{name: 'Video'}">GALLERY</router-link>
             </li>
@@ -175,7 +180,7 @@ export default {
       },
       genColorClass() { //Input a letter
         let lc = this.$store.state.c.loggeduserName.toLowerCase()
-        let ascii = lc.charCodeAt(0)
+        let ascii = lc.charCodeAt(1)
         if(ascii <  97 || ascii > 122) return 'v0';
         if(ascii >  96 && ascii < 101) return 'v1';
         if(ascii > 100 && ascii < 106) return 'v2';

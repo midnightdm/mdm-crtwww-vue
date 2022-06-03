@@ -40,6 +40,8 @@ const AlertsAll = () => import('@/views/alerts/AlertsAll.vue')
 const AlertsDemo = () => import('@/views/alerts/AlertsDemo.vue')
 //import AlertsPass from '../views/alerts/AlertsPass.vue'
 const AlertsPass = () => import('@/views/alerts/AlertsPass.vue')
+//Import AlertsRss from '../views/alerts/AlertsRss.vue'
+const AlertsRss = () => import('@/views/alerts/AlertsRss.vue')
 //import AlertsWatch from '../views/alerts/AlertsWatch'
 const AlertsWatch = () => import('@/views/alerts/AlertsWatch.vue')
 //import Manage from '../views/alerts/Manage.vue'
@@ -58,6 +60,8 @@ const Video = () => import('@/views/gallery/Video.vue')
 const LiveMobile = () => import('@/views/live/LiveMobile.vue')
 //import LiveWide from '../views/live/LiveWide.vue'
 const LiveWide = () => import('@/views/live/LiveWide.vue')
+
+
 
 //import Msg404 from '../views/Msg404.vue'
 const Msg404 = () => import('@/views/Msg404.vue')
@@ -207,7 +211,7 @@ const routes = [
     component: Waypoint
   },
   {
-    path: '/gallery/comments',
+    path: '/comments',
     name: 'Comments',
     component: Comments,
   },
@@ -220,6 +224,15 @@ const routes = [
     path: '/gallery/video',
     name: 'Video',
     component: Video,
+  },
+  {
+    path: '/feed',
+    component: AlertsRss
+    
+  },
+  {
+    path: '/rss',
+    component: AlertsRss
   },
   {
     path: '/gallery',

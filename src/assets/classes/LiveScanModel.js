@@ -13,7 +13,7 @@ export default class LiveScanModel {
     self.selectedView = {view: 'viewList', idx: null};//ko.observable
     self.nowPage      = 'list'; //ko.observable
     self.lastPage     = 'list'; //ko.observable
-    self.mapZoom      = 12;  //ko.observable
+    self.mapZoom      = 12;     //ko.observable
     self.markerList   = [];
     self.markersOn    = false; //ko.observable
     self.infoOn       = true; //ko.observable
