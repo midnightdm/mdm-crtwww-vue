@@ -41,7 +41,7 @@
         <li><a  @click="goRoute('/alerts')" :href="'/alerts'" class="nav-link" :class="{ 'selected': this.$store.state.a.alertsLinkActive  }" exact>ALERTS</a></li>
         <li><a @click="goRoute('/comments')" :href="'/comments'" class="nav-link" :class="{'selected': this.$store.state.a.commentsLinkActive}" >COMMENTS</a></li>
         <li><a @click="goRoute('/gallery/video')" :href="'/gallery/video'" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" >GALLERY</a></li>
-        <li><a @click="goRoute('/live/mobile')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='Live'}" :href="'/live/wide'" >LIVE</a></li>
+        <li><a @click="goRoute('/live/')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='Live'}" :href="'/live/'" >LIVE</a></li>
         <li><a @click="goRoute('/logs')" :href="'/logs'" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive }">LOGS</a></li>
       </ul>
 
