@@ -43,9 +43,9 @@
       <w-button class="btnGrpA" @click="subscribeToDefaultWaypoints">Add Default Waypoints</w-button>
       <br/>
       <!-- Button to request test notifcation -->
-      <div v-if="user.alertTestRequest" style="color: red">Test Pending</div>
+      <div v-if="user && user.alertTestRequest" style="color: red">Test Pending</div>
       <w-button class="ma1" bg-color="info" @click="requestNotificationTest">Notification Test</w-button>
-      <div v-if="user.alertTestedTS!=null">Last Test Notification Sent {{user.alertTestedTS}}</div>
+      <div v-if="user && user.alertTestedTS!=null">Last Test Notification Sent {{user.alertTestedTS}}</div>
     </div>
 
     <div class="boxb boxc">Consider where along the river you like to watch riverboats. Choose one marker a few miles above your spot for downriver notices. Pick another below your spot for upriver notices. "Passenger" events will trigger less often than the "Any" vessel events which occur many times daily.
