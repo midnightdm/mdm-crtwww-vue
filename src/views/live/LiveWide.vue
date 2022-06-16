@@ -8,7 +8,7 @@
       <section class="data column">
         <div class="dataColumn">
           <ul v-if="store.state.a.liveScans.length" class="cardWrapper">
-            <li  class="listMode" v-for="live in store.state.a.liveScans" :key="live.id">
+            <li  class="listMode" v-for="(live, idxa) in store.state.a.liveScans" :key="live.id">
               <div class="slideData">
               <div class="list-wrap">
                 <h4 class="map-label">{{live.mapLabel}}</h4>
@@ -31,12 +31,18 @@
                     </li>
                   </ul>
                 </div>
-                <div id="img-frame"><img id="data-image" :src="live.imageUrl"></div><br>
+                <div id="img-frame">
+                  <a href="#" @click="setSelectedA(idxa)">
+                  <img class="data-image" :class="{bigger:selectedA==idxa}" :src="live.imageUrl">
+                  </a>
+                  <div class="btnWrapper">
+                    <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                  </div>                   
+                </div>
               </div>
+              
               <h5>{{live.liveLocation}}</h5>
-              <div class="btnWrapper">
-                <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
-              </div>             
+                       
             </div>
           </li>
           </ul>
@@ -64,7 +70,8 @@ export default {
   data() {
     return {
       currentSlide: 0,
-      delayDisplay: 7    
+      delayDisplay: 7,
+      selectedA: undefined    
     }
   },
   methods: {
@@ -74,7 +81,18 @@ export default {
         on: true,
         delay: this.delayDisplay 
       })
-    }
+    },
+    setSelectedA(t) {
+      if(t==this.selectedA) {
+        this.selectedA=undefined
+      } else {
+        this.selectedA = t
+        setTimeout(this.restoreSelectedA, 10000)  
+      }
+    },
+    restoreSelectedA() {
+      this.selectedA=undefined
+    },
   },
   setup() {
     const store = useStore()
@@ -379,6 +397,19 @@ ul#all-vessels {
 }
 .td.dir {
   text-transform: capitalize;
+}
+
+/* Vessel Image resizer*/
+img.data-image  {
+  width: 80%;
+  height: auto;
+  max-height: 20vh;
+  transition: transform .5s ease-in-out;
+}
+
+img.data-image.bigger {
+  transform: scale(3) translate(-40%, 30%);
+  transition: transform .5s ease-in-out;
 }
 
 
