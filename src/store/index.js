@@ -633,7 +633,7 @@ const moduleA = {
       //Toggle switches
       liveListOn: false,
       infoOn: true,
-      liveVoiceOn: false,
+      liveVoiceOn: true,
       playApub: false,
       playVpub: false,
 

@@ -1,9 +1,12 @@
 <template>
   <div id="page-container">
-    <div id="content-wrap">
+    <div id="idiv">
       <iframe id="imap" class="widemap column" src="https://dashboard.clintonrivertraffic.com/map.html" scrolling="no" frameborder="0" seamless></iframe>
+    </div>
+    <div id="content-wrap">
+      
       <!--button @click="toggleLabels">Mile Labels <span class='led' :class="{'on':  store.state.a.infoOn }"></span></-button-->&nbsp;&nbsp;
-      <button @click="toggleLiveVoice">Announcements <span class='led' :class="{'on':  store.state.a.liveVoiceOn }"></span></button>
+      <button class="ann" @click="toggleLiveVoice">Announcements <span class='led' :class="{'on':  store.state.a.liveVoiceOn }"></span></button>
       <!--section class="map column"></-section-->
       <section class="data column">
         <div class="dataColumn">
@@ -32,12 +35,13 @@
                   </ul>
                 </div>
                 <div id="img-frame">
-                  <a href="#" @click="setSelectedA(idxa)">
+                  <a href="javascript:void(0)" @click="setSelectedA(idxa)">
                   <img class="data-image" :class="{bigger:selectedA==idxa}" :src="live.imageUrl">
                   </a>
                   <div class="btnWrapper">
                     <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
-                  </div>                   
+                  </div>
+                  <div class="spader"></div>                   
                 </div>
               </div>
               
@@ -331,6 +335,30 @@ h5 {
   text-shadow: 1px 1px #000;
 }
 
+/* Map to Content Proportions */
+
+#imap {
+    height: 100%;
+    width: 100%;
+}
+
+#idiv {
+    position: fixed;
+    top: 150px;
+    left: 0px;
+    right: 60vw;
+    bottom: 0px;
+}
+
+#content-wrap { 
+  position: relative;    
+  top: 0px;
+  left: 40vw;
+  bottom: 0px;
+  right: 10px;
+  padding-right: 10%;
+}
+
 
 /* Deals with all vessel data displayed as cards */
 ul.cardWrapper {
@@ -408,10 +436,13 @@ img.data-image  {
 }
 
 img.data-image.bigger {
-  transform: scale(3) translate(-40%, 30%);
+  transform: scale(5) translate(-30%, 20%);
   transition: transform .5s ease-in-out;
 }
 
+div.spader {
+  height: 2rem;
+}
 
 /* Next 3 ensure footer on bottom of page */
 #page-container {
@@ -420,14 +451,8 @@ img.data-image.bigger {
   min-height: 100vh;
 }
 
-#content-wrap { 
-  padding-bottom: 2.5rem;    /* Footer height */
-}
 
-#content-wrap:after {
-  display: table;
-  clear: both;
-}
+
 
 .column {
   float: left;
@@ -481,6 +506,13 @@ div.dataColumn {
    padding: 4px;
 }
 
+button.ann {
+  position: fixed;
+  top: 40px;
+  right: 180px;
+  z-index: 100;
+}
+
 .led  {
   height: 10px;
   display: inline-block;
@@ -491,7 +523,6 @@ div.dataColumn {
 
 .led.on {
   background-color: rgba(6, 245, 6, 1);
-
 }
 
 img.dir-img {
@@ -606,7 +637,7 @@ section {
   flex-direction: row;
   justify-content: left;
   align-items: center;
-  padding: 0.5rem 0.5rem;
+  padding: 0.1rem 0.1rem;
   margin: 0px;
 }
 
