@@ -7,7 +7,6 @@
       
       <!--button @click="toggleLabels">Mile Labels <span class='led' :class="{'on':  store.state.a.infoOn }"></span></-button-->&nbsp;&nbsp;
       <button class="ann" @click="toggleLiveVoice">Announcements <span class='led' :class="{'on':  store.state.a.liveVoiceOn }"></span></button>
-      <!--section class="map column"></-section-->
       <section class="data column">
         <div class="dataColumn">
           <ul v-if="store.state.a.liveScans.length" class="cardWrapper">
@@ -60,7 +59,6 @@
 </template>
 
 <script>
-//import Map from '@/components/Map.vue'
 import { onMounted, onUnmounted, watchEffect, ref } from 'vue'
 import { useStore } from 'vuex'
 import 'vue3-carousel/dist/carousel.css';
@@ -68,9 +66,6 @@ import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 import { useRouter } from 'vue-router'
 
 export default {
-  // components: {
-  //   Map
-  // },
   data() {
     return {
       currentSlide: 0,
