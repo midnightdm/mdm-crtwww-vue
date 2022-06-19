@@ -330,6 +330,24 @@ export default {
                   if(Array.isArray(this.user.events) && this.user.events.length) {
                     this.user.events.forEach(this.loadSubListActual);
                   }  
+                } else {
+                  let userObj = {
+                  alertDest: "",
+                  alertMethod: "notification",
+                  alertNote: "v2 onSnapshot()",
+                  alertTestRequest: false,
+                  alertTestedTS: null,
+                  userID: this.mm.userID,
+                  userCreatedTS: Math.round(Date.now()/1000),
+                  events: [],
+                  subscription: {
+                    auth:  "",
+                    endpoint: subscription.endpoint,
+                    is_enabled: false,
+                    p256dh: "" 
+                  }
+                };
+                setDoc(this.deviceRef, userObj)
                 } 
               }, 
               () => {
