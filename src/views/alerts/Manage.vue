@@ -234,7 +234,9 @@ export default {
         let auth = btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('auth'))));
         let p246dh = btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('p256dh'))));
         this.user = {
+          alertDest: "",
           alertMethod: "notification",
+          alertNote: "v0 subscribeUser()",
           alertTestRequest: false,
           alertTestedTS: null,
           userCreatedTS: Math.round(Date.now()/1000),
@@ -333,7 +335,9 @@ export default {
               () => {
                 //Create if not found
                 let userObj = {
+                  alertDest: "",
                   alertMethod: "notification",
+                  alertNote: "v2 onSnapshot()",
                   alertTestRequest: false,
                   alertTestedTS: null,
                   userID: this.mm.userID,
