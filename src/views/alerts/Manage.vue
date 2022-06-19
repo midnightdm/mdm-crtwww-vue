@@ -132,6 +132,10 @@ export default {
     }
   },
   mounted() {
+    //Logout user to avoid conflict with annonymous login
+    if(this.$store.state.c.loggeduserCredentials && !this.$store.state.c.loggeduserCredentials.isAnonymous) {
+      this.$store.dispatch('logOut')
+    }
     this.$store.commit('setSlate', 'ALERTS')
     this.$store.commit('setAlertsLinkActive', true)
     this.$store.commit('setPageSelected', 'Manage')
@@ -223,7 +227,6 @@ export default {
         applicationServerKey: applicationServerKey
       })
       .then( (subscription) => {
-        //this.getSubList();
         console.log('User is subscribed.');
         this.isSubscribed = true;
         this.updateBtn();  
@@ -234,6 +237,7 @@ export default {
           alertMethod: "notification",
           alertTestRequest: false,
           alertTestedTS: null,
+          userCreatedTS: Math.round(Date.now()/1000),
           events: [],
           subscription: {
             auth:  auth,
@@ -291,20 +295,22 @@ export default {
           }
           //Login annonymously to firebase auth and get unique uid  
           signInAnonymously(this.fsAuth).catch( (error) => {
-            // Handle Errors here.
-            let errorCode = error.code;
-            let errorMessage = error.message;
-          
-            if (errorCode === 'auth/operation-not-allowed') {
-              alert('You must enable Anonymous auth in the Firebase Console.');
-            } else {
-              console.error(error);
-            }
+             // Handle Errors here.
+             let errorCode = error.code;
+             let errorMessage = error.message;
+             if (errorCode === 'auth/operation-not-allowed') {
+               alert('You must enable Anonymous auth in the Firebase Console.');
+             } else {
+               console.error(error);
+             }
           })
           .then( (userObj) => {
             //Use returned user object's uid to get or create new db document
-            console.log("Returned userObj: ",userObj);
-            this.mm.userID = userObj.user.uid;   
+            //NEW WAY: DON'T LOG ANNONYMOUS ID, USE SUBCR ID INSTEAD
+            //console.log("Returned userObj: ",userObj);
+            //Use browser's subsription endpoint as login uuid 
+            let uuid = subscription.endpoint.substr(-20,20)
+            this.mm.userID = uuid              
             if(this.mm.userID==null) { 
               alert("Error generating a UUID.  Try again later.");
             } else {
@@ -325,10 +331,13 @@ export default {
                 } 
               }, 
               () => {
-                let user = {
+                //Create if not found
+                let userObj = {
                   alertMethod: "notification",
                   alertTestRequest: false,
                   alertTestedTS: null,
+                  userID: this.mm.userID,
+                  userCreatedTS: Math.round(Date.now()/1000),
                   events: [],
                   subscription: {
                     auth:  "",
@@ -337,18 +346,7 @@ export default {
                     p256dh: "" 
                   }
                 };
-                setDoc(this.deviceRef, {
-                  alertMethod: "notification",
-                  alertTestRequest: false,
-                  alertTestedTS: null,
-                  events: [],
-                  subscription: {
-                    auth:  "",
-                    endpoint: subscription.endpoint,
-                    is_enabled: false,
-                    p256dh: "" 
-                  }
-                })
+                setDoc(this.deviceRef, userObj)
             })
           })              
       }); 

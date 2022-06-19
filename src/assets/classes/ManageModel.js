@@ -2,6 +2,8 @@ export default class ManageModel {
     constructor() {
       let self = this;
       self.userID = null;
+      self.userPW = null;
+      self.userIA = false;
       self.subListActual = [];
       self.subListSelection = {};
       self.actListSelection = {};
