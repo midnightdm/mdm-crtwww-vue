@@ -34,8 +34,8 @@ export const userAuthState = () => {
       auth,
       async (u) => {
         user.value = u;
-        //console.log("userAuthState:", u)
-        if(u !== null) {
+        console.log("userAuthState:", u)
+        if(u !== null && !u.isAnonymous) {
           let payload = { user: u, type: "uas"}
           await store.dispatch('saveLoggeduserCredentials', payload)
           await store.dispatch('saveUserToA', u.uid)
