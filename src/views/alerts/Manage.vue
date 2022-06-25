@@ -112,6 +112,10 @@ import { doc, getDoc, setDoc, updateDoc, arrayRemove, onSnapshot } from 'firebas
 import { getAuth, signInAnonymously } from "firebase/auth";
 export default {
   beforeMount() {
+    //Logout user to avoid conflict with annonymous login
+    if(this.$store.state.c.loggeduserCredentials && !this.$store.state.c.loggeduserCredentials.isAnonymous) {
+      this.$store.dispatch('logOut')
+    }
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       console.log('Service Worker and Push is supported');
       //mysw.js has the push method and payload, mysw.js also has the eventhandler for when the notification is clicked
@@ -132,10 +136,6 @@ export default {
     }
   },
   mounted() {
-    //Logout user to avoid conflict with annonymous login
-    if(this.$store.state.c.loggeduserCredentials && !this.$store.state.c.loggeduserCredentials.isAnonymous) {
-      this.$store.dispatch('logOut')
-    }
     this.$store.commit('setSlate', 'ALERTS')
     this.$store.commit('setAlertsLinkActive', true)
     this.$store.commit('setPageSelected', 'Manage')
@@ -143,6 +143,8 @@ export default {
   unmounted() {
     this.$store.commit('setAlertsLinkActive', false)
     this.$store.commit('setPageSelected', null)
+    //Disengage anonymous login upon leaving
+    this.$store.dispatch('logOut')
   },
   data: function() {
     return {
