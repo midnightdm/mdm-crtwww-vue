@@ -4,7 +4,7 @@ export default class LiveScanModel {
   constructor(callback) {
     let self = this;
     self.store     = callback;
-    self.clinton   = {lat: 41.857202, lng:-90.184084};
+    self.mapCenter   = {lat: process.env.VUE_APP_MAPCENTER_LAT, lng: process.env.VUE_APP_MAPCENTER_LNG};
     //self.url       = "..livescanjson";
     self.INTERVAL  = 20000;
     self.labelIndex = 0;
@@ -102,13 +102,13 @@ export default class LiveScanModel {
       let coords = self.getShipSpriteCoords(o.course), icon
       if(o.type.includes("assenger")) {
         icon = {
-          url: "https://storage.googleapis.com/www.clintonrivertraffic.com/images/ship-icon-sprite-yellow.png",
+          url: process.env.VUE_APP_PASSENGER_SPRITE_URL,
           origin: { x: coords[0], y: coords[1] }, 
           size: {width: 55, height: 55 }
         }
       } else {
         icon = {
-          url: "https://storage.googleapis.com/www.clintonrivertraffic.com/images/ship-icon-sprite-cyan.png",
+          url: self.passSpriteUrl = process.env.VUE_APP_ALL_SPRITE_URL,
           origin: { x: coords[0], y: coords[1] }, 
           size: {width: 55, height: 55 }
         }

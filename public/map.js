@@ -13,23 +13,40 @@ Contains all code for static page small.html which customizes CRT data for KiOS 
 function LiveScanModel() {
   let self = this;
 
-  //Config values
-  self.fetchUrl  = "https://us-central1-mdm-qcrt-demo-1.cloudfunctions.net/livescans/json"; 
-  //"https://storage.googleapis.com/www.clintonrivertraffic.com/livescan.json";
-  self.clinton   = {lat: 41.857202, lng:-90.184084};
+  /* * * Config values * * * /
+
+  /**
+   * Rather than reading 'livescans' firestore db directly, we use a cloud function to push updates to a json file which is fetched at this url:
+   */
+  //self.fetchUrl  = "https://us-central1-mdm-qcrt-demo-1.cloudfunctions.net/livescans/json"; 
+  self.livescansFetchUrl   = process.env.VUE_APP_LIVESCANS_FETCH_URL;
+  self.milemarkersFetchUrl = process.env.VUE_APP_MILEMARKERS_FETCH_URL;
+  //self.mapCenter   = {lat: 41.857202, lng:-90.184084};
+  self.mapCenter = {lat: process.env.VUE_APP_MAPCENTER_LAT, lng: process.env.VUE_APP_MAPCENTER_LNG };
   self.red       = "#ff0000";
   self.green     = "#34A16B";
-  self.tock      = 0;
+  
+  //Starting value of loop clock
+  self.tock      =  0;
+
+  //Allowed Geographic segments (To ignore vessels outside app's featured region)
+  self.segments = process.env.VUE_APP_SEGMENTS_ARRAY.split(',')
+
+  //For single character google map icon labels. Loaded as needed in listed order (first ignored)
+  self.lab        = "_ABCDEFGHIJKLMNOPQRSTUVWXYZ*#@&~1234567890abcdefghijklmnopqrstuvwxyz";
   self.labelIndex = 0;
-  self.lab       = "_ABCDEFGHIJKLMNOPQRSTUVWXYZ*#@&~1234567890abcdefghijklmnopqrstuvwxyz";
-  self.passSpriteUrl = "https://storage.googleapis.com/www.clintonrivertraffic.com/images/ship-icon-sprite-yellow.png";
-  self.allSpriteUrl  = "https://storage.googleapis.com/www.clintonrivertraffic.com/images/ship-icon-sprite-cyan.png";
-  self.mileMarkerIconUrl = "https://storage.googleapis.com/www.clintonrivertraffic.com/images/green.png";
+
+  //self.passSpriteUrl = "https://storage.googleapis.com/www.clintonrivertraffic.com/images/ship-icon-sprite-yellow.png";
+  self.passSpriteUrl = process.env.VUE_APP_PASSENGER_SPRITE_URL;
+  //self.allSpriteUrl  = "https://storage.googleapis.com/www.clintonrivertraffic.com/images/ship-icon-sprite-cyan.png";
+  self.allSpriteUrl = process.env.VUE_APP_ALL_SPRITE_URL;
+  //self.mileMarkerIconUrl = "https://storage.googleapis.com/www.clintonrivertraffic.com/images/green.png";
+  self.mileMarkerIconUrl = process.env.VUE_APP_MILEMARKER_ICON_URL;
 
   //Loaded data store
-  self.liveScans = [];
-  self.map       = {};
-  self.polylines = {};
+  self.liveScans         = [];
+  self.map               = {};
+  self.polylines         = {};
   self.announcement      = {};
   self.waypoint          = {};
   self.mileMarkersList   = [];
@@ -46,7 +63,8 @@ function LiveScanModel() {
   prevWaypoint       = {};
   prevVpubID         = 0;
   self.selectedView  = {view: "list", idx: null };
-  self.focusPosition = {lat: 41.857202, lng:-90.184084};
+  //Starting value for selected map position same is map center default
+  self.focusPosition = {lat: process.env.VUE_APP_MAPCENTER_LAT, lng: process.env.VUE_APP_MAPCENTER_LNG };
   self.nowPage       = "list";
   self.lastPage      = "list";
   self.mapZoom       = 12;
@@ -78,7 +96,6 @@ function LiveScanModel() {
     o.segment = dat.liveSegment;
     o.imageUrl = dat.imageUrl;
     o.type   = dat.type;
-    //o.otherDataLabel = "od"+dat.liveVesselID;
         
     //FOR SHIP ICON MOVEMENT
     let coords = self.getShipSpriteCoords(o.course), icon;
@@ -101,6 +118,7 @@ function LiveScanModel() {
       o.lat = dat.liveInitLat;
       o.lng = dat.liveInitLon;
       o.mapLabel = self.lab[++self.labelIndex];
+      //Marker start pos is just a point out of current view
       o.mapMarker = new google.maps.Marker({
         position: new google.maps.LatLng(43.116055, -94.679274),
         title: o.name, 
@@ -131,16 +149,12 @@ function LiveScanModel() {
       o.prevLat = o.lat
       o.prevLng = o.lng
     }
-    return o;
-    // return new Promise( (resolve, reject)=>{
-    //   //console.log("mapped obj:", o)
-    //   resolve(o)
-    // })
-    
+    return o;    
   };
 
   //Method used by mapper()
   self.getShipSpriteCoords= function(course) {
+    //Sprite has 24 frames to cover 360 deg of heading
     if(course >=   0 && course <=  15) return [  0,   0];
     if(course >=  16 && course <=  30) return [ 55,   0];
     if(course >=  31 && course <=  45) return [110,   0];
@@ -174,7 +188,7 @@ function LiveScanModel() {
       self.mapDiv, 
       {
         zoom: 12, 
-        center: {lat: 41.85002, lng:-90.184084}, 
+        center: {lat: process.env.VUE_APP_MAPCENTER_LAT, lng: process.env.VUE_APP_MAPCENTER_LNG}, 
         mapTypeId: "hybrid",
         disableDefaultUI: true
       }
@@ -183,30 +197,37 @@ function LiveScanModel() {
     //Add waypoint lines
     self.polylines = {
       alphaLine: new google.maps.Polyline({
-        path: [{lat: 41.938785, lng: -90.173893}, {lat: 41.938785, lng: -90.108296}],
+        path: [
+          {lat: process.env.VUE_APP_ALPHALINE_LATA, lng: process.env.VUE_APP_ALPHALINE_LNGA},
+          {lat: process.env.VUE_APP_ALPHALINE_LATB, lng: process.env.VUE_APP_ALPHALINE_LNGB}
+        ],
         strokeColor: self.red,
         strokeWeight: 2
       }), 
       bravoLine:  new google.maps.Polyline({
-        path: [{lat: 41.897258, lng: -90.174}, {lat: 41.897258, lng: -90.154058}],
+        path: [
+          {lat: process.env.VUE_APP_BRAVOLINE_LATA, lng: process.env.VUE_APP_BRAVOLINE_LNGA},
+          {lat: process.env.VUE_APP_BRAVOLINE_LATB, lng: process.env.VUE_APP_BRAVOLINE_LNGB}
+        ],
         strokeColor: self.red,
         strokeWeight: 2
       }), 
       charlieLine: new google.maps.Polyline({
-        path: [{lat: 41.836353, lng: -90.186610}, {lat: 41.836353, lng: -90.169705}],
+        path: [
+          {lat: process.env.VUE_APP_CHARLIELINE_LATA, lng: process.env.VUE_APP_CHARLIELINE_LNGA}, 
+          {lat: process.env.VUE_APP_CHARLIELINE_LATB, lng: process.env.VUE_APP_CHARLIELINE_LNGB}
+        ],
         strokeColor: self.red,
         strokeWeight: 2
       }), 
       deltaLine: new google.maps.Polyline({
-        path: [{lat: 41.800704, lng: -90.212768}, {lat: 41.800704, lng: -90.188677}],
+        path: [
+          {lat: process.env.VUE_APP_DELTALINE_LATA, lng: process.env.VUE_APP_DELTALINE_LNGA}, 
+          {lat: process.env.VUE_APP_DELTALINE_LATB, lng: process.env.VUE_APP_DELTALINE_LNGB}
+        ],
         strokeColor: self.red,
         strokeWeight: 2
-      }),
-      alphaLine: new google.maps.Polyline({
-        path: [{lat: 41.938785, lng: -90.173893}, {lat: 41.938785, lng: -90.108296}],
-        strokeColor: this.red,
-        strokeWeight: 2
-      })         
+      }) 
     };
     self.polylines.alphaLine.setMap(self.map);
     self.polylines.bravoLine.setMap(self.map);
@@ -214,64 +235,18 @@ function LiveScanModel() {
     self.polylines.deltaLine.setMap(self.map);
          
     //Add mile marker lines
-    const dat = [
-      {id:486, lngA:-90.50971806363766, latA:41.52215220467504, lngB:-90.5092203536731, latB:41.51372097487243}, 
-      {id:487, lngA:-90.48875678287305, latA:41.521402024002950, lngB:-90.48856266269104, latB:41.5145424556308},
-      {id:488, lngA:-90.47251555885472, latA:41.52437816051497, lngB:-90.47036467716465, latB:41.51537456609466},
-      {id:489, lngA:-90.45698288389242, latA:41.53057735758976, lngB:-90.45000250745086, latB:41.52480546208061},
-      {id:490, lngA:-90.4461928429114, latA:41.54182560886835, lngB:-90.43804967962095, latB:41.53668343008653},
-      {id:491, lngA:-90.43225148614556, latA:41.55492191671779, lngB:-90.42465891516093, latB:41.54714647168962},
-      {id:492, lngA:-90.42215634673808, latA:41.56423876538352, lngB:-90.41359632007243, latB:41.55879211219473},
-      {id:493, lngA:-90.40755589318907, latA:41.57200066107595, lngB:-90.40121765684347, latB:41.56578132917156},
-      {id:494, lngA:-90.39384285792221, latA:41.57842796885789, lngB:-90.38766103940617, latB:41.57132529050489},
-      {id:495, lngA:-90.37455561078977, latA:41.58171517893158, lngB:-90.37097459099577, latB:41.57455780093269},
-      {id:496, lngA:-90.35418070340366, latA:41.5875726488084, lngB:-90.34989801453619, latB:41.58193114855811},
-      {id:497, lngA:-90.34328730016247, latA:41.59576427084198, lngB:-90.33608085417411, latB:41.59502112101575},
-      {id:498, lngA:-90.34404272829823, latA:41.61119012348694, lngB:-90.33646143861851, latB:41.6111032102589},
-      {id:499, lngA:-90.3472745860646, latA:41.62454773858045, lngB:-90.33663122233754, latB:41.62387063319586},
-      {id:500, lngA:-90.3480736269221, latA:41.63971945269969, lngB:-90.33817941381621, latB:41.63955239006518},
-      {id:501, lngA:-90.34380831321272, latA:41.65683003496228, lngB:-90.33649979303949, latB:41.65484790099703},
-      {id:502, lngA:-90.33988256792307, latA:41.66828476005874, lngB:-90.3286147300638, latB:41.66790001449647},
-      {id:503, lngA:-90.33882199131011, latA:41.68036827724283, lngB:-90.32843393740198, latB:41.6798418644646},
-      {id:504, lngA:-90.32382303252616, latA:41.69122269168967, lngB:-90.31540075610307, latB:41.68607027095535},
-      {id:505, lngA:-90.31560815565506, latA:41.70162133249737, lngB:-90.31077421309571, latB:41.70093421981962},
-      {id:506, lngA:-90.32324160813617, latA:41.71865527148766, lngB:-90.3144828164786, latB:41.71893714129034},
-      {id:507, lngA:-90.32043157100178, latA:41.73305742526379, lngB:-90.31219715829357, latB:41.73209034176453},
-      {id:508, lngA:-90.30911551889101, latA:41.74805205206862, lngB:-90.30381674016407, latB:41.74473810650169},
-      {id:509, lngA:-90.29387889379554, latA:41.75940105234584, lngB:-90.29012440316585, latB:41.7570342469618},
-      {id:510, lngA:-90.28216840054604, latA:41.76853414046849, lngB:-90.27848788377898, latB:41.76498972749543},
-      {id:511, lngA:-90.2654809443937, latA:41.77464017600214, lngB:-90.26200151315392, latB:41.770651247585950},
-      {id:512, lngA:-90.24800719074986, latA:41.7843434632554, lngB:-90.24263626100766, latB:41.77880910965498},
-      {id:513, lngA:-90.23473410036074, latA:41.79168622191222, lngB:-90.2284317808665, latB:41.78595112826723},
-      {id:514, lngA:-90.2156953508097, latA:41.7973419581181, lngB:-90.21337944364016, latB:41.79404084443492},
-      {id:515, lngA:-90.19822143802581, latA:41.8025198609788, lngB:-90.19581674354208, latB:41.79898355228364},
-      {id:516, lngA:-90.18352536643455, latA:41.80932693789443, lngB:-90.17633565144088, latB:41.80648691881999},
-      {id:517, lngA:-90.18485994749022, latA:41.8234823269278, lngB:-90.18032482162711, latB:41.82393548957531},
-      {id:518, lngA:-90.18522602598576, latA:41.83743971204904, lngB:-90.18253482993897, latB:41.83749106584514},
-      {id:519, lngA:-90.17908346056349, latA:41.8513020234478, lngB:-90.17295527825956, latB:41.850379130804},
-      {id:521, lngA:-90.17297767304423, latA:41.87737306056449, lngB:-90.16660198044828, latB:41.8760873927711},
-      {id:522, lngA:-90.16238975538499, latA:41.89065244219969, lngB:-90.15871961546813, latB:41.88892630366035},
-      {id:523, lngA:-90.167240, latA:41.903965, lngB:-90.151909, latB:41.903010},
-      {id:524, lngA:-90.164227, latA:41.916904, lngB:-90.147937, latB:41.916824},
-      {id:525, lngA:-90.178143, latA:41.928487, lngB:-90.150351, latB:41.928544},
-      {id:526, lngA:-90.170325, latA:41.941093, lngB:-90.154714, latB:41.940933},
-      {id:527, lngA:-90.169716, latA:41.956191, lngB:-90.154570, latB:41.955656},
-      {id:528, lngA:-90.165536, latA:41.971451, lngB:-90.150207, latB:41.966624},
-      {id:529, lngA:-90.160597, latA:41.983653, lngB:-90.128595, latB:41.983866},
-      {id:530, lngA:-90.159155, latA:41.998832, lngB:-90.129745, latB:41.998937},
-      {id:531, lngA:-90.160529, latA:42.010256, lngB:-90.126528, latB:42.012881},
-      {id:532, lngA:-90.162878, latA:42.025086, lngB:-90.136450, latB:42.027552},
-      {id:533, lngA:-90.16063756667363, latA:42.03651491321578, lngB:-90.15151752534508, latB:42.03730169372241},
-      {id:534, lngA:-90.16890457045166, latA:42.04885717910146, lngB:-90.16066649304122, latB:42.04930465441836},
-      {id:535, lngA:-90.16873927252988, latA:42.06458933574678, lngB:-90.16266001168944, latB:42.06507225175709},
-      {id:536, lngA:-90.16914609409496, latA:42.0804515612181, lngB:-90.16249823994366, latB:42.07970814767357},
-      {id:537, lngA:-90.16729803875997, latA:42.09221812981502, lngB:-90.1579947493362, latB:42.09136054497117},
-      {id:538, lngA:-90.16382083849952, latA:42.10622273166468, lngB:-90.15894760458957, latB:42.10600456364353},
-      {id:539, lngA:-90.16773051913361, latA:42.11833177709393, lngB:-90.16024166340684, latB:42.12179322620005},
-      {id:540, lngA:-90.18197341024099, latA:42.12474496670414, lngB:-90.18304430150994, latB:42.12795599576975},
-      {id:520, lngA:-90.17610039282224, latA:41.86515500754595, lngB:-90.17058699252856, latB:41.86429560522607}  
-    ];
-  
+    const myHeaders = new Headers({ 'Content-Type': 'application/json'});
+    let response = await fetch(self.milemarkersFetchUrl,  { headers: myHeaders });
+    if(response.status===200) {
+      let dat = await response.json();
+    }  
+    /*  Mile Markers imported as json from milemarkersFetchUrl as referenced above, and formatted as below: 
+    [
+      {"id":486, "lngA":-90.50971806363766, "latA":41.52215220467504, "lngB":-90.5092203536731, "latB":41.51372097487243}, 
+      {"id":487, "lngA":-90.48875678287305, "latA":41.521402024002950, "lngB":-90.48856266269104, "latB":41.5145424556308},
+      {"id":488, "lngA":-90.47251555885472, "latA":41.52437816051497, "lngB":-90.47036467716465, "latB":41.51537456609466}
+    ]
+    */
     if(self.mileMarkersList.length == 0) {
       for(let i=0, len=dat.length; i<len; i++) {
         self.mileMarkersList.push(new google.maps.Polyline({
@@ -381,20 +356,26 @@ function LiveScanModel() {
         obj.spd = Math.round(obj.speed);
       }
       switch(obj.segment) {
-        case 0: { segments[0].push(obj); break; }
-        case 1: { segments[1].push(obj); break; }
-        case 2: { segments[2].push(obj); break; }
-        case 3: { segments[3].push(obj); break; }
-        case 4: { segments[4].push(obj); break; }
+        //Each website covers 5 segments above, below or between waypoints
+        case 0:
+        case 5: { segments[0].push(obj); break; }
+        case 1:
+        case 6: { segments[1].push(obj); break; }
+        case 2:
+        case 7: { segments[2].push(obj); break; }
+        case 3:
+        case 8: { segments[3].push(obj); break; }
+        case 4: 
+        case 9: { segments[4].push(obj); break; }
       }
     }
     //Build output string for each segment
     const maplines = [
       ``,
-      `<li><span class="waypoint">3 SOUTH</span></li>`,
-      `<li><span class="waypoint">RR  BRIDGE</span></li>`,
-      `<li><span class="waypoint">LOCK 13</span></li>`,
-      `<li><span class="waypoint">3 NORTH</span></li>`
+      `<li><span class="waypoint">${process.env.VUE_APP_DELTALINE_LABEL}</span></li>`,
+      `<li><span class="waypoint">${process.env.VUE_APP_CHARLIELINE_LABEL}</span></li>`,
+      `<li><span class="waypoint">${process.env.VUE_APP_BRAVOLINE_LABEL}</span></li>`,
+      `<li><span class="waypoint">${process.env.VUE_APP_ALPHALINE_LABEL}</span></li>`
     ];
     for(i=4; i>-1; i--) {
       if(segments[i].length) {
@@ -495,9 +476,12 @@ class LiveScan {
     }
     this.setDirImg = ()=> {
       switch(this.dir) {
-        case "undetermined": return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/qmark.png"; break;
-        case "upriver"     : return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/uparr.png"; break;
-        case "downriver"   : return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/dwnarr.png"; break;
+        //case "undetermined": return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/qmark.png"; break;
+        case "undetermined": return process.env.VUE_APP_IMG_URL+"/images/qmark.png"; break;
+        //case "upriver"     : return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/uparr.png"; break;
+        case "upriver"     : return process.env.VUE_APP_IMG_URL+"/images/uparr.png"; break;
+        //case "downriver"   : return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/dwnarr.png"; break;
+        case "downriver"   : return process.env.VUE_APP_IMG_URL+"/images/dwnarr.png"; break;
       }
     }
     this.alphaTime = () => {
@@ -561,6 +545,11 @@ function initLiveScan() {
         
        
         data.forEach( (dat) => {
+          //Skip vessels not in target segments
+          if (!liveScanModel.segments.contains(dat.liveSegment)) {
+            console.log("Vessel "+dat.liveName+" in segment "+dat.liveSegment+" skipped.");
+            return
+          }
           if(!liveScanModel.liveScans.length){
             key = -1;
           } else {
@@ -592,12 +581,8 @@ function initLiveScan() {
     //Advance moving vessel icons predictively
     predictMovement() 
   }, 1000);
-  /*  END OF CLOCK LOOP   */
- 
+  /*  END OF CLOCK LOOP   */ 
 }
-
-
-
 
 function getKeyOfId(arr, id) {
   let key = -1;
@@ -678,8 +663,6 @@ function calculateNewPositionFromBearingDistance(lat, lng, bearing, distance) {
   return [ rLat.toFixed(6), rLng.toFixed(6) ];
 }
 
-
-
 function compareSeg(a, b) {
   return b.lat - a.lat;
 }
@@ -699,9 +682,4 @@ window.initLiveScan = initLiveScan;
 
 
 
-
-
-/* *
- *  ACTIONS SECTION 
- */
 

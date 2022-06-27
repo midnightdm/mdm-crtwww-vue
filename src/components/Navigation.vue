@@ -2,7 +2,7 @@
   <header>
     <nav class="nav-comp">
       <div class="logo">
-        <h1>clinton<span :style="'background-image: url('+crushpixel+');'">river</span>traffic</h1>
+        <h1>{{logoTitle}}<span :style="'background-image: url('+crushpixel+');'">river</span>traffic</h1>
         <img id="logo-img" :src="logo" title="The logo image shows a tow boat pushing 9 barges.">
   
       </div>
@@ -103,6 +103,7 @@ export default {
           windowWidth: null,
           urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
           logo: process.env.VUE_APP_IMG_URL+'/images/logo-towboat2.png',
+          logoTitle: process.env.VUE_APP_LOGO_TITLE,
           crushpixel: process.env.VUE_APP_IMG_URL+'/images/crushpixel-1625816-ID1625816-640x427.jpg',
           router: useRouter(),
           galleryTipOn: false,

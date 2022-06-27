@@ -325,7 +325,7 @@ export default {
     const router = useRouter()
     const store = useStore()
     const provider = new GoogleAuthProvider();
-    const posturl = process.env.VUE_APP_POST_COMMENTS_URL;
+    const posturl = process.env.VUE_APP_COMMENTS_POST_URL;
     
     const dialogOn = ref(false)
     let addCommentInput = ref("")
@@ -396,7 +396,7 @@ export default {
     const handleSendPasswordResetEmail = async () => {
       console.log("handlePasswordResetEamil()",passwordResetEmail.value)
       const actionCodeSettings = {
-        url: 'https://www.clintonrivertraffic.com/gallery/comments'
+        url: commentsreturnUrl
       }
 
       sendPasswordResetEmail(uas.auth, passwordResetEmail.value, actionCodeSettings)
@@ -625,6 +625,7 @@ const handleSubReplySubmit = (item, idx, rIdx) => {
   data: function() {
     return {
       isPassword: true,
+      commentsreturnUrl: process.env.VUE_APP_COMMENTS_RETURN_URL
     }
   }
 }

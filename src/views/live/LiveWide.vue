@@ -1,7 +1,7 @@
 <template>
   <div id="page-container">
     <div id="idiv">
-      <iframe id="imap" class="widemap column" src="https://dashboard.clintonrivertraffic.com/map.html" scrolling="no" frameborder="0" seamless></iframe>
+      <iframe id="imap" class="widemap column" :src="iframemapUrl" scrolling="no" frameborder="0" seamless></iframe>
     </div>
     <div id="content-wrap">
       
@@ -68,6 +68,7 @@ import { useRouter } from 'vue-router'
 export default {
   data() {
     return {
+      iframemapUrl: process.env.VUE_APP_IFRAMEMAP_URL,
       currentSlide: 0,
       delayDisplay: 7,
       selectedA: undefined    
@@ -219,7 +220,7 @@ export default {
         vh: 90, 
         vw: 30,
         zoom: 12, 
-        center: store.state.a.liveScanModel.clinton
+        center: store.state.a.liveScanModel.mapCenter
       })
       console.log("liveScans.length", store.state.a.liveScans.length)
       if(store.state.a.liveScans != undefined && store.state.a.liveScans.length) {
@@ -249,7 +250,7 @@ export default {
         vh: 90, 
         vw: 30,
         zoom: 12, 
-        center: store.state.a.liveScanModel.clinton
+        center: store.state.a.liveScanModel.mapCenter
       })
       console.log("liveScans.length", store.state.a.liveScans.length)
       if(store.state.a.liveScans != undefined && store.state.a.liveScans.length) {

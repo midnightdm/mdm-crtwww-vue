@@ -177,9 +177,12 @@ class LiveScan {
     }
     this.setDirImg = ()=> {
       switch(this.dir) {
-        case "undetermined": return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/qmark.png"; break;
-        case "upriver"     : return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/uparr.png"; break;
-        case "downriver"   : return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/dwnarr.png"; break;
+        //case "undetermined": return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/qmark.png"; break;
+        case "undetermined": return process.env.VUE_APP_IMG_URL+"/images/qmark.png"; break;
+        //case "upriver"     : return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/uparr.png"; break;
+        case "upriver"     : return process.env.VUE_APP_IMG_URL+"/images/uparr.png"; break;
+        //case "downriver"   : return "https://storage.googleapis.com/www.clintonrivertraffic.com/images/dwnarr.png"; break;
+        case "downriver"   : return process.env.VUE_APP_IMG_URL+"/images/dwnarr.png"; break;
       }
     }
     this.setRndSpd = (speed, dir) => {
@@ -221,7 +224,7 @@ class LiveScan {
     } 
     this.zoomMap = () => {
       if(this.state.map.isZoomed) {
-        this.state.map.center = this.state.liveScanModel.clinton;
+        this.state.map.center = this.state.liveScanModel.mapCenter;
         this.state.map.zoom = 12;      
         this.isZoomed = false
       } else {
@@ -1278,7 +1281,7 @@ const moduleA = {
       state.isZoomed = true
       console.log('key/pos', payload, state.focusPosition)
     },
-    initMap(state) { //Mutation
+    initMap(state) { //Mutation CUSTOMIZE POINTS FOR YOUR LOCAL MAP
       state.map =  {
         zoom: 12, 
         center: {lat: 41.857202, lng:-90.184084}, 
@@ -1331,7 +1334,7 @@ const moduleA = {
         }
       ]         
     },
-    addMileMarkers(state) { //Mutation
+    addMileMarkers(state) { //Mutation CUSTOMIZE MILE MARKER LINES TO YOUR LOCAL MAP
       var dat = [
         {id:486, lngA:-90.50971806363766, latA:41.52215220467504, lngB:-90.5092203536731, latB:41.51372097487243}, 
         {id:487, lngA:-90.48875678287305, latA:41.521402024002950, lngB:-90.48856266269104, latB:41.5145424556308},

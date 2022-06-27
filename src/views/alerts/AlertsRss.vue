@@ -5,8 +5,8 @@
       <h1>RSS Feeds</h1>
       <p>The links below are for use by an RSS reader.  The information in this alternate format duplicates the human readable waypoint passage information as displayed on the All and Passenger pages linked on the menu above.</p>
       <ol>
-        <li class="f1"><a href="https://storage.googleapis.com/www.clintonrivertraffic.com/any.rss">Clinton River Traffic-ALL VESSELS</a></li>
-        <li class="f1"><a href="https://storage.googleapis.com/www.clintonrivertraffic.com/passenger.rss">Clinton River Traffic-PASSENGER VESSELS</a></li>
+        <li class="f1"><a :href="rssanyUrl">Clinton River Traffic-ALL VESSELS</a></li>
+        <li class="f1"><a :href="rsspassUrl">Clinton River Traffic-PASSENGER VESSELS</a></li>
       </ol>
     </section>
   </main>
@@ -23,6 +23,12 @@ export default {
     this.$store.commit('setSlate', 'ALERTS')
     this.$store.commit('setAlertsLinkActive', true)
     this.$store.commit('setPageSelected', 'AlertsRss')
+  },
+  data: function() {
+    return {
+      rssanyUrl: process.env.VUE_APP_IMG_URL+'/any.rss',
+      rsspassUrl: process.env.VUE_APP_IMG_URL+'/passenger.rss'
+    }
   },
   unmounted() {
     this.$store.commit('setAlertsLinkActive', false)

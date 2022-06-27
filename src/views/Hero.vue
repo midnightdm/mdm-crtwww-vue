@@ -3,7 +3,7 @@
     <header id="Hero">
       <nav class="hero-nav">
         <div class="logo">
-          <h1>clinton<span :style="'background-image: url('+crushpixel+');'">river</span>traffic</h1>
+          <h1>{{logoTitle}}<span :style="'background-image: url('+crushpixel+');'">river</span>traffic</h1>
           <img id="logo-img" :src="logo" title="The logo image shows a tow boat pushing 9 barges.">
         </div>
         <ul class="navigation">
@@ -46,6 +46,7 @@ export default {
   data: function() {
       return {
         logoImgUrl: process.env.VUE_APP_IMG_URL+'/images/logo-towboat2.png',
+        logoTitle process.env.VUE_APP_LOGO_TITLE,
         bgVidUrl: process.env.VUE_APP_IMG_URL+'/images/crt-background-vid.mp4',
         urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
         router: useRouter(),

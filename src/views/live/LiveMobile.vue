@@ -403,7 +403,7 @@ export default {
           vh: 37,
           vw: 100, 
           zoom: 12, 
-          center: store.state.a.liveScanModel.clinton
+          center: store.state.a.liveScanModel.mapCenter
         })
         store.commit('toggleLiveAuto', {
           on: false,
