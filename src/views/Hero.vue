@@ -46,7 +46,7 @@ export default {
   data: function() {
       return {
         logoImgUrl: process.env.VUE_APP_IMG_URL+'/images/logo-towboat2.png',
-        logoTitle process.env.VUE_APP_LOGO_TITLE,
+        logoTitle: process.env.VUE_APP_LOGO_TITLE,
         bgVidUrl: process.env.VUE_APP_IMG_URL+'/images/crt-background-vid.mp4',
         urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
         router: useRouter(),
