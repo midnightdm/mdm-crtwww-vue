@@ -227,12 +227,48 @@ function LiveScanModel() {
         ],
         strokeColor: self.red,
         strokeWeight: 2
-      }) 
+      }),
+      echoLine: new google.maps.Polyline({
+        path: [
+          {lat:process.env.VUE_APP_ECHOLINE_LATA, lng: process.env.VUE_APP_ECHOLINE_LNGA}, 
+          {lat: process.env.VUE_APP_ECHOLINE_LATB, lng:-process.env.VUE_APP_ECHOLINE_LNGB}
+        ],
+        strokeColor: this.red,
+        strokeWeight: 2
+      }),
+      foxtrotLine: new google.maps.Polyline({
+        path: [
+          {lat:process.env.VUE_APP_FOXTROTLINE_LATA, lng: process.env.VUE_APP_FOXTROTLINE_LNGA}, 
+          {lat: process.env.VUE_APP_FOXTROTLINE_LATB, lng:-process.env.VUE_APP_FOXTROTLINE_LNGB}
+        ],
+        strokeColor: this.red,
+        strokeWeight: 2
+      }),
+      golfLine: new google.maps.Polyline({
+        path: [
+          {lat:process.env.VUE_APP_GOLFLINE_LATA, lng: process.env.VUE_APP_GOLFLINE_LNGA}, 
+          {lat: process.env.VUE_APP_GOLFLINE_LATB, lng:-process.env.VUE_APP_GOLFLINE_LNGB}
+        ],
+        strokeColor: this.red,
+        strokeWeight: 2
+      }),
+      hotelLine: new google.maps.Polyline({
+        path: [
+          {lat:process.env.VUE_APP_HOTELLINE_LATA, lng: process.env.VUE_APP_HOTELLINE_LNGA}, 
+          {lat: process.env.VUE_APP_HOTELLINE_LATB, lng:-process.env.VUE_APP_HOTELLINE_LNGB}
+        ],
+        strokeColor: this.red,
+        strokeWeight: 2
+      })  
     };
     self.polylines.alphaLine.setMap(self.map);
     self.polylines.bravoLine.setMap(self.map);
     self.polylines.charlieLine.setMap(self.map);
     self.polylines.deltaLine.setMap(self.map);
+    self.polylines.echoLine.setMap(self.map);
+    self.polylines.foxtrotLine.setMap(self.map);
+    self.polylines.golfLine.setMap(self.map);
+    self.polylines.hotelLine.setMap(self.map);
          
     //Add mile marker lines
     const myHeaders = new Headers({ 'Content-Type': 'application/json'});
@@ -423,6 +459,7 @@ class LiveScan {
     this.name           = null
     this.liveLocation   = null
     this.segment        = null
+    this.region         = null
     this.mapLabel       = null
     this.btnText        = "+"
     this.dir            = "undetermined"
@@ -545,9 +582,9 @@ function initLiveScan() {
         
        
         data.forEach( (dat) => {
-          //Skip vessels not in target segments
-          if (!liveScanModel.segments.contains(dat.liveSegment)) {
-            console.log("Vessel "+dat.liveName+" in segment "+dat.liveSegment+" skipped.");
+          //Skip vessels not in target region
+          if (dat.liveRegion != process.env.VUE_APP_REGION) {
+            console.log("Vessel "+dat.liveName+" in region "+dat.liveRegion+" skipped.");
             return
           }
           if(!liveScanModel.liveScans.length){

@@ -81,6 +81,7 @@ export default class LiveScanModel {
       o.lsKey = lsKey
       o.position = {lat: dat.liveLastLat, lng: dat.liveLastLon}
       o.segment = dat.liveSegment
+      o.region  = dat.liveRegion
       o.lat = dat.liveLastLat!==undefined ? dat.liveLastLat : dat.liveInitLat;
       o.lng = dat.liveLastLon!==undefined ? dat.liveLastLon : dat.liveInitLon;
       

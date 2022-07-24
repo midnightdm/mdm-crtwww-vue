@@ -115,6 +115,7 @@ class LiveScan {
     this.plotTS         = null
     this.position       = null
     this.segment        = null
+    this.region         = null
     this.detail         = false
     this.lat            = null
     this.lng            = null
@@ -193,35 +194,35 @@ class LiveScan {
       return spd
     }
 
-    this.alphaTime = () => {
-      if(this.liveMarkerAlphaTS===null) {
-        return "Not Yet Reached";
-      } else {
-      return formatTime(this.liveMarkerAlphaTS);
-      }
-    } 
-    this.bravoTime = ()=> {
-      if(this.liveMarkerBravoTS===null) {
-        return "Not Yet Reached";
-      } else {
-        return formatTime(this.liveMarkerBravoTS);
-      }       
-    } 
-    this.charlieTime = ()=> {
-      if(this.liveMarkerCharlieTS===null) {
-        return "Not Yet Reached";
-      } else {
-        return formatTime(this.liveMarkerCharlieTS);
-      }      
-    } 
-    this.deltaTime = ()=> {
-      if(this.liveMarkerDeltaTS===null) {
-        return "Not Yet Reached";
-      } else {
-        return formatTime(this.liveMarkerDeltaTS);
-      }
+    // this.alphaTime = () => {
+    //   if(this.liveMarkerAlphaTS===null) {
+    //     return "Not Yet Reached";
+    //   } else {
+    //   return formatTime(this.liveMarkerAlphaTS);
+    //   }
+    // } 
+    // this.bravoTime = ()=> {
+    //   if(this.liveMarkerBravoTS===null) {
+    //     return "Not Yet Reached";
+    //   } else {
+    //     return formatTime(this.liveMarkerBravoTS);
+    //   }       
+    // } 
+    // this.charlieTime = ()=> {
+    //   if(this.liveMarkerCharlieTS===null) {
+    //     return "Not Yet Reached";
+    //   } else {
+    //     return formatTime(this.liveMarkerCharlieTS);
+    //   }      
+    // } 
+    // this.deltaTime = ()=> {
+    //   if(this.liveMarkerDeltaTS===null) {
+    //     return "Not Yet Reached";
+    //   } else {
+    //     return formatTime(this.liveMarkerDeltaTS);
+    //   }
       
-    } 
+    // } 
     this.zoomMap = () => {
       if(this.state.map.isZoomed) {
         this.state.map.center = this.state.liveScanModel.mapCenter;
