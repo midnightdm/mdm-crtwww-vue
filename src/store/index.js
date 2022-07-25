@@ -895,7 +895,7 @@ const moduleA = {
       payload = {
         success: found,
         vessels: vessels,
-        index: monthKey,
+        index: params.monthKey,
         range: {
           lo: start,
           hi: lastDayOfMonth(start)
