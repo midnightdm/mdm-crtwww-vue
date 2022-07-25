@@ -138,7 +138,7 @@ export default {
     },
     updateMonth() {
       console.log('updateMonth()', this.selectedMonth)
-      this.$store.dispatch("fetchOtherMonth", this.selectedMonth)
+      this.$store.dispatch("fetchOtherMonth", {monthKey: this.selectedMonth, region: this.region})
     } 
   },
   data() {
@@ -146,6 +146,7 @@ export default {
       scrolled: false,
       upArrUrl: process.env.VUE_APP_IMG_URL+'/images/uparr.png',
       dnArrUrl: process.env.VUE_APP_IMG_URL+'/images/dwnarr.png',
+      region: process.env.VUE_APP_REGION,
       dialog1: {
         show: false,
         fullscreen: false,

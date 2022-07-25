@@ -748,9 +748,14 @@ const moduleA = {
     }),   
   actions: {
 
-    async fetchPassagesList({ commit, state }) { //Action
+    async fetchPassagesList({ commit, state }, region) { //Action
       if(state.passagesList[0].type==="default") {
-        const passagesAllRef = doc(db, 'Passages', 'All');
+        let collection
+        switch(region) {
+          case "clinton": collection="Passages"; break;
+          case "qc":      collection="PassagesQC"; break;
+        }
+        const passagesAllRef = doc(db, collection, 'All');
         var plObj, key, listArr = [], tmpArr = {},  nameArr = [], idx = 0, nKey, nObj, i;
         //const document;
         await getDoc(passagesAllRef).then(
@@ -794,10 +799,15 @@ const moduleA = {
       }
     },
 
-    async fetchCurrentMonth({ commit, state } ) { //Action
+    async fetchCurrentMonth({ commit, state } , region) { //Action
       //Check whether cache is already set to prevent reloading
       if(state.monthCache[0].passageDirection !=="default") {
         return;
+      }
+      let collection
+      switch(region) {
+        case "clinton": collection="Passages"; break;
+        case "qc":      collection="PassagesQC"; break;
       }
       let thisMonthObj = new Date()
       let tmYr = thisMonthObj.getFullYear()
@@ -806,8 +816,8 @@ const moduleA = {
       let lmYr = lm==11? tmYr-1 : tmYr
       let thisMonthKey = format(new Date(tmYr, mo), "yyyyMM")
       let lastMonthKey = format(new Date(lmYr, lm), "yyyyMM")
-      const vesselRef1 = doc(db, 'Passages', lastMonthKey)
-      const vesselRef2 = doc(db, 'Passages', thisMonthKey)
+      const vesselRef1 = doc(db, collection, lastMonthKey)
+      const vesselRef2 = doc(db, collection, thisMonthKey)
       const document1 = await getDoc(vesselRef1)
       const document2 = await getDoc(vesselRef2)
       var vessels = [], lmData, tmData, vkey, dkey, found = false;
@@ -850,15 +860,20 @@ const moduleA = {
     },
 
 
-    async fetchOtherMonth({ commit, state }, monthKey ) { //Action
+    async fetchOtherMonth({ commit, state }, params ) { //Action
       //if(state.otherMonthIndex==monthKey) {
       //  return
       //}
-      let yr = parseInt(monthKey.substring(0,4))
-      let mo = parseInt(monthKey.substring(4,6))-1
+      let yr = parseInt(params.monthKey.substring(0,4))
+      let mo = parseInt(params.monthKey.substring(4,6))-1
       //console.log("mo/yr", mo, yr)
       let start = new Date(yr, mo, 1, 0, 0, 0)
-      const vesselRef = doc(db, 'Passages', monthKey)
+      let collection
+      switch(params.region) {
+        case "clinton": collection="Passages"; break;
+        case "qc":      collection="PassagesQC"; break;
+      }
+      const vesselRef = doc(db, collection, params.monthKey)
       const document = await getDoc(vesselRef)
       var vessels = [], omData, vkey, dkey, payload, found = false;
       //Put lastMonth & thisMonth passage in 1 vessels array

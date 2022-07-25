@@ -27,7 +27,7 @@ import LogsSubMenu from '@/components/LogsSubMenu.vue'
 
 export default {
   created: function () {
-    this.$store.dispatch("fetchPassagesList")
+    this.$store.dispatch("fetchPassagesList", process.env.VUE_APP_REGION)
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)

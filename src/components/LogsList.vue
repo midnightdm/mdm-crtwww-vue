@@ -50,7 +50,7 @@ export default {
     pageTitle: String
   },
   created: function () {
-    this.$store.dispatch("fetchCurrentMonth")
+    this.$store.dispatch("fetchCurrentMonth", process.env.VUE_APP_REGION)
     window.addEventListener('scroll', this.handleScroll)
   },
   mounted() {
@@ -61,7 +61,7 @@ export default {
   unmounted() {
     this.$store.commit('setLogsLinkActive', false)
   },
-   data: function() {
+  data: function() {
     return {
       upArrUrl: process.env.VUE_APP_IMG_URL+'/images/uparr.png',
       dnArrUrl: process.env.VUE_APP_IMG_URL+'/images/dwnarr.png',
