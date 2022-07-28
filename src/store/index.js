@@ -242,8 +242,8 @@ class LiveScan {
  *
  */
 
-function updateVesselHistory(dat) {
-  var o;           
+function updateVesselHistory(dat, region) {
+  let o, reg=region       
   o = new Vessel();
   //o.localIndex = logsPageModel.vesselList().length;      
   o.vesselRecordAddedTS = dat.vesselRecordAddedTS
@@ -260,46 +260,97 @@ function updateVesselHistory(dat) {
   o.vesselBuilt = dat.vesselBuilt
   o.vesselWatchOn = dat.vesselWatchOn
   //Create array from vesselPassage data
-  let waypoints = {
-    alpha : [  ],
-    bravo : [  ],
-    charlie: [  ],
-    delta: [  ]
-  };
-  var i, k, objKey, dir, dateArr = [];
-  for(objKey in dat.vesselPassages) {
-    //Sort passages by dated keys before putting into waypoints
-    if(dat.vesselPassages[objKey].passageMarkerCharlieTS==null ||
-      dat.vesselPassages[objKey].passageMarkerAlphaTS==null ||
-      dat.vesselPassages[objKey].passageMarkerDeltaTS==null ||
-      dat.vesselPassages[objKey].passageMarkerBravoTS==null)
-    {
-      console.log("Skipping null passage "+objKey);
-      continue;
-    } else {
-      dateArr.push(dat.vesselPassages[objKey])
-    }
-  }
-  dateArr.sort((a,b) => parseInt(a.passageMarkerCharlieTS) < parseInt(b.passageMarkerCharlieTS) ? -1 : 1);
-  for(i=0; i<dateArr.length; i++) {
-    dir = dateArr[i].passageDirection=="upriver" ? "up" : "down";
-    waypoints.alpha[i] = {
-      date: new Date(parseInt(dateArr[i].passageMarkerAlphaTS)*1000),
-      dir: dir
-    };
-    waypoints.bravo[i] = {
-      date: new Date(parseInt(dateArr[i].passageMarkerBravoTS)*1000),
-      dir: dir
-    }
-    waypoints.charlie[i] = {
-      date : new Date(parseInt(dateArr[i].passageMarkerCharlieTS)*1000),
-      dir: dir
-    };
+  let i, k, objKey, dir, dateArr = [], waypoints; 
+  switch(reg) {
 
-    waypoints.delta[i] = {
-      date: new Date(parseInt(dateArr[i].passageMarkerDeltaTS)*1000),
-      dir: dir
+    case "clinton": {
+      waypoints = {
+        alpha : [  ],
+        bravo : [  ],
+        charlie: [  ],
+        delta: [  ]
+      };
+      for(objKey in dat.vesselPassages) {
+        //Sort passages by dated keys before putting into waypoints
+        if(dat.vesselPassages[objKey].passageMarkerCharlieTS==null ||
+          dat.vesselPassages[objKey].passageMarkerAlphaTS==null ||
+          dat.vesselPassages[objKey].passageMarkerDeltaTS==null ||
+          dat.vesselPassages[objKey].passageMarkerBravoTS==null)
+        {
+          console.log("Skipping null passage "+objKey);
+          continue;
+        } else {
+          dateArr.push(dat.vesselPassages[objKey])
+        }
+      }
+      dateArr.sort((a,b) => parseInt(a.passageMarkerCharlieTS) < parseInt(b.passageMarkerCharlieTS) ? -1 : 1);
+      for(i=0; i<dateArr.length; i++) {
+        dir = dateArr[i].passageDirection=="upriver" ? "up" : "down";
+        waypoints.alpha[i] = {
+          date: new Date(parseInt(dateArr[i].passageMarkerAlphaTS)*1000),
+          dir: dir
+        };
+        waypoints.bravo[i] = {
+          date: new Date(parseInt(dateArr[i].passageMarkerBravoTS)*1000),
+          dir: dir
+        }
+        waypoints.charlie[i] = {
+          date : new Date(parseInt(dateArr[i].passageMarkerCharlieTS)*1000),
+          dir: dir
+        };
+    
+        waypoints.delta[i] = {
+          date: new Date(parseInt(dateArr[i].passageMarkerDeltaTS)*1000),
+          dir: dir
+        }
+      }
+      break;
+  }
+
+  case "qc": {
+      waypoints = {
+        echo : [  ],
+        foxtrot : [  ],
+        golf: [  ],
+        hotel: [  ]
+      };
+      for(objKey in dat.vesselPassages) {
+        //Sort passages by dated keys before putting into waypoints
+        if(dat.vesselPassages[objKey].passageMarkerEchoTS==null ||
+          dat.vesselPassages[objKey].passageMarkerFoxtrotTS==null ||
+          dat.vesselPassages[objKey].passageMarkerGolfTS==null ||
+          dat.vesselPassages[objKey].passageMarkerHotelTS==null)
+        {
+          console.log("Skipping null passage "+objKey);
+          continue;
+        } else {
+          dateArr.push(dat.vesselPassages[objKey])
+        }
+      }
+      dateArr.sort((a,b) => parseInt(a.passageMarkerGolfTS) < parseInt(b.passageMarkerGolfTS) ? -1 : 1);
+      for(i=0; i<dateArr.length; i++) {
+        dir = dateArr[i].passageDirection=="upriver" ? "up" : "down";
+        waypoints.alpha[i] = {
+          date: new Date(parseInt(dateArr[i].passageMarkerEchoTS)*1000),
+          dir: dir
+        };
+        waypoints.bravo[i] = {
+          date: new Date(parseInt(dateArr[i].passageMarkerFoxtrotTS)*1000),
+          dir: dir
+        }
+        waypoints.charlie[i] = {
+          date : new Date(parseInt(dateArr[i].passageMarkerGolfTS)*1000),
+          dir: dir
+        };
+    
+        waypoints.delta[i] = {
+          date: new Date(parseInt(dateArr[i].passageMarkerHotelTS)*1000),
+          dir: dir
+        }
+      }
+      break;  
     }
+ 
   }
   o.vesselPassages = waypoints;
   console.log("Reassembled Vessel Object: ", o)
@@ -644,6 +695,7 @@ const moduleA = {
       liveMapHeight: 30,
       liveMapWidth: 100,
       liveScanModel: null,
+      region: null,
       user: {},
       liveScans: [ { liveName: "loading" } ],
       comments: [],
@@ -673,7 +725,11 @@ const moduleA = {
           alpha:   [{date: new Date()}],
           bravo:   [{date: new Date()}], 
           charlie: [{date: new Date()}], 
-          delta:   [{date: new Date()}]
+          delta:   [{date: new Date()}],
+          echo:    [{date: new Date()}],
+          foxtrot: [{date: new Date()}],
+          golf:    [{date: new Date()}],
+          hotel:   [{date: new Date()}]
         } 
       },
       
@@ -783,8 +839,10 @@ const moduleA = {
       }
     },
 
-    async fetchPassageHistory({ commit }, vesselID) { //Action
-      let docKey = 'mmsi'+vesselID 
+    async fetchPassageHistory({ commit }, params) { //Action
+      let docKey = 'mmsi'+params.vesselID
+      let reg = params.region 
+      console.log(docKey, reg);
       //367668810
       const vesselRef = doc(db, 'Vessels', docKey)
       const document = await getDoc(vesselRef)
@@ -792,14 +850,14 @@ const moduleA = {
       if(document.exists()) {
         //console.log("Data: ", document.data())
         var data = document.data()
-        var obj = updateVesselHistory(data)
+        var obj = updateVesselHistory(data, reg)
         commit('setHistoryCache', obj)
       } else {
         console.log("Data not found!")
       }
     },
 
-    async fetchCurrentMonth({ commit, state } , region) { //Action
+    async fetchCurrentMonth({ commit, state }, region) { //Action
       //Check whether cache is already set to prevent reloading
       if(state.monthCache[0].passageDirection !=="default") {
         return;
@@ -830,6 +888,10 @@ const moduleA = {
             lmData[dkey][vkey]['bravoDO']   = new Date( lmData[dkey][vkey].passageMarkerBravoTS * 1000)
             lmData[dkey][vkey]['charlieDO'] = new Date( lmData[dkey][vkey].passageMarkerCharlieTS * 1000)
             lmData[dkey][vkey]['deltaDO']   = new Date( lmData[dkey][vkey].passageMarkerDeltaTS * 1000)
+            lmData[dkey][vkey]['echoDO']    = new Date( lmData[dkey][vkey].passageMarkerEchoTS * 1000)
+            lmData[dkey][vkey]['foxtrotDO'] = new Date( lmData[dkey][vkey].passageMarkerFoxtrotTS * 1000)
+            lmData[dkey][vkey]['golfDO']    = new Date( lmData[dkey][vkey].passageMarkerGolfTS * 1000)
+            lmData[dkey][vkey]['hotelDO']   = new Date( lmData[dkey][vkey].passageMarkerHotelTS * 1000)
             vessels.push(lmData[dkey][vkey])
           }
         }
@@ -844,6 +906,10 @@ const moduleA = {
             tmData[dkey][vkey]['bravoDO']   = new Date( tmData[dkey][vkey].passageMarkerBravoTS * 1000)
             tmData[dkey][vkey]['charlieDO'] = new Date( tmData[dkey][vkey].passageMarkerCharlieTS * 1000)
             tmData[dkey][vkey]['deltaDO']   = new Date( tmData[dkey][vkey].passageMarkerDeltaTS * 1000)
+            tmData[dkey][vkey]['echoDO']    = new Date( tmData[dkey][vkey].passageMarkerEchoTS * 1000)
+            tmData[dkey][vkey]['foxtrotDO'] = new Date( tmData[dkey][vkey].passageMarkerFoxtrotTS * 1000)
+            tmData[dkey][vkey]['golfDO']    = new Date( tmData[dkey][vkey].passageMarkerGolfTS * 1000)
+            tmData[dkey][vkey]['hotelDO']   = new Date( tmData[dkey][vkey].passageMarkerHotelTS * 1000)
             vessels.push(tmData[dkey][vkey])
           }
         }
@@ -885,6 +951,10 @@ const moduleA = {
             omData[dkey][vkey]['bravoDO']   = new Date( omData[dkey][vkey].passageMarkerBravoTS * 1000)
             omData[dkey][vkey]['charlieDO'] = new Date( omData[dkey][vkey].passageMarkerCharlieTS * 1000)
             omData[dkey][vkey]['deltaDO']   = new Date( omData[dkey][vkey].passageMarkerDeltaTS * 1000)
+            omData[dkey][vkey]['echoDO']    = new Date( omData[dkey][vkey].passageMarkerEchoTS * 1000)
+            omData[dkey][vkey]['foxtrotDO'] = new Date( omData[dkey][vkey].passageMarkerFoxtrotTS * 1000)
+            omData[dkey][vkey]['golfDO']    = new Date( omData[dkey][vkey].passageMarkerGolfTS * 1000)
+            omData[dkey][vkey]['hotelDO']   = new Date( omData[dkey][vkey].passageMarkerHotelTS * 1000)
             vessels.push(omData[dkey][vkey])
           }
         }
@@ -1214,6 +1284,9 @@ const moduleA = {
   },
 
   mutations: {
+    setRegion(state, val)  { //Mutation
+      state.region = val
+    },
     setPassagesList(state, val) { //Mutation
       state.passagesList = val
     },
@@ -1514,6 +1587,10 @@ const moduleA = {
     getBravo: state => state.historyCache.vesselPassages.bravo,
     getCharlie: state => state.historyCache.vesselPassages.charlie,
     getDelta: state => state.historyCache.vesselPassages.delta,
+    getEcho: state => state.historyCache.vesselPassages.echo,
+    getFoxtrot: state => state.historyCache.vesselPassages.foxtrot,
+    getGolf: state => state.historyCache.vesselPassages.golf,
+    getHotel: state => state.historyCache.vesselPassages.hotel,
     dd: () => { return format(new Date(), "dd")},
     ymd: () => { return format(new Date(), "yyyy-mm-dd") },
     getToday: (state) => {

@@ -90,11 +90,14 @@ export default {
   props: ['id'],
   data() {
       return {
-          base: process.env.VUE_APP_IMG_URL,           
+          base: process.env.VUE_APP_IMG_URL,
+          region: process.env.VUE_APP_REGION           
       }
     },
   created: function () {
-    this.$store.dispatch("fetchPassageHistory", this.id)
+    let region = process.env.VUE_APP_REGION
+    console.log("Region is",region, " ID is", this.id)
+    this.$store.dispatch("fetchPassageHistory", {vesselID: this.id, region: region} )
   },
   mounted() {
     this.$store.commit('setSlate', 'LOGS')

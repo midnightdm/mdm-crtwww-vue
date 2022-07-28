@@ -23,8 +23,10 @@
           <div class="tableBlock">
             <h4>{{vessel.charlieDO.toLocaleDateString() }}</h4>
             <br/>
-            <p><span class="label">LOCK 13:</span> <span class="value">{{ vessel.bravoDO.toLocaleTimeString() }}</span></p>
-            <p><span class="label">BRIDGE :</span> <span class="value">{{ vessel.charlieDO.toLocaleTimeString() }}</span></p>
+            <p v-if="this.$store.state.a.region=='clinton'"><span class="label">LOCK 13:</span> <span class="value">{{ vessel.bravoDO.toLocaleTimeString() }}</span></p>
+            <p v-if="this.$store.state.a.region=='clinton'"><span class="label">BRIDGE :</span> <span class="value">{{ vessel.charlieDO.toLocaleTimeString() }}</span></p>
+            <p v-if="this.$store.state.a.region=='qc'"><span class="label">LOCK 14:</span> <span class="value">{{ vessel.foxtrotDO.toLocaleTimeString() }}</span></p>
+            <p v-if="this.$store.state.a.region=='qc'"><span class="label">LOCK 15:</span> <span class="value">{{ vessel.golfDO.toLocaleTimeString() }}</span></p>
           </div>
 
           <div class="tableBlock holder">
@@ -52,6 +54,7 @@ export default {
   created: function () {
     this.$store.dispatch("fetchCurrentMonth", process.env.VUE_APP_REGION)
     window.addEventListener('scroll', this.handleScroll)
+    this.$store.commit('setRegion', process.env.VUE_APP_REGION)
   },
   mounted() {
     this.$store.commit('setSlate', 'LOGS')
