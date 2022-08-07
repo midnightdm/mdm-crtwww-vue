@@ -87,7 +87,7 @@ export default {
     let mili = now.getTime()
     let twoago = mili - 5184000000
     let dt2 = format(new Date(twoago), "yyyyMM")
-    this.$store.dispatch("fetchOtherMonth", dt2)
+    this.$store.dispatch("fetchOtherMonth",  {monthKey: dt2, region: this.region})
     //Create array of months 9/2020 thru present -2
     let nine20 = new Date('2020-09-01')
     let nine20mili = nine20.getTime()

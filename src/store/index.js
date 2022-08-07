@@ -1319,6 +1319,9 @@ const moduleA = {
           key = getKeyOfId(state.liveScans, dat.liveVesselID)
           //Create & Push
           if(key==-1) {
+            //Skip out of region objects
+            console.log("from initLiveScan for "+dat.liveName+" dat.liveRegion/context.region:", dat.liveRegion, state.liveScanModel.region)
+            if(dat.liveRegion != state.liveScanModel.region) { return }
             let len = state.liveScans.length
             let obj = state.liveScanModel.mapper(new LiveScan(state), dat, true, state, len)
             commit('pushLiveScan', {key: key, obj: obj })

@@ -5,6 +5,7 @@ export default class LiveScanModel {
     let self = this;
     self.store     = callback;
     self.mapCenter   = {lat: process.env.VUE_APP_MAPCENTER_LAT, lng: process.env.VUE_APP_MAPCENTER_LNG};
+    self.region      = process.env.VUE_APP_REGION;
     //self.url       = "..livescanjson";
     self.INTERVAL  = 20000;
     self.labelIndex = 0;

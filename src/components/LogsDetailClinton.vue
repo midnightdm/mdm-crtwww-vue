@@ -134,7 +134,7 @@ import LogsSubMenu from '@/components/LogsSubMenu.vue'
 
 export default {
   name: 'LogsDetailClinton',
-  props: ['propID'],
+  props: ['id'],
   data() {
       return {
           base: process.env.VUE_APP_IMG_URL,
@@ -143,8 +143,8 @@ export default {
     },
   created: function () {
     let region = process.env.VUE_APP_REGION
-    console.log("Region is",region, " ID is", this.propID)
-    this.$store.dispatch("fetchPassageHistory", {vesselID: this.propID, region: region} )
+    console.log("Region is",region, " ID is", this.id)
+    this.$store.dispatch("fetchPassageHistory", {vesselID: this.id, region: region} )
   },
   mounted() {
     this.$store.commit('setSlate', 'LOGS')

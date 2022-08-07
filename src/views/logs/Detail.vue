@@ -1,16 +1,13 @@
 <template>
-  <LogsDetailClinton 
-  v-if="this.region=='clinton'" 
-  v-bind:id="id" 
-  ></LogsDetailClinton>
-    <LogsDetailQC v-if="this.region=='qc'"  
-  v-bind:id="id" 
-  ></LogsDetailQC>
+
+    <LogsDetailClinton v-if="this.region=='clinton'" v-bind:id="id"></LogsDetailClinton>
+    <LogsDetailQC v-if="this.region=='qc'" v-bind:id="id"></LogsDetailQC>
+  
 </template>
 
 <script>
-//import LogsDetailClinton from '@/components/LogsDetailClinton.vue'
-//import LogsDetailQC from '@/components/LogsDetailQC.vue'
+import LogsDetailClinton from '@/components/LogsDetailClinton.vue'
+import LogsDetailQC from '@/components/LogsDetailQC.vue'
 
 export default {
   props: ['id'],
@@ -21,8 +18,10 @@ export default {
       }
     },
   components: {
-    LogsDetailClinton: () => import('@/components/LogsDetailClinton.vue'),
-    LogsDetailQC:      () => import('@/components/LogsDetailQC.vue')
+    LogsDetailClinton,
+    //: () => import('@/components/LogsDetailClinton.vue'),
+    LogsDetailQC
+   //:      () => import('@/components/LogsDetailQC.vue')
   }
 }
 </script>
