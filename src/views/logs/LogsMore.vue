@@ -26,10 +26,10 @@
           </div>
 
           <div class="tableBlock">
-            <h4>{{vessel.charlieDO.toLocaleDateString() }}</h4>
+            <h4>{{vessel.marker2DO.toLocaleDateString() }}</h4>
             <br/>
-            <p><span class="label">LOCK 13:</span> <span class="value">{{ vessel.bravoDO.toLocaleTimeString() }}</span></p>
-            <p><span class="label">BRIDGE :</span> <span class="value">{{ vessel.charlieDO.toLocaleTimeString() }}</span></p>
+            <p><span class="label">LOCK 13:</span> <span class="value">{{ vessel.marker1DO.toLocaleTimeString() }}</span></p>
+            <p><span class="label">BRIDGE :</span> <span class="value">{{ vessel.marker2DO.toLocaleTimeString() }}</span></p>
           </div>
 
           <div class="tableBlock holder">

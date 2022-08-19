@@ -122,7 +122,7 @@ export default {
             const vessRef = doc(db, 'Vessels', 'mmsi'+this.vessel.vesselID)
             setDoc(vessRef, vesselClone, {merge: true})
             this.changed = false
-        },
+        }
         
     }
 

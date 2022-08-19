@@ -10,7 +10,7 @@
         <p>{{this.$store.state.a.alertsAll[19].apubText}}</p>
       </li>
 </transition-group>
-<transition-group enter-active-class="animate__animated animate__slideInRight">
+<transition-group enter-active-class="animate__animated animate__slideInDown">
       <li class="card" v-if="this.$store.state.a.alertsAll[18].apubID >-1"
         :key="this.$store.state.a.alertsAll[18].apubID" @click="routeWP(18)">
         <h4><router-link :to="{name: 'Waypoint', route: '/alerts/waypoint', params: { apubID: this.$store.state.a.alertsAll[18].apubID}}">{{this.$store.state.a.alertsAll[18].apubVesselName}}</router-link>&nbsp;&nbsp; <timeago autoUpdate :datetime="this.$store.state.a.alertsAll[18].date"/></h4>
@@ -133,6 +133,8 @@
 
 <script>
 import AlertsSubMenu from '@/components/AlertsSubMenu.vue'
+import { onMounted, watchEffect } from 'vue'
+import { useStore } from 'vuex'
 
 export default {
   created: function () {
@@ -155,7 +157,59 @@ export default {
   },
   components: {
     AlertsSubMenu
+  },
+  setup() {
+    const store = useStore()
+    const stopVoiceWatch = watchEffect( () => {
+      if(store.state.a.liveVoiceOn && store.state.a.playApub) {
+        playWaypoint()
+      }
+      if(store.state.a.liveVoiceOn && store.state.a.playVpub) {
+        playAnnouncement()
+      } 
+    })
+
+    function playAnnouncement(wasBtn=false) {
+      let audio = new Audio(store.state.a.liveScanModel.announcement.vpubVoiceUrl);
+      audio.loop = false;
+      audio.play(); 
+      if(!wasBtn) { 
+        store.dispatch('togglePlayVpub', false)
+      }
+    }
+
+    function playWaypoint(wasBtn=false) {
+      let audio = new Audio(store.state.a.liveScanModel.waypoint.apubVoiceUrl);
+      audio.loop = false;
+      audio.play();
+      if(!wasBtn) { 
+        store.dispatch('togglePlayApub', false)
+      } 
+    }
+
+    onMounted(async () => {
+      store.commit("initLiveScan", store)
+      store.dispatch("fetchVoiceNotices");    
+      document.addEventListener('keydown', (event) => {
+        keysPressed[event.key] = true;
+        if (keysPressed['Control'] && keysPressed['Shift'] && event.code == "Digit1") {
+          console.log("keypress playWaypoint", event.code)
+          playWaypoint(true);
+        }
+        if (keysPressed['Control'] && keysPressed['Shift'] && event.code == 'Digit2') {
+          console.log("keypress playAnnouncement", event.code)
+          playAnnouncement(true);
+        }
+      });
+      document.addEventListener('keyup', (event) => {
+        keysPressed[event.key] = false;
+      });
+      
+    })
+
+    let keysPressed = {}
   }
+  
 }
 </script>
 

@@ -31,6 +31,7 @@ const AdminLogin = () => import('@/views/admin/AdminLogin.vue')
 const AdminVessels = () => import('@/views/admin/AdminVessels.vue')
 //import AdminDetail from '../views/admin/AdminDetail.vue'
 const AdminDetail = () => import('@/views/admin/AdminDetail.vue')
+const AdminAnnouncements = () => import('@/views/admin/AdminAnnouncements.vue')
 //import Subscriptions from '../views/admin/Subscriptions.vue'
 const Subscriptions = () => import('@/views/admin/Subscriptions.vue')
 
@@ -111,7 +112,13 @@ const routes = [
       }
     ]
   },
-  
+  {
+    path: '/admin/announcements',
+    name: 'AdminAnnouncements',
+    component: AdminAnnouncements,
+    meta: { requiresAuth: true }
+  },
+
   {
     path: '/admin/subscriptions',
     name: 'Subscriptions',

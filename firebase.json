@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "target": "main",
+    "target": "crtwww",
     "public": "dist",
     "ignore": [
       "firebase.json",

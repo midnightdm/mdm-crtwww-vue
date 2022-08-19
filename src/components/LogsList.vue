@@ -21,12 +21,18 @@
           </div>
 
           <div class="tableBlock">
-            <h4>{{vessel.charlieDO.toLocaleDateString() }}</h4>
+            <h4>{{vessel.marker2DO.toLocaleDateString() }}</h4>
             <br/>
-            <p v-if="this.$store.state.a.region=='clinton'"><span class="label">LOCK 13:</span> <span class="value">{{ vessel.bravoDO.toLocaleTimeString() }}</span></p>
-            <p v-if="this.$store.state.a.region=='clinton'"><span class="label">BRIDGE :</span> <span class="value">{{ vessel.charlieDO.toLocaleTimeString() }}</span></p>
-            <p v-if="this.$store.state.a.region=='qc'"><span class="label">LOCK 14:</span> <span class="value">{{ vessel.foxtrotDO.toLocaleTimeString() }}</span></p>
-            <p v-if="this.$store.state.a.region=='qc'"><span class="label">LOCK 15:</span> <span class="value">{{ vessel.golfDO.toLocaleTimeString() }}</span></p>
+            <p>
+              <span class="label" v-if="this.$store.state.a.region=='clinton'">LOCK 13:</span>
+              <span class="label" v-if="this.$store.state.a.region=='qc'">LOCK 14:</span> 
+              <span class="value">{{ vessel.marker1DO.toLocaleTimeString() }}</span>
+            </p>
+            <p>
+              <span class="label" v-if="this.$store.state.a.region=='clinton'">BRIDGE :</span>
+              <span class="label" v-if="this.$store.state.a.region=='qc'">LOCK 15:</span> 
+              <span class="value">{{ vessel.marker2DO.toLocaleTimeString() }}</span>
+            </p>
           </div>
 
           <div class="tableBlock holder">

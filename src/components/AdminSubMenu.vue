@@ -3,6 +3,7 @@
     <li class="nav-link sub"><router-link :to="{name: 'Add'}">Add</router-link></li> 
     <li class="nav-link sub"><router-link :to="{name: 'AdminVessels'}">Vessels</router-link></li>
     <li class="nav-link sub"><router-link :to="{name: 'Subscriptions'}">Subscriptions</router-link></li>
+    <li class="nav-link sub"><router-link :to="{name: 'AdminAnnouncements'}"> Dashboard</router-link></li>
   </ul>
 </template>
 
@@ -49,6 +50,8 @@ a, a:visited,
   transition: 0.5x ease all;
 }
 
+
+
 .navigation2 {
   flex-direction: column;
   margin-left: 2rem;
@@ -57,4 +60,6 @@ a, a:visited,
 ul.navigation2 {
   background-color: white; 
 }
+
+
 </style>

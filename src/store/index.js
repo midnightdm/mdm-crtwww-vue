@@ -1073,10 +1073,24 @@ const moduleA = {
       if(state.monthCache[0].passageDirection !=="default") {
         return;
       }
-      let collection
-      switch(region) {
-        case "clinton": collection="Passages"; break;
-        case "qc":      collection="PassagesQC"; break;
+      if(state.region==null) {
+        commit('setRegion', region)
+      }
+      let collection, sortMarker1, sortMarker2;
+      switch(state.region) {
+        case "clinton": {
+          collection="Passages";   
+          sortMarker1='passageMarkerBravoTS'; 
+          sortMarker2='passageMarkerCharlieTS'
+          break;
+        } 
+        case "qc": {
+          collection="PassagesQC"; 
+          sortMarker1="passageMarkerFoxtrotTS"
+          sortMarker2='passageMarkerGolfTS'; 
+          break;
+        }      
+        default: console.log("fetchCurrentMonth couldn't read region", state.region); break;
       }
       let thisMonthObj = new Date()
       let tmYr = thisMonthObj.getFullYear()
@@ -1095,14 +1109,8 @@ const moduleA = {
         lmData = document1.data()  
         for(dkey in lmData) {
           for(vkey in lmData[dkey]) {
-            lmData[dkey][vkey]['alphaDO']   = new Date( lmData[dkey][vkey].passageMarkerAlphaTS * 1000)
-            lmData[dkey][vkey]['bravoDO']   = new Date( lmData[dkey][vkey].passageMarkerBravoTS * 1000)
-            lmData[dkey][vkey]['charlieDO'] = new Date( lmData[dkey][vkey].passageMarkerCharlieTS * 1000)
-            lmData[dkey][vkey]['deltaDO']   = new Date( lmData[dkey][vkey].passageMarkerDeltaTS * 1000)
-            lmData[dkey][vkey]['echoDO']    = new Date( lmData[dkey][vkey].passageMarkerEchoTS * 1000)
-            lmData[dkey][vkey]['foxtrotDO'] = new Date( lmData[dkey][vkey].passageMarkerFoxtrotTS * 1000)
-            lmData[dkey][vkey]['golfDO']    = new Date( lmData[dkey][vkey].passageMarkerGolfTS * 1000)
-            lmData[dkey][vkey]['hotelDO']   = new Date( lmData[dkey][vkey].passageMarkerHotelTS * 1000)
+            lmData[dkey][vkey]['marker1DO']   = new Date( lmData[dkey][vkey][sortMarker1] * 1000)
+            lmData[dkey][vkey]['marker2DO']   = new Date( lmData[dkey][vkey][sortMarker2] * 1000)            
             vessels.push(lmData[dkey][vkey])
           }
         }
@@ -1113,14 +1121,8 @@ const moduleA = {
         for(dkey in tmData) {
           for(vkey in tmData[dkey]) {
             
-            tmData[dkey][vkey]['alphaDO']   = new Date( tmData[dkey][vkey].passageMarkerAlphaTS * 1000)
-            tmData[dkey][vkey]['bravoDO']   = new Date( tmData[dkey][vkey].passageMarkerBravoTS * 1000)
-            tmData[dkey][vkey]['charlieDO'] = new Date( tmData[dkey][vkey].passageMarkerCharlieTS * 1000)
-            tmData[dkey][vkey]['deltaDO']   = new Date( tmData[dkey][vkey].passageMarkerDeltaTS * 1000)
-            tmData[dkey][vkey]['echoDO']    = new Date( tmData[dkey][vkey].passageMarkerEchoTS * 1000)
-            tmData[dkey][vkey]['foxtrotDO'] = new Date( tmData[dkey][vkey].passageMarkerFoxtrotTS * 1000)
-            tmData[dkey][vkey]['golfDO']    = new Date( tmData[dkey][vkey].passageMarkerGolfTS * 1000)
-            tmData[dkey][vkey]['hotelDO']   = new Date( tmData[dkey][vkey].passageMarkerHotelTS * 1000)
+            tmData[dkey][vkey]['marker1DO']   = new Date( tmData[dkey][vkey][sortMarker1] * 1000)
+            tmData[dkey][vkey]['marker2DO']   = new Date( tmData[dkey][vkey][sortMarker2] * 1000)            
             vessels.push(tmData[dkey][vkey])
           }
         }
@@ -1128,7 +1130,7 @@ const moduleA = {
       }
       if(found) {
         //Sort by passageMarkerCharlieTS
-        vessels.sort( (a,b) => parseInt(a.passageMarkerCharlieTS) < parseInt(b.passageMarkerCharlieTS) ? -1 : 1)
+        vessels.sort( (a,b) => parseInt(a[sortMarker2]) < parseInt(b[sortMarker2]) ? -1 : 1)
         //console.log("Vessels Passage Array: ", vessels)
         commit('setMonthCache', vessels)
       } else {
@@ -1138,17 +1140,28 @@ const moduleA = {
 
 
     async fetchOtherMonth({ commit, state }, params ) { //Action
-      //if(state.otherMonthIndex==monthKey) {
-      //  return
-      //}
       let yr = parseInt(params.monthKey.substring(0,4))
       let mo = parseInt(params.monthKey.substring(4,6))-1
       //console.log("mo/yr", mo, yr)
       let start = new Date(yr, mo, 1, 0, 0, 0)
-      let collection
-      switch(params.region) {
-        case "clinton": collection="Passages"; break;
-        case "qc":      collection="PassagesQC"; break;
+      let collection, sortMarker1, sortMarker2
+      if(state.region==null) {
+        commit('setRegion', params.region)
+      }
+      switch(state.region) {
+        case "clinton": {
+          collection="Passages";   
+          sortMarker1='passageMarkerBravoTS'; 
+          sortMarker2='passageMarkerCharlieTS'
+          break;
+        } 
+        case "qc": {
+          collection="PassagesQC"; 
+          sortMarker1="passageMarkerFoxtrotTS"
+          sortMarker2='passageMarkerGolfTS'; 
+          break;
+        }      
+        default: console.log("fetchOther couldn't read region", state.region); break;
       }
       const vesselRef = doc(db, collection, params.monthKey)
       const document = await getDoc(vesselRef)
@@ -1158,21 +1171,15 @@ const moduleA = {
         omData = document.data()  
         for(dkey in omData) {
           for(vkey in omData[dkey]) {
-            omData[dkey][vkey]['alphaDO']   = new Date( omData[dkey][vkey].passageMarkerAlphaTS * 1000)
-            omData[dkey][vkey]['bravoDO']   = new Date( omData[dkey][vkey].passageMarkerBravoTS * 1000)
-            omData[dkey][vkey]['charlieDO'] = new Date( omData[dkey][vkey].passageMarkerCharlieTS * 1000)
-            omData[dkey][vkey]['deltaDO']   = new Date( omData[dkey][vkey].passageMarkerDeltaTS * 1000)
-            omData[dkey][vkey]['echoDO']    = new Date( omData[dkey][vkey].passageMarkerEchoTS * 1000)
-            omData[dkey][vkey]['foxtrotDO'] = new Date( omData[dkey][vkey].passageMarkerFoxtrotTS * 1000)
-            omData[dkey][vkey]['golfDO']    = new Date( omData[dkey][vkey].passageMarkerGolfTS * 1000)
-            omData[dkey][vkey]['hotelDO']   = new Date( omData[dkey][vkey].passageMarkerHotelTS * 1000)
+            omData[dkey][vkey]['marker1DO']   = new Date( omData[dkey][vkey][sortMarker1] * 1000)
+            omData[dkey][vkey]['marker2DO']   = new Date( omData[dkey][vkey][sortMarker2] * 1000)
             vessels.push(omData[dkey][vkey])
           }
         }
         found = true
       }
       //Sort by passageMarkerCharlieTS
-      vessels.sort( (a,b) => parseInt(a.passageMarkerCharlieTS) < parseInt(b.passageMarkerCharlieTS) ? -1 : 1)
+      vessels.sort( (a,b) => parseInt(a[sortMarker2]) < parseInt(b[sortMarker2]) ? -1 : 1)
       payload = {
         success: found,
         vessels: vessels,
@@ -1189,7 +1196,21 @@ const moduleA = {
 
     async fetchAllAlerts({ commit, state }) { //Action
       if(state.alertsAll[0].apubID == "loading") {
-        const apubSnapshot = onSnapshot(doc(db, "Alertpublish", "all"), (querySnapshot) => {
+        if(state.region==null) {
+          commit('setRegion', process.env.VUE_APP_REGION)
+        }
+        let collection
+        switch(state.region) {
+          case "clinton": {
+            collection = 'Alertpublish';
+            break;
+          }
+          case "qc": {
+            collection = 'AlertpublishQC';
+            break;
+          }
+        }
+        const apubSnapshot = onSnapshot(doc(db, collection, "all"), (querySnapshot) => {
           let tempAlertsAll = []
           let dataSet = querySnapshot.data()
           let i = 0
@@ -1216,7 +1237,21 @@ const moduleA = {
 
     async fetchPassengerAlerts({ commit, state }) { //Action
       if(state.alertsPassenger[0].apubID == "loading") {
-        const apubSnapshot = onSnapshot(doc(db, "Alertpublish", "passenger"), (querySnapshot) => {
+        if(state.region==null) {
+          commit('setRegion', process.env.VUE_APP_REGION)
+        }
+        let collection
+        switch(state.region) {
+          case "clinton": {
+            collection = 'Alertpublish';
+            break;
+          }
+          case "qc": {
+            collection = 'AlertpublishQC';
+            break;
+          }
+        }
+        const apubSnapshot = onSnapshot(doc(db, collection, "passenger"), (querySnapshot) => {
           let tempAlertsPassenger = []
           let dataSet = querySnapshot.data()
           let i = 0
@@ -1243,12 +1278,30 @@ const moduleA = {
 
     async fetchVoiceNotices({ commit, state} ) { //Action
       console.log("fetchVoiceNotices()")
+      if(state.region==null) {
+        commit('setRegion', process.env.VUE_APP_REGION)
+      }
       if(state.liveScanModel.prevVpubID == 0) {
         const adminSnapshot = onSnapshot(doc(db, "Passages", "Admin"), (snap) => {
           //Func run on each data change
           let dataSet = snap.data()
-          let apubID  = parseInt(dataSet.lastApubID)
-          let vpubID  = parseInt(dataSet.lastVpubID)
+          let apubID, vpubID, acollection, vcollection
+          switch(state.region) {
+            case "clinton": {
+              apubID = parseInt(dataSet.lastApubID)
+              vpubID = parseInt(dataSet.lastVpubID)
+              acollection = 'Alertpublish'
+              vcollection = 'Voicepublish'
+              break
+            }
+            case "qc": {
+              apubID = parseInt(dataSet.lastQcApubID)
+              vpubID = parseInt(dataSet.lastQcVputID)
+              acollection = 'AlertpublishQC'
+              vcollection = 'VoicepublishQC'
+              break
+            }
+          }
           let lsLen   = dataSet.liveScanLength
 
           //Compare lsLen to liveScan array size
@@ -1264,7 +1317,7 @@ const moduleA = {
             state.liveScanModel.prevVpubID = vpubID
           }
           //Get published documents for updated IDs
-          getDoc( doc(db, "Alertpublish", apubID.toString()))
+          getDoc( doc(db, acollection, apubID.toString()))
           .then( (document) => {
   
             if(document.exists()) {
@@ -1278,7 +1331,7 @@ const moduleA = {
             }
           })
 
-          getDoc(doc(db, "Voicepublish", vpubID.toString()))
+          getDoc(doc(db, vcollection, vpubID.toString()))
           .then( (document) => {
             if(document.exists()) {
               state.liveScanModel.announcement = document.data()
@@ -1342,7 +1395,21 @@ const moduleA = {
 
 
     initComments({ commit, state }) { //Action
-      const q = query(collection(db, 'Comments'), where('ts', '!=', 0), orderBy('ts', 'desc'), limit(20));
+      if(state.region==null) {
+        commit('setRegion', process.env.VUE_APP_REGION)
+      }
+      let ccollection
+      switch(state.region) {
+        case "clinton": {
+          ccollection = 'Comments'
+          break
+        }
+        case "qc": {
+          ccollection = 'CommentsQC'
+          break
+        }
+      }
+      const q = query(collection(db, ccollection), where('ts', '!=', 0), orderBy('ts', 'desc'), limit(20));
       const commentSnapshot = onSnapshot(q, (querySnapshot)=> {
         let key, len, dat, i=0, j=0
         console.log("Current User:", state.user)
@@ -1872,6 +1939,8 @@ const moduleB = {
   state: () => ({
     adminUser: false,
     adminMsg: false,
+    adminAnnc: false,
+    adminAnncQC: false,
     adminFormChanged: false,
     adminFormSaved: false,
     subscribedEventsList: [],
@@ -1896,7 +1965,7 @@ const moduleB = {
   },
   actions: {
     async fetchAllSubscribedEvents({ commit, state }) {
-      const udSnapshot = await getDocs(collection(db, "user_devices"))
+      const udSnapshot = await getDocs(collection(db, "Announcements"))
       udSnapshot.forEach( (doc) => {
         let data = doc.data()
         let events = data.events
@@ -1913,6 +1982,22 @@ const moduleB = {
         })        
       })
       state.subscribedEventsList.sort( (a,b) => a.name < b.name ? -1 : 1)     
+    },
+
+    async fetchAdminAnnc({ commit, state }) {
+      console.log("fetchAdminAnnc()")
+    
+      if(state.adminAnncQC != false) {
+        return
+      }
+      const anncSnapshot = onSnapshot(doc(db, 'Announcements', 'dashboard'), (item) => {
+        state.adminAnnc = item.data()
+      })
+      
+      
+      const anncSnapshotQC = onSnapshot(doc(db, 'AnnouncementsQC', 'dashboard'), (item) => {
+        state.adminAnncQC = item.data()
+      })
     },
 
     async fetchAllVessels({ commit, state }) {
@@ -1934,8 +2019,6 @@ const moduleB = {
       })
     },
 
-
-
     fetchAdminMsg({ commit, state }) {
       if(state.adminMsg != false) {
         return
@@ -1944,6 +2027,7 @@ const moduleB = {
         state.adminMsg = item.data()
       })
     },
+
     saveAdminCredentials: ({commit, state} , value) => {
       commit('SAVE_ADMIN_CREDENTIALS', value)
       console.log('saveAdminCredentials: ', state.adminUser)
@@ -1990,6 +2074,12 @@ const moduleB = {
       tempList.sort( (a,b) => a.vesselID < b.vesselID ? -1 : 1)
       return tempList 
     },
+    getAdminAnnc: (state) => {
+      return state.adminAnnc
+    },
+    getAdminAnncQC: (state) => {
+      return state.adminAnncQC
+    }
   }
 }
 
