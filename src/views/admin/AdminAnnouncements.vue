@@ -20,13 +20,14 @@
             <li> "Day Limit" slots will run on the selected day only if enabled.</li>
             <li>Use <code>&lt;em&gt;&lt;/em&gt;</code> tags in text to enable <span class="high">highlight</span></li>
           </ul>
-        <button class="example_b" v-on:click="showObj"></button>  
+        <button class="example_b" v-on:click="showObj">Show Fields</button>  
             
         <form ref="form" @submit.prevent="updateAnnc">
         <h2>QC Announcements</h2>
 
-        <fieldset v-for="annc in anncQcArr" :key="annc.key">
+        <fieldset v-for="annc in anncQcArr" :key="annc.key" :class="annc.status">
             <legend>QC Field {{annc.num}}</legend>
+            <legend class="sideways">{{annc.status}}</legend>
             <input type="text" name="formText" size="100" maxlength="100" placeholder="Text up to 100 Characters" v-model="anncQC[annc.key].text" v-on:change="changeDetectedQC"><br>
 
             <label for="formHasOnlyDay">Announcement Has Day Limit?</label>&nbsp;
@@ -48,17 +49,18 @@
             <br>
             </div>
             <label for="formStartTS">Start Date:</label>
-            <input type="date" name="formStartTS" v-model="anncQC[annc.key].startTS" v-on:change="changeDetectedQC"><br>
+            <input type="datetime-local" name="formStartTS" v-model="anncQC[annc.key].startTS" v-on:change="changeDetectedQC"><br>
             <label for="formEndTS">End Date:</label>
-            <input type="date" name="formEndTS" v-model="anncQC[annc.key].endTS" v-on:change="changeDetectedQC"><br>
+            <input type="datetime-local" name="formEndTS" v-model="anncQC[annc.key].endTS" v-on:change="changeDetectedQC"><br>
           </fieldset>
 
           <button v-on:click="addQcField">Add a QC Field</button><br><br>
 
 
         <h2>Clinton Announcements</h2>
-        <fieldset v-for="annc in anncClArr" :key="annc.key">
-            <legend>Clinton Field {{annc.num}}</legend>
+        <fieldset v-for="annc in anncClArr" :key="annc.key" :class="annc.status">
+            <legend :class="annc.status">Clinton Field {{annc.num}}</legend>
+            <legend class="sideways">{{annc.status}}</legend>
             <input type="text" name="formText" size="100" maxlength="100" placeholder="Text up to 100 Characters" v-model="anncCL[annc.key].text" v-on:change="changeDetectedClinton"><br>
 
             <label for="formHasOnlyDay">Announcement Has Day Limit?</label>&nbsp;
@@ -80,11 +82,9 @@
             <br>
             </div>
             <label for="formStartTS">Start Date:</label>
-            <input type="date" name="formStartTS" v-model="anncCL[annc.key].startTS" v-on:change="changeDetectedClinton"><br>
+            <input type="datetime-local" name="formStartTS" v-model="anncCL[annc.key].startTS" v-on:change="changeDetectedClinton"><br>
             <label for="formEndTS">End Date:</label>
-            <input type="date" name="formEndTS" v-model="anncCL[annc.key].endTS" v-on:change="changeDetectedClinton">
-            <!-- Solution Needed -->
-            <div v-if="now < anncCL[annc.key].endTS">Currently Active</div>
+            <input type="datetime-local" name="formEndTS" v-model="anncCL[annc.key].endTS" v-on:change="changeDetectedClinton">
             
             <br>
           </fieldset>
@@ -108,6 +108,11 @@ import { doc, setDoc } from 'firebase/firestore'
 const db = firestore
 const anncQcRef = doc(db, 'AnnouncementsQC', 'dashboard')
 const anncClRef = doc(db, 'Announcements', 'dashboard')
+let ts  = new Date(),
+    day = ts.getDay(),
+    now, 
+    oneDay = 86400000 //miliseconds
+
 
 export default {
     created() {
@@ -143,26 +148,44 @@ export default {
     computed: {
       anncQC() {
         let anncQcClone = Object.assign({}, this.$store.state.b.adminAnncQC )
-        let aKey, nKey
+        let aKey, nKey, status, start, end
         this.anncQcArr = []
         for(aKey in anncQcClone) {
           nKey = aKey.substring(1)
-          this.anncQcArr.push({key: aKey, num: parseInt(nKey), obj: anncQcClone[aKey]})
+          start = new Date(anncQcClone[aKey].startTS)
+          end   = new Date(anncQcClone[aKey].endTS)
+          now       = ts.getTime()
+          status = "inactive"
+          if(start.getTime() < now && end.getTime() > now) {
+            status = "active"
+            if( (end.getTime() - now) < oneDay) {
+            status = "short"
+            }
+          }
+          this.anncQcArr.push({key: aKey, num: parseInt(nKey), status: status, obj: anncQcClone[aKey]})
         }
         this.anncQcArr.sort( (a,b) => a.num - b.num )
-        console.log("anncQC", this.anncQcArr)   
         return this.$store.state.b.adminAnncQC
       },
       anncCL() {
-        this.anncClClone = Object.assign({}, this.$store.state.b.adminAnnc )
-        this.anncClArr = []
-        let aKey, nKey
-        for(aKey in this.anncClClone) {
+        let anncClClone = Object.assign({}, this.$store.state.b.adminAnnc )
+        let aKey, nKey, status, start, end
+        this.anncClArr = []   
+        for(aKey in anncClClone) {
           nKey = aKey.substring(1)
-          this.anncClArr.push({key: aKey, num: parseInt(nKey), obj: this.anncClClone[aKey]})
+          start = new Date(anncClClone[aKey].startTS)
+          end   = new Date(anncClClone[aKey].endTS)
+          now       = ts.getTime()
+          status = "inactive"
+          if(start.getTime() < now && end.getTime() > now) {
+            status = "active"
+            if((end.getTime() - now) < oneDay) {
+              status = "short"
+            }
+          }
+          this.anncClArr.push({key: aKey, num: parseInt(nKey), status: status, obj: anncClClone[aKey]})
         }
-        this.anncClArr.sort( (a,b) => a.num - b.num )
-        console.log("annc", this.anncClArr)   
+        this.anncClArr.sort( (a,b) => a.num - b.num )  
         return this.$store.state.b.adminAnnc
       }
     },
@@ -257,10 +280,31 @@ ul.instruct > li {
 fieldset {
     width: 250px;
     margin: 10px auto;
-    padding: .2rem .5rem;
+    padding: .1rem .1rem .2rem 1.5rem;
     line-height: 1.5rem
+}
+
+fieldset.inactive {
+  border: solid 2px black;
+}
+fieldset.active {
+  border: solid 4px green;
 
 }
+
+fieldset.short {
+  border: solid 4px yellow;
+}
+
+legend.sideways {
+  bottom: 50%;
+  padding: 1px 1px 20px 1px;
+  top: unset !important;
+  transform: translate(-50%, 3.2rem) rotate(-90deg);
+  text-transform:uppercase;
+  font-weight: bold;
+}
+
 input {
   border-top-style:solid;
   padding: .2rem;
