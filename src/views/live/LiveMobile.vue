@@ -2,7 +2,7 @@
   <div id="page-container">
     <div id="mobile-content-wrap" class="mobile">
       <!--Map class="map"></ Map-->
-      <iframe name="imap" id="imap" class="map" :class="{active: store.state.a.liveListOn}" src="../../map.html" scrolling="no" frameborder="0" seamless></iframe>  
+      <iframe name="imap" id="imap" class="map" :class="{active: store.state.a.liveListOn}" :src="iframemapUrl" scrolling="no" frameborder="0" seamless></iframe>  
       <section class="middle" v-show="!store.state.a.liveListOn">
         <carousel v-if="store.state.a.liveScans.length" 
         v-model="currentSlide" 
@@ -281,6 +281,7 @@ export default {
   },
   data() {
     return {
+      iframemapUrl: process.env.VUE_APP_IFRAMEMAP_URL,
       currentSlide: 0,
       delayDisplay: 7,
       selectedA: undefined,
