@@ -55,8 +55,9 @@
         </carousel>
         <h1 class="noslide" v-else>No vessel transponders are in range currently.</h1>
       </section>
-      <section class="listMode" v-show="store.state.a.liveListOn">
-
+     
+     
+      <section class="listMode" v-show="region=='clinton' && store.state.a.liveListOn">
         <ul id="all-vessels">
           <template v-if="store.state.a.segments[4].length">
           <li class="ctr" v-for="(live,idx4) in store.state.a.segments[4]" :key="live.id">
@@ -249,6 +250,201 @@
         </ul>
 
       </section>
+    
+          <section class="listMode" v-show="region=='qc' && store.state.a.liveListOn">
+        <ul id="all-vessels">
+          <template v-if="store.state.a.segments[4].length">
+          <li class="ctr" v-for="(live,idx4) in store.state.a.segments[4]" :key="live.id">
+            <div class="list-wrap">
+              <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+              <button @click="showDetail(live.lsKey)">Detail</button>
+              <h4 class="tile-title">{{live.name}}</h4> 
+              <div class="dir-container">
+                <img class="dir-img" :src="live.dirImg"/>
+                <span class="speed">{{live.spd}}</span>
+              </div>                           
+            </div>
+            <div v-show="live.detail" class="data-cont grid2-container">
+              <div class="data-table">
+                <ul class="selected-vessel">
+                  <li class="dataPoint"><span class="th">TYPE:</span> <span class="td">{{live.type}}</span></li>
+                  <li class="dataPoint"><span class="th">MMSI #:</span> <span class="td">{{live.id}}</span></li>
+                  <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
+                  <li class=dataPoint><span class=th>SPEED:</span> <span class=td>{{live.speed}} Knots</span></li>
+                  <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
+                  <li class="dataPoint"><span class="th">COORDINATES:</span></li>
+                  <li class="dataPoint"><span class="th"></span> <span class="td dir">{{live.rndLat}}, {{live.rndLng}}</span>  
+                  </li>
+                </ul>
+              </div>
+              <div class="img-frame">
+                <a href="#" @click="setSelectedB(4, idx4)">
+                  <img class="data-image" :class="{bigger: selectedB[4]==idx4}" :src="live.imageUrl" >      
+                </a>
+                <div class="btnWrapper">
+                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                </div>
+              </div>
+            </div>
+            <h5>{{live.liveLocation}}</h5>
+          </li>
+          </template>
+          <li><span class="waypoint">I-80 BRIDGE</span></li>
+
+          <template v-if="store.state.a.segments[3].length">
+          <li class="ctr" v-for="(live, idx3) in store.state.a.segments[3]" :key="live.id">
+            <div class="list-wrap">
+              <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+              <button @click="showDetail(live.lsKey)">Detail</button>
+              <h4 class="tile-title">{{live.name}}</h4> 
+              <div class="dir-container">
+                <img class="dir-img" :src="live.dirImg"/>
+                <span class="speed">{{live.spd}}</span>
+              </div>                           
+            </div>
+            <div v-show="live.detail" class="data-cont grid2-container">
+              <div class="data-table">
+                <ul class="selected-vessel">
+                  <li class="dataPoint"><span class="th">TYPE:</span> <span class="td">{{live.type}}</span></li>
+                  <li class="dataPoint"><span class="th">MMSI #:</span> <span class="td">{{live.id}}</span></li>
+                  <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
+                  <li class=dataPoint><span class=th>SPEED:</span> <span class=td>{{live.speed}} Knots</span></li>
+                  <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
+                  <li class="dataPoint"><span class="th">COORDINATES:</span></li>
+                  <li class="dataPoint"><span class="th"></span> <span class="td dir">{{live.rndLat}}, {{live.rndLng}}</span>  
+                  </li>
+                </ul>
+              </div>
+              <div class="img-frame">
+                <a href="#" @click="setSelectedB(3, idx3)">
+                  <img class="data-image" :class="{bigger: selectedB[3]==idx3}" :src="live.imageUrl" >      
+                </a>
+                <div class="btnWrapper">
+                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                </div>
+              </div>
+            </div>
+            <h5>{{live.liveLocation}}</h5>
+          </li>
+          </template>
+          <li><span class="waypoint">LOCK 14</span></li>
+          
+          <template v-if="store.state.a.segments[2].length">
+          <li class="ctr" v-for="(live, idx2) in store.state.a.segments[2]" :key="live.id">
+            <div class="list-wrap">
+              <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+              <button @click="showDetail(live.lsKey)">Detail</button>
+              <h4 class="tile-title">{{live.name}}</h4> 
+              <div class="dir-container">
+                <img class="dir-img" :src="live.dirImg"/>
+                <span class="speed">{{live.spd}}</span>
+              </div>                           
+            </div>
+            <div v-show="live.detail" class="data-cont grid2-container">
+              <div class="data-table">
+                <ul class="selected-vessel">
+                  <li class="dataPoint"><span class="th">TYPE:</span> <span class="td">{{live.type}}</span></li>
+                  <li class="dataPoint"><span class="th">MMSI #:</span> <span class="td">{{live.id}}</span></li>
+                  <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
+                  <li class=dataPoint><span class=th>SPEED:</span> <span class=td>{{live.speed}} Knots</span></li>
+                  <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
+                  <li class="dataPoint"><span class="th">COORDINATES:</span></li>
+                  <li class="dataPoint"><span class="th"></span> <span class="td dir">{{live.rndLat}}, {{live.rndLng}}</span>  
+                  </li>
+                </ul>
+              </div>
+              <div class="img-frame">
+                <a href="#" @click="setSelectedB(2, idx2)">
+                  <img class="data-image" :class="{bigger: selectedB[2]==idx2}" :src="live.imageUrl" >      
+                </a>
+                <div class="btnWrapper">
+                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                </div>
+              </div>
+            </div>
+            <h5>{{live.liveLocation}}</h5>
+          </li>
+          </template>
+          <li><span class="waypoint">LOCK 15</span></li>
+
+          <template v-if="store.state.a.segments[1].length">
+          <li class="ctr" v-for="(live, idx1) in store.state.a.segments[1]" :key="live.id">
+            <div class="list-wrap">
+             <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+              <button @click="showDetail(live.lsKey)">Detail</button>
+              <h4 class="tile-title">{{live.name}}</h4> 
+              <div class="dir-container">
+                <img class="dir-img" :src="live.dirImg"/>
+                <span class="speed">{{live.spd}}</span>
+              </div>                           
+            </div>
+            <div v-show="live.detail" class="data-cont grid2-container">
+              <div class="data-table">
+                <ul class="selected-vessel">
+                  <li class="dataPoint"><span class="th">TYPE:</span> <span class="td">{{live.type}}</span></li>
+                  <li class="dataPoint"><span class="th">MMSI #:</span> <span class="td">{{live.id}}</span></li>
+                  <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
+                  <li class=dataPoint><span class=th>SPEED:</span> <span class=td>{{live.speed}} Knots</span></li>
+                  <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
+                  <li class="dataPoint"><span class="th">COORDINATES:</span></li>
+                  <li class="dataPoint"><span class="th"></span> <span class="td dir">{{live.rndLat}}, {{live.rndLng}}</span>  
+                  </li>
+                </ul>
+              </div>
+              <div class="img-frame">
+                <a href="#" @click="setSelectedB(1, idx1)">
+                  <img class="data-image" :class="{bigger: selectedB[1]==idx1}" :src="live.imageUrl" >      
+                </a>
+                <div class="btnWrapper">
+                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                </div>
+              </div>
+            </div>
+            <h5>{{live.liveLocation}}</h5>
+          </li>
+          </template>
+          <li><span class="waypoint">I-280 BRIDGE</span></li>
+
+          <template v-if="store.state.a.segments[0].length">
+          <li class="ctr" v-for="(live, idx0) in store.state.a.segments[0]" :key="live.id">
+            <div class="list-wrap">
+            <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+              <button @click="showDetail(live.lsKey)">Detail</button>
+              <h4 class="tile-title">{{live.name}}</h4> 
+              <div class="dir-container">
+                <img class="dir-img" :src="live.dirImg"/>
+                <span class="speed">{{live.spd}}</span>
+              </div>                           
+            </div>
+            <div v-show="live.detail" class="data-cont grid2-container">
+              <div class="data-table">
+                <ul class="selected-vessel">
+                  <li class="dataPoint"><span class="th">TYPE:</span> <span class="td">{{live.type}}</span></li>
+                  <li class="dataPoint"><span class="th">MMSI #:</span> <span class="td">{{live.id}}</span></li>
+                  <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
+                  <li class=dataPoint><span class=th>SPEED:</span> <span class=td>{{live.speed}} Knots</span></li>
+                  <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
+                  <li class="dataPoint"><span class="th">COORDINATES:</span></li>
+                  <li class="dataPoint"><span class="th"></span> <span class="td dir">{{live.rndLat}}, {{live.rndLng}}</span>  
+                  </li>
+                </ul>
+              </div>
+              <div class="img-frame">
+                <a href="#" @click="setSelectedB(0, idx0)">
+                  <img class="data-image" :class="{bigger: selectedB[0]==idx0}" :src="live.imageUrl" >      
+                </a>
+                <div class="btnWrapper">
+                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
+                </div>
+              </div>
+            </div>
+            <h5>{{live.liveLocation}}</h5>
+          </li>
+          </template>
+        </ul>
+
+      </section>
+    
     </div>
     <section id="footer">
       <div class="btnBar">
@@ -264,7 +460,7 @@
 </template>
 
 <script>
-import Map from '@/components/Map.vue'
+//import Map from '@/components/Map.vue'
 import { onMounted, onUnmounted, watch, watchEffect, ref } from 'vue'
 import { useStore } from 'vuex'
 import 'vue3-carousel/dist/carousel.css';
@@ -273,7 +469,6 @@ import { useRouter } from 'vue-router'
 
 export default {
   components: {
-    Map,
     Carousel,
     Slide,
     Pagination,
@@ -281,6 +476,7 @@ export default {
   },
   data() {
     return {
+      region: process.env.VUE_APP_REGION, 
       iframemapUrl: process.env.VUE_APP_IFRAMEMAP_URL,
       currentSlide: 0,
       delayDisplay: 7,
