@@ -58,7 +58,7 @@
      
      
       <section class="listMode" v-show="region=='clinton' && store.state.a.liveListOn">
-        <ul id="all-vessels">
+        <ul class="all-vessels">
           <template v-if="store.state.a.segments[4].length">
           <li class="ctr" v-for="(live,idx4) in store.state.a.segments[4]" :key="live.id">
             <div class="list-wrap">
@@ -252,7 +252,7 @@
       </section>
     
           <section class="listMode" v-show="region=='qc' && store.state.a.liveListOn">
-        <ul id="all-vessels">
+        <ul class="all-vessels">
           <template v-if="store.state.a.segments[4].length">
           <li class="ctr" v-for="(live,idx4) in store.state.a.segments[4]" :key="live.id">
             <div class="list-wrap">
@@ -972,7 +972,7 @@ img.dir-img {
 
 
 /** List */
-ul#all-vessels {  
+ul.all-vessels {  
   list-style-type: none;
   bottom: 0px;
   padding: 1px;
