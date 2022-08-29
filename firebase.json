@@ -1,21 +1,16 @@
 {
   "hosting": {
-    "target": "crtwww",
     "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites":[
+    "rewrites": [
       {
-        "source": "/frame/map.html",
-        "destination": "/frame/map.html"
-      },
-			{
-				"source":"**",
-				"destination":"/index.html"
-			}
-		]
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }

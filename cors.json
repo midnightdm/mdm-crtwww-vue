@@ -1,0 +1,24 @@
+[
+  {
+    "maxAgeSeconds": 3600, 
+    "method": ["GET"], 
+    "origin": [
+       "http://127.0.0.1:5500", 
+        "https://127.0.0.1:5500", 
+        "http://localhost:5500", 
+        "http://localhost:8080", 
+        "https://dashboard.clintonrivertraffic.com",
+        "http://dashboard.clintonrivertraffic.com", 
+        "https://www.clintonrivertraffic.com",
+	      "http://app.clintonrivertraffic.com",
+        "https://app.clintonrivertraffic.com",
+        "http://www.qcrivertraffic.com",
+        "https://www.qcrivertraffic.com",
+        "https://dashboard.qcrivertraffic.com",
+        "http://dashboard.qcrivertraffic.com",
+        "https://app.qcrivertraffic.com",
+        "http://app.qcrivertraffic.com"
+      ], 
+      "responseHeader": ["Content-Type", "Access-Control-Allow-Origin"]
+   }
+]

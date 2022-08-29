@@ -13,8 +13,12 @@ module.exports = {
         config
             .plugin('html')
             .tap(args => {
-                args[0].title = "Clinton River Traffic";
+                if(process.env.VUE_APP_REGION=='clinton') {
+                  args[0].title = "Clinton River Traffic";
+                } else if(process.env.VUE_APP_REGION=='qc') {
+                  args[0].title = "QC River Traffic";
+                }
                 return args;
             })
-    },
+    }
 }

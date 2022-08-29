@@ -1285,13 +1285,14 @@ const moduleA = {
         const adminSnapshot = onSnapshot(doc(db, "Passages", "Admin"), (snap) => {
           //Func run on each data change
           let dataSet = snap.data()
-          let apubID, vpubID, acollection, vcollection
+          let apubID, vpubID, acollection, vcollection, lsLenField
           switch(state.region) {
             case "clinton": {
               apubID = parseInt(dataSet.lastApubID)
               vpubID = parseInt(dataSet.lastVpubID)
               acollection = 'Alertpublish'
               vcollection = 'Voicepublish'
+              lsLenField  = 'liveScanLength'
               break
             }
             case "qc": {
@@ -1299,10 +1300,11 @@ const moduleA = {
               vpubID = parseInt(dataSet.lastQcVputID)
               acollection = 'AlertpublishQC'
               vcollection = 'VoicepublishQC'
+              lsLenField  = 'liveScanLengthQC'
               break
             }
           }
-          let lsLen   = dataSet.liveScanLength
+          let lsLen   = dataSet[lsLenField]
 
           //Compare lsLen to liveScan array size
           if(lsLen < state.liveScans.length) {
