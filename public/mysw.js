@@ -1,5 +1,7 @@
 //this code was lifted from : https://developers.google.com/web/fundamentals/getting-started/codelabs/push-notifications/
 //add i believe it belongs to GOOGLE
+
+//mysw.js referenced by Manage.vue DO NOT DELETE
 'use strict';
 
 self.addEventListener('push', function(event) {
