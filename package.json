@@ -6,7 +6,10 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-cl": "dotenv -e .env.clinton vue-cli-service build",
-    "build-qc": "dotenv -e .env.qc vue-cli_service build",
+    "build-qc": "dotenv -e .env.qc vue-cli-service build",
+    "deploy-qc": "firebase deploy --only hosting:qrtwww",
+    "deploy-cl": "firebase deploy --only hosting:crtwww",
+    "deploy": "npm run build-cl && npm run deploy-cl && npm run build-qc && npm run deploy-qc",
     "start": "node server.js"
   },
   "dependencies": {
@@ -37,6 +40,7 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/devtools": "^5.3.4",
+    "dotenv-cli": "^6.0.0",
     "postcss": "^8.3.9"
   },
   "browserslist": [
