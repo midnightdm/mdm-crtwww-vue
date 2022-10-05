@@ -1963,6 +1963,9 @@ const moduleB = {
     },
     SET_ADMIN_FORM_SAVED(state, value) {
       state.adminFormSaved = payload
+    },
+    saveShowClVideoOn( state, value) {
+      state.adminMsg.showClVideoOn = value
     }
   },
   actions: {
@@ -2029,6 +2032,8 @@ const moduleB = {
         state.adminMsg = item.data()
       })
     },
+
+
 
     saveAdminCredentials: ({commit, state} , value) => {
       commit('SAVE_ADMIN_CREDENTIALS', value)

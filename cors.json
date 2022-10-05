@@ -17,7 +17,8 @@
         "https://dashboard.qcrivertraffic.com",
         "http://dashboard.qcrivertraffic.com",
         "https://app.qcrivertraffic.com",
-        "http://app.qcrivertraffic.com"
+        "http://app.qcrivertraffic.com",
+        "http://173.16.65.69:41080"
       ], 
       "responseHeader": ["Content-Type", "Access-Control-Allow-Origin"]
    }

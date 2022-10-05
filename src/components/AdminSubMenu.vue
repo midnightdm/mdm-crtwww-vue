@@ -4,6 +4,7 @@
     <li class="nav-link sub"><router-link :to="{name: 'AdminVessels'}">Vessels</router-link></li>
     <li class="nav-link sub"><router-link :to="{name: 'Subscriptions'}">Subscriptions</router-link></li>
     <li class="nav-link sub"><router-link :to="{name: 'AdminAnnouncements'}"> Dashboard</router-link></li>
+      <li class="nav-link sub"><router-link :to="{name: 'AdminWebcam'}"> Webcam</router-link></li>
   </ul>
 </template>
 

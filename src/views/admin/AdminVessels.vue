@@ -37,7 +37,7 @@
             <tr v-for='(vessel, idx) in this.$store.state.b.vesselsList' :key='vessel.vesselID'>
               <td class="col_r expendable" ><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
               <td class="col_r">{{ vessel.vesselType}}</td>
-              <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">{{ vessel.vesselName}}</h4></router-link></td>
+              <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">EDIT {{ vessel.vesselName}}</h4></router-link></td>
               <td class="expendable">{{vessel.vesselID}}</td>
               <td class="wider">{{ vessel.vesselRecordAddedDate }}</td>     
               <td  :class="{ watchOn: vessel.vesselWatchOn}" class="col_c square">
@@ -53,7 +53,7 @@
             <tr v-for='(vessel, idx) in this.$store.getters.getVesselsSortMMSI' :key='vessel.vesselID'>
               <td class="col_r expendable"><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
               <td class="col_r">{{ vessel.vesselType}}</td>
-              <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">{{ vessel.vesselName}}</h4></router-link></td>
+              <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">EDIT {{ vessel.vesselName}}</h4></router-link></td>
               <td>{{vessel.vesselID}}</td>
               <td class="expendable">{{ vessel.vesselRecordAddedDate }}</td>     
               <td :class="{ watchOn: vessel.vesselWatchOn}" class="col_c square">
@@ -69,7 +69,7 @@
             <tr v-for='(vessel, idx) in this.$store.getters.getVesselsSortAdded' :key='vessel.vesselID'>
               <td class="col_r expendable" ><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
               <td class="col_r">{{ vessel.vesselType}}</td>
-              <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">{{ vessel.vesselName}}</h4></router-link></td>
+              <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">EDIT {{ vessel.vesselName}}</h4></router-link></td>
               <td class="expendable">{{vessel.vesselID}}</td>
               <td class="wider">{{ vessel.vesselRecordAddedDate }}</td>     
               <td  :class="{ watchOn: vessel.vesselWatchOn}" class="col_c square">
@@ -85,7 +85,7 @@
             <tr v-for='(vessel, idx) in this.$store.getters.getVesselsPassengerOnly' :key='vessel.vesselID'>
               <td class="col_r expendable" ><a :name="'mmsi'+vessel.vesselID">{{ idx }}</a></td>
               <td class="col_r">{{ vessel.vesselType}}</td>
-              <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">{{ vessel.vesselName}}</h4></router-link></td>
+              <td><router-link :to="{ name: 'AdminDetail', params: { vesselID: vessel.vesselID }}" exact-active-class="exact-active" @click="isShowing=!isShowing"><h4 class="inTable">EDIT {{ vessel.vesselName}}</h4></router-link></td>
               <td class="expendable">{{vessel.vesselID}}</td>
               <td class="wider">{{ vessel.vesselRecordAddedDate }}</td>     
               <td   :class="{ watchOn: vessel.vesselWatchOn}" class="col_c square">
@@ -327,6 +327,11 @@ a, a:visited,
   color: #00afea;
   border-color: #00afea;
 }
+
+a.router-link-active.router-link-exact-active {
+  color: white;
+}
+
 
 .navigation .sub {
   display: flex;

@@ -12,28 +12,43 @@
 >Save Clinton Changes</button>
 
   <main class="local">  
-    <div id="AddVess" class="AddVess">
-        <h1>Edit Announcements</h1>
-        <p>This page allows you to add or remove announcements that apppear at the bottom of the dashboard.</p>
+    <div id="AdminAnnoucements" class="AdminAnnouncements">
+      <h1>Edit Announcements</h1>
+      <div class="flex-container">
+
+        <div class="flex-item slota">
+          <p>This page allows you to add or remove announcements that apppear at the bottom of the dashboard.</p>
           <ul class="instruct">
             <li>Disable unused slots by setting expire date.</li>
             <li> "Day Limit" slots will run on the selected day only if enabled.</li>
             <li>Use <code>&lt;em&gt;&lt;/em&gt;</code> tags in text to enable <span class="high">highlight</span></li>
           </ul>
-        <button class="example_b" v-on:click="showObj">Show Fields</button>  
-            
-        <form ref="form" @submit.prevent="updateAnnc">
-        <h2>QC Announcements</h2>
+        </div>
 
-        <fieldset v-for="annc in anncQcArr" :key="annc.key" :class="annc.status">
+        <div class="flex-item thumbnail-container slotb">
+          <div class="thumbnail">
+            <iframe src="https://dashboard.clintonrivertraffic.com" frameborder="0"></iframe>
+          </div>
+        </div>
+
+      </div>
+      
+      <button class="example_b" v-on:click="showObj">Show Fields</button> 
+      <form ref="form" @submit.prevent="updateAnnc">
+      
+      <div class="flex-container">
+        <div class="flex-item">
+          <h2>QC Announcements</h2>
+
+          <fieldset v-for="annc in anncQcArr" :key="annc.key" :class="annc.status">
             <legend>QC Field {{annc.num}}</legend>
             <legend class="sideways">{{annc.status}}</legend>
             <input type="text" name="formText" size="100" maxlength="100" placeholder="Text up to 100 Characters" v-model="anncQC[annc.key].text" v-on:change="changeDetectedQC"><br>
 
             <label for="formHasOnlyDay">Announcement Has Day Limit?</label>&nbsp;
             <input type="checkbox" name="formHasOnlyDay" v-model="anncQC[annc.key].hasOnlyDay" v-on:change="changeDetectedQC">
-             <span v-if="anncQC[annc.key].hasOnlyDay" v-bind:class="{'watchOn': anncQC[annc.key].hasOnlyDay}">True</span>
-                         <span v-else>False</span>
+              <span v-if="anncQC[annc.key].hasOnlyDay" v-bind:class="{'watchOn': anncQC[annc.key].hasOnlyDay}">True</span>
+                          <span v-else>False</span>
             <br>
             <div v-if="anncQC[annc.key].hasOnlyDay">
             <label for="formOnlyDay">Choose Day</label>
@@ -55,10 +70,11 @@
           </fieldset>
 
           <button v-on:click="addQcField">Add a QC Field</button><br><br>
+        </div>
 
-
-        <h2>Clinton Announcements</h2>
-        <fieldset v-for="annc in anncClArr" :key="annc.key" :class="annc.status">
+        <div class="flex-item">
+          <h2>Clinton Announcements</h2>
+          <fieldset v-for="annc in anncClArr" :key="annc.key" :class="annc.status">
             <legend :class="annc.status">Clinton Field {{annc.num}}</legend>
             <legend class="sideways">{{annc.status}}</legend>
             <input type="text" name="formText" size="100" maxlength="100" placeholder="Text up to 100 Characters" v-model="anncCL[annc.key].text" v-on:change="changeDetectedClinton"><br>
@@ -89,6 +105,14 @@
             <br>
           </fieldset>
           <button v-on:click="addClField">Add a Clinton Field</button>
+        </div>
+      </div>
+      
+     
+
+
+
+          
         </form>
         <br>
        
@@ -349,6 +373,10 @@ h4.inTable {
   transition: all 0.4s ease 0s;
 }
 
+a.router-link-active.router-link-exact-active {
+  color: white;
+}
+
 .wider {
   width: 10em;
 }
@@ -387,9 +415,35 @@ tr.isNew {
   background-color:rgb(167, 109, 109);
 }
 
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0.5rem;
+  gap: 10px 20px;
+}
 
+.thumbnail iframe {
+  width: 1920px;
+  height: 1080px;
+}
 
+.flex-item {
+  max-width: 40vw;
+}
 
+.slota, .slotb {
+  max-height: 280px;
+}
+.thumbnail {
+  position: relative;
+  -ms-zoom: 0.25;
+  -moz-transform: scale(0.25);
+  -moz-transform-origin: 0 0;
+  -o-transform: scale(0.25);
+  -o-transform-origin: 0 0;
+  -webkit-transform: scale(0.25);
+  -webkit-transform-origin: 0 0;
+}
 
 .cent_cont {
   height: 200px;
@@ -446,7 +500,7 @@ main.local {
     transform: translateY(94px);
   }
   */ 
-  main#AdminVessels {
+  main#AdminAccouncements {
     padding-top: var(--menu-pad-mobile);
   }
 }

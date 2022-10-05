@@ -33,6 +33,8 @@ const AdminVessels = () => import('@/views/admin/AdminVessels.vue')
 const AdminDetail = () => import('@/views/admin/AdminDetail.vue')
 const AdminAnnouncements = () => import('@/views/admin/AdminAnnouncements.vue')
 //import Subscriptions from '../views/admin/Subscriptions.vue'
+const AdminWebcam = () => import('@/views/admin/AdminWebcam.vue')
+
 const Subscriptions = () => import('@/views/admin/Subscriptions.vue')
 
 //import AlertsAll from '../views/alerts/AlertsAll.vue'
@@ -123,6 +125,13 @@ const routes = [
     path: '/admin/subscriptions',
     name: 'Subscriptions',
     component: Subscriptions,
+    meta: { requiresAuth: true }
+  },
+
+  {
+    path: '/admin/webcam',
+    name: 'AdminWebcam',
+    component: AdminWebcam,
     meta: { requiresAuth: true }
   },
 

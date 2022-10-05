@@ -524,7 +524,7 @@ export default {
       toggleReplyForm(idx)
     }
 
-const handleSubReplySubmit = (item, idx, rIdx) => {
+    const handleSubReplySubmit = (item, idx, rIdx) => {
       let reply = {
         msgType: "reply",
         msgID : item.msgID,
