@@ -1,6 +1,7 @@
 //vue.config.js
 module.exports = {
     configureWebpack: {
+      mode: "production",
       devtool: 'source-map',
       optimization: {
         splitChunks: {

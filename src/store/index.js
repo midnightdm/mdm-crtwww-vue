@@ -194,35 +194,6 @@ class LiveScan {
       return spd
     }
 
-    // this.alphaTime = () => {
-    //   if(this.liveMarkerAlphaTS===null) {
-    //     return "Not Yet Reached";
-    //   } else {
-    //   return formatTime(this.liveMarkerAlphaTS);
-    //   }
-    // } 
-    // this.bravoTime = ()=> {
-    //   if(this.liveMarkerBravoTS===null) {
-    //     return "Not Yet Reached";
-    //   } else {
-    //     return formatTime(this.liveMarkerBravoTS);
-    //   }       
-    // } 
-    // this.charlieTime = ()=> {
-    //   if(this.liveMarkerCharlieTS===null) {
-    //     return "Not Yet Reached";
-    //   } else {
-    //     return formatTime(this.liveMarkerCharlieTS);
-    //   }      
-    // } 
-    // this.deltaTime = ()=> {
-    //   if(this.liveMarkerDeltaTS===null) {
-    //     return "Not Yet Reached";
-    //   } else {
-    //     return formatTime(this.liveMarkerDeltaTS);
-    //   }
-      
-    // } 
     this.zoomMap = () => {
       if(this.state.map.isZoomed) {
         this.state.map.center = this.state.liveScanModel.mapCenter;
@@ -857,8 +828,20 @@ function compareSeg(a, b) {
   return b.lat - a.lat;
 }
 
-// The shared state object that any vue component can get access to.
-// Has some placeholders that we’ll use further on!
+
+
+
+     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+      *                                                                               *
+      *                          B E G I N  S T O R E  M O D U L E S                  *
+      *                                                                               *
+      *    The shared state object that any vue component can get access to.          *
+      *    Has some placeholders that we’ll use further on!                           *
+      *                                                                               *
+      *                                                                               *
+      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
 const moduleA = {
   state: () => ({
       slate: "LOADING",
@@ -1016,6 +999,7 @@ const moduleA = {
   actions: {
 
     async fetchPassagesList({ commit, state }, region) { //Action
+      console.log("fetchPassagesList for ",region)
       if(state.passagesList[0].type==="default") {
         let collection
         switch(region) {
@@ -1029,9 +1013,8 @@ const moduleA = {
           (document) => {
             if(document.exists()) {
               plObj = document.data();
-              //console.log("plObj", plObj);
               for(key in plObj) {
-                nKey = plObj[key].name;
+                nKey = plObj[key].name;    
                 nObj = plObj[key];
                 if(nKey=="---") { continue; }
                 nameArr.push(nKey);
@@ -1042,6 +1025,13 @@ const moduleA = {
                 nKey = nameArr[i];
                 nObj = tmpArr[nKey];
                 nObj.localIndex = i;
+                //Convert ID num to str
+                nObj.id = String(nObj.id)
+                nObj.ts = new Date(nObj.date)
+                //Filter empty & undefined
+                if(nObj.name==null || nObj.name=="" || nObj.id=="undefined") {
+                  continue
+                }
                 listArr.push(nObj);
               }
               commit("setPassagesList", listArr)  
@@ -1931,7 +1921,44 @@ const moduleA = {
       ret.sort( (a,b) => parseInt(a.passageMarkerCharlieTS) > parseInt(b.passageMarkerCharlieTS) ? -1 : 1) 
       return ret
     },
-    getRanges: state => { return state.ranges.past7.lo }   
+    getRanges: state => { return state.ranges.past7.lo },
+    getPassagesListSortDateAsc: (state) => {
+      let tempList = []
+      state.passagesList.forEach( (item) => {
+        tempList.push(item)
+      })
+      tempList.sort( (a,b) => a.ts < b.ts ? -1 : 1)
+      return tempList      
+    },
+    getPassagesListSortDateDsc: (state) => {
+      let tempList = []
+      state.passagesList.forEach( (item) => {
+        tempList.push(item)
+      })
+      tempList.sort( (a,b) => a.ts > b.ts ? -1 : 1)
+      return tempList      
+    },
+    getPassagesListSortMMSIAsc: (state) => {
+      let tempList = []
+      state.passagesList.forEach( (item) => {
+        tempList.push(item)
+      })  
+      tempList.sort( (a,b) => a.id > b.id ? 1 : -1)
+      return tempList 
+    },
+    getPassagesListSortMMSIDsc: (state) => {
+      let tempList = []
+      state.passagesList.forEach( (item) => {
+        tempList.push(item)
+      })  
+      tempList.sort( (a,b) => a.id < b.id ? 1 : -1)
+      return tempList 
+    },
+    getPassagesListPassengerOnly: (state) => {
+      return state.passagesList.filter( (item) => {
+        return item.type.includes("assenger")
+      })
+    }   
   }    
 }
 
@@ -2144,6 +2171,9 @@ const moduleC = {
         user = value.user
       }
       commit('SAVE_LOGGEDUSER_CREDENTIALS', user)  
+    },
+    setLogInForm: ({commit, state }, value)=> {
+      commit('SHOW_LOG_IN_FORM', value)
     },
     testLoggeduserIsAdmin: async({commit, state}, value) => {
       //Check if uid in admin list

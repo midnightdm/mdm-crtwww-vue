@@ -1,68 +1,15 @@
 <template>
   <div id="page-container">
-    <div id="mobile-content-wrap" class="mobile">
-      <!--Map class="map"></ Map-->
-      <iframe name="imap" id="imap" class="map" :class="{active: store.state.a.liveListOn}" :src="iframemapUrl" scrolling="no" frameborder="0" seamless></iframe>  
-      <section class="middle" v-show="!store.state.a.liveListOn">
-        <carousel v-if="store.state.a.liveScans.length" 
-        v-model="currentSlide" 
-        :items-to-show="1" 
-        :wrap-around="true"
-        :autoplay="parseInt(store.state.a.liveAutoDelay)*1000"
-        >
-         
-          <slide class="slide" v-for='(live, idxa) in store.state.a.liveScans' :key="live.id">
-            
-            <div class="list-wrap">
-              <h4 class="map-label" >{{live.mapLabel}}</h4> 
-              <h4 class="tile-title">{{live.name}}</h4> 
-              <div class="dir-container">
-                <img class="dir-img" :src="live.dirImg"/>
-                <span class="speed">{{live.spd}}</span>
-              </div>                           
-            </div>
-            <div class="data-cont grid2-container">
-              <div class="data-table">
-                <ul class="selected-vessel">
-                  <li class="dataPoint"><span class="th">TYPE:</span> <span class="td">{{live.type}}</span></li>
-                  <li class="dataPoint"><span class="th">MMSI #:</span> <span class="td">{{live.id}}</span></li>
-                  <li class="dataPoint"><span class="th">COURSE:</span> <span class="td">{{live.course}}°</span></li>
-                  <li class=dataPoint><span class=th>SPEED:</span> <span class=td>{{live.speed}} Knots</span></li>
-                  <li class="dataPoint"><span class="th">DIRECTION:</span> <span class="td dir">{{live.dir}}</span>  </li>
-                  <li class="dataPoint"><span class="th">COORDINATES:</span></li>
-                  <li class="dataPoint"><span class="td co">{{live.rndLat}}, {{live.rndLng}}</span>  
-                  </li>
-                </ul>
-              </div>
-              <div class="img-frame">                
-                <a href="#" @click="setSelectedA(idxa)">
-                <img class="data-image" :class="{ bigger: selectedA==idxa}" :src="live.imageUrl" >      
-                </a>
-                <div class="btnWrapper">
-                  <button class="pill" @click="route('/logs/history/'+ live.id )" >History</button>
-                </div>
-              </div>
-        
-            </div>
-            <h5>{{live.liveLocation}}</h5>             
-           
-          </slide>
+    <div id="idiv">
+      <iframe name="imap" id="imap" class="widemap column" :src="iframemapUrl" scrolling="no" frameborder="0" seamless></iframe>
+    </div>
 
-          <template #addons>
-            <navigation />
-            
-          </template>
-        </carousel>
-        <h1 class="noslide" v-else>No vessel transponders are in range currently.</h1>
-      </section>
-     
-     
-      <section class="listMode" v-show="region=='clinton' && store.state.a.liveListOn">
+      <section class="listMode" v-show="region=='clinton'">
         <ul class="all-vessels">
           <template v-if="store.state.a.segments[4].length">
           <li class="ctr" v-for="(live,idx4) in store.state.a.segments[4]" :key="live.id">
             <div class="list-wrap">
-              <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+              <h4 class="map-label">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
               <h4 class="tile-title">{{live.name}}</h4> 
               <div class="dir-container">
@@ -100,7 +47,7 @@
           <template v-if="store.state.a.segments[3].length">
           <li class="ctr" v-for="(live, idx3) in store.state.a.segments[3]" :key="live.id">
             <div class="list-wrap">
-              <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+              <h4 class="map-label">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
               <h4 class="tile-title">{{live.name}}</h4> 
               <div class="dir-container">
@@ -138,7 +85,7 @@
           <template v-if="store.state.a.segments[2].length">
           <li class="ctr" v-for="(live, idx2) in store.state.a.segments[2]" :key="live.id">
             <div class="list-wrap">
-              <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+              <h4 class="map-label">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
               <h4 class="tile-title">{{live.name}}</h4> 
               <div class="dir-container">
@@ -176,7 +123,7 @@
           <template v-if="store.state.a.segments[1].length">
           <li class="ctr" v-for="(live, idx1) in store.state.a.segments[1]" :key="live.id">
             <div class="list-wrap">
-             <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+             <h4 class="map-label">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
               <h4 class="tile-title">{{live.name}}</h4> 
               <div class="dir-container">
@@ -214,7 +161,7 @@
           <template v-if="store.state.a.segments[0].length">
           <li class="ctr" v-for="(live, idx0) in store.state.a.segments[0]" :key="live.id">
             <div class="list-wrap">
-            <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+            <h4 class="map-label">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
               <h4 class="tile-title">{{live.name}}</h4> 
               <div class="dir-container">
@@ -251,12 +198,12 @@
 
       </section>
     
-          <section class="listMode" v-show="region=='qc' && store.state.a.liveListOn">
+          <section class="listMode" v-show="region=='qc'">
         <ul class="all-vessels">
           <template v-if="store.state.a.segments[4].length">
           <li class="ctr" v-for="(live,idx4) in store.state.a.segments[4]" :key="live.id">
             <div class="list-wrap">
-              <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+              <h4 class="map-label">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
               <h4 class="tile-title">{{live.name}}</h4> 
               <div class="dir-container">
@@ -294,7 +241,7 @@
           <template v-if="store.state.a.segments[3].length">
           <li class="ctr" v-for="(live, idx3) in store.state.a.segments[3]" :key="live.id">
             <div class="list-wrap">
-              <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+              <h4 class="map-label">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
               <h4 class="tile-title">{{live.name}}</h4> 
               <div class="dir-container">
@@ -332,7 +279,7 @@
           <template v-if="store.state.a.segments[2].length">
           <li class="ctr" v-for="(live, idx2) in store.state.a.segments[2]" :key="live.id">
             <div class="list-wrap">
-              <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+              <h4 class="map-label">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
               <h4 class="tile-title">{{live.name}}</h4> 
               <div class="dir-container">
@@ -370,7 +317,7 @@
           <template v-if="store.state.a.segments[1].length">
           <li class="ctr" v-for="(live, idx1) in store.state.a.segments[1]" :key="live.id">
             <div class="list-wrap">
-             <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+             <h4 class="map-label">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
               <h4 class="tile-title">{{live.name}}</h4> 
               <div class="dir-container">
@@ -408,7 +355,7 @@
           <template v-if="store.state.a.segments[0].length">
           <li class="ctr" v-for="(live, idx0) in store.state.a.segments[0]" :key="live.id">
             <div class="list-wrap">
-            <h4 class="map-label"  @click="focusMap(live.lsKey)">{{live.mapLabel}}</h4>
+            <h4 class="map-label">{{live.mapLabel}}</h4>
               <button @click="showDetail(live.lsKey)">Detail</button>
               <h4 class="tile-title">{{live.name}}</h4> 
               <div class="dir-container">
@@ -444,18 +391,7 @@
         </ul>
 
       </section>
-    
-    </div>
-    <section id="footer">
-      <div class="btnBar">
-        <button @click="toggleAuto">Auto <span class='led' :class="{'on': store.state.a.liveAutoOn}"></span></button>
-        Set Delay 
-        <input @change="updateDelay" type="range" name="inputDelay" ref="inputDelay" value="7" min="2" max="60">
-        {{delayDisplay}} Sec
-        <button @click="toggleList">List <span class='led' :class="{'on':  store.state.a.liveListOn }"></span></button>
-        <button @click="toggleLiveVoice">Announce <span class='led' :class="{'on':  store.state.a.liveVoiceOn }"></span></button>
-      </div>
-    </section>
+   
   </div>
 </template>
 
@@ -539,8 +475,8 @@ export default {
     function checkScreen() {
       let windowWidth = window.innerWidth
       if(windowWidth >= 751) {
-        router.push('/live/wide/tiles')
-      } else {
+        router.push('/live/wide/list')
+      } else if(windowWidth <=750) {
         router.push('/live/mobile')
       }
       console.log("checkScreen()")
@@ -707,28 +643,31 @@ export default {
       //let reference = document.getElementById("inputDelay")      
     })
     return { store, keysPressed, focusMap, showDetail, toggleList, toggleMarkers, inputDelay, checkScreen, toggleAuto, route,  toggleLiveVoice, playAnnouncement, playWaypoint, playActivated }
-  },
-  watch: {
-    currentSlide: function () {
-      // when the hash prop changes, this function will be fired.
-      //this.$store.commit('focusMap', this.currentSlide)
-      let key = this.currentSlide
-      let lat = parseFloat(this.$store.state.a.liveScans[key].rndLat)
-      let lng = parseFloat(this.$store.state.a.liveScans[key].rndLng)
-      let pos = {lat: lat, lng: lng }
-      window.frames["imap"].window.liveScanModel.map.setCenter(pos)
-      window.frames["imap"].window.liveScanModel.map.setZoom(14)
-      //this.$store.commit('setSlate', this.$store.state.a.liveScans.length+' LIVE')
-      //console.log("slide:", this.currentSlide, pos)
-    }
   }
+  // watch: {
+  //   currentSlide: function () {
+  //     // when the hash prop changes, this function will be fired.
+  //     //this.$store.commit('focusMap', this.currentSlide)
+  //     let key = this.currentSlide
+  //     let lat = parseFloat(this.$store.state.a.liveScans[key].rndLat)
+  //     let lng = parseFloat(this.$store.state.a.liveScans[key].rndLng)
+  //     let pos = {lat: lat, lng: lng }
+  //     window.frames["imap"].window.liveScanModel.map.setCenter(pos)
+  //     window.frames["imap"].window.liveScanModel.map.setZoom(14)
+  //     //this.$store.commit('setSlate', this.$store.state.a.liveScans.length+' LIVE')
+  //     //console.log("slide:", this.currentSlide, pos)
+  //   }
+  // }
 }
 </script>
 
+
 <style scoped>
+
+/*
 .map {
   position: relative;
-  top: 95px;/* var(--menu-pad-mobile); */
+  top: 95px;/* var(--menu-pad-mobile); * /
   height: 35vh;
   width: 100vw;
   padding: 0px 0rem 0 0rem; 
@@ -736,6 +675,13 @@ export default {
 
 .map .active {
   height: 37vh;
+}
+
+*/
+
+
+.widemap {
+  border-radius: 8px;
 }
 
 img.data-image  {
@@ -748,6 +694,7 @@ img.data-image  {
 img.data-image.bigger {
   transform: scale(3) translate(-40%, 30%);
   transition: transform .5s ease-in-out;
+  z-index: 250 !important;
 }
 
 
@@ -764,11 +711,13 @@ img.data-image.bigger {
 /* List Mode  */
 
 .listMode {
-  height: 40vh;
+  /*
+  height: 100%;
   overflow-y: scroll;
+  */
   margin-top: 5px;
   position: relative;
-  top: 100px;
+  top: 134px;
 }
 
 .listMode ul {
@@ -822,9 +771,7 @@ span.waypoint {
 }
 
 
-.listMode .list-wrap h4.map-label {
-  margin: 5px;
-}
+
 
 
 .list-wrap div.dir-container {
@@ -861,17 +808,16 @@ h4.map-label {
   border: 2px solid black;  
 }
 
-.listMode .list-wrap h4.map-label {
-  padding: 5px 10px;
-  margin: 5px;
-  cursor: pointer;
-}
+/* .listMode .list-wrap */ 
+
 
 h4.tile-title {
   font-size: 16pt;
 }
 
-#mobile-content-wrap .list-wrap  {
+/* #mobile-content-wrap */
+
+.list-wrap  {
   background-color: #2c3e50;
   opacity: 1;
   height: 3rem;
@@ -887,7 +833,9 @@ h4.tile-title {
   margin: 0px;
 }
 
-#mobile-content-wrap .slide .list-wrap {
+/* #mobile-content-wrap .slide */
+
+.list-wrap {
   margin: auto;
 }
 
@@ -909,6 +857,24 @@ img.dir-img {
   max-height: 30vh;
 }
 
+.column {
+  float: left;
+}
+
+.widemap.column {
+  width: 50%;
+  height: 100vh;
+  min-width: 300px;
+}
+
+.data.column {
+  width: 47%;
+}
+
+div.dataColumn {
+  width: 100%;
+  text-align: center;
+}
 
 
 
@@ -1027,6 +993,8 @@ ul.all-vessels {
 .listMode .data-table {
   padding: .5rem;
   margin: 0;
+  height: auto;
+  
 }
 
 .img-frame {

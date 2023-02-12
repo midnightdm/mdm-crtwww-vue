@@ -62,7 +62,8 @@ const Video = () => import('@/views/gallery/Video.vue')
 //import LiveMobile from '../views/live/LiveMobile.vue'
 const LiveMobile = () => import('@/views/live/LiveMobile.vue')
 //import LiveWide from '../views/live/LiveWide.vue'
-const LiveWide = () => import('@/views/live/LiveWide.vue')
+const LiveWideTiles = () => import('@/views/live/LiveWideTiles.vue')
+const LiveWideList = () => import('@/views/live/LiveWideList.vue')
 
 
 
@@ -77,6 +78,7 @@ const routes = [
     component: Hero,
     
   },
+
   {
     path: '/about',
     name: 'About',
@@ -142,9 +144,14 @@ const routes = [
     component: LiveMobile
   },
   {
-    path: '/live/wide',
-    name: 'LiveWide',
-    component: LiveWide
+    path: '/live/wide/list',
+    name: 'LiveWideList',
+    component: LiveWideList
+  },
+  {
+    path: '/live/wide/tiles',
+    name: 'LiveWideTiles',
+    component: LiveWideTiles
   },
   {
     path: '/live',

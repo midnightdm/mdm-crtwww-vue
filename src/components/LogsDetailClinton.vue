@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import LogsSubMenu from '@/components/LogsSubMenu.vue'
+//import LogsSubMenu from '@/components/LogsSubMenu.vue'
 
 export default {
   name: 'LogsDetailClinton',
@@ -148,15 +148,15 @@ export default {
   },
   mounted() {
     this.$store.commit('setSlate', 'LOGS')
-    this.$store.commit('setLogsLinkActive', true)
+    //this.$store.commit('setLogsLinkActive', true)
     this.$store.commit('setPageSelected', 'Detail')
   },
   unmounted() {
     this.$store.commit('setLogsLinkActive', false)
-  },
-  components: {
-    LogsSubMenu
   }
+  // components: {
+  //   LogsSubMenu
+  // }
 
 }
 
@@ -165,7 +165,7 @@ export default {
 <style>
 
 section#History {
-  padding-top: var(--menu-pad-wide-b);
+  padding-top: 5rem;
 }
 
 .detail {
@@ -248,7 +248,7 @@ tr:nth-child(odd) {
 
 @media (max-width: 750px) {
   section#History {
-    padding-top:50px;
+    padding-top:0px;
   }
 
   .detail {

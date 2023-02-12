@@ -119,6 +119,8 @@ export default {
       let windowWidth = window.innerWidth
       if(windowWidth <= 750) {
         router.push('/live/mobile')
+      } else {
+        router.push('/live/wide/tiles')
       }
       //console.log("checkScreen()")
     }
@@ -361,7 +363,7 @@ ul.cardWrapper {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  /* justify-content: space-around; */
 }
 
 

@@ -3,7 +3,8 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useStore } from 'vuex'
+//import { useStore } from 'vuex'
+import store from '@/store/index.js';
 
 
 const config = {
@@ -24,12 +25,12 @@ export let firestore = getFirestore(firebaseApp)
 export const userAuthState = () => {
   const user = ref(null)
   const error = ref(null)
-  const store = useStore()
+  //const store = useStore()
   const auth = getAuth(firebaseApp)
   
   let unsubscribe
   
-  onMounted(async ()=> {
+  //onMounted(async ()=> {
     unsubscribe = onAuthStateChanged(
       auth,
       async (u) => {
@@ -41,12 +42,13 @@ export const userAuthState = () => {
           await store.dispatch('saveUserToA', u.uid)
           await store.dispatch('testLoggeduserIsAdmin', u.uid) 
         }
-        store.commit('SHOW_LOG_IN_FORM', false)
+        store.dispatch('setLogInForm', false)
       },
       e => {error.value = e}
     )
-  })
-  onUnmounted(() => unsubscribe())
+  //}
+  //)
+  //onUnmounted(() => unsubscribe())
  
 
   return { auth, user, error }

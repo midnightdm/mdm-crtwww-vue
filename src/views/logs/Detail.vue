@@ -8,6 +8,7 @@
 <script>
 import LogsDetailClinton from '@/components/LogsDetailClinton.vue'
 import LogsDetailQC from '@/components/LogsDetailQC.vue'
+//import LogsSubMenu from '@/components/LogsSubMenu.vue'
 
 export default {
   props: ['id'],
@@ -22,6 +23,7 @@ export default {
     //: () => import('@/components/LogsDetailClinton.vue'),
     LogsDetailQC
    //:      () => import('@/components/LogsDetailQC.vue')
+    //LogsSubMenu
   }
 }
 </script>

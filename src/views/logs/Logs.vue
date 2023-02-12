@@ -1,21 +1,101 @@
 <template>
   <button v-bind:class="{ active: scrolled}" id="topbtn" @click="topOfPage">Top</button>
   <div id="main" class="logs">
-      <h1>List of Vessels Logged</h1>     
+    <h1>List of Vessels Logged</h1>     
     <p>The transponder-equipped vessels below passed Clinton most recently on the date shown. Select a vessel to view all its passages.</p>
-      <div v-if=" this.$store.state.a.passagesList[0].type != 'loading'">
-        <ul class="vessels-list" v-for="vessel in this.$store.state.a.passagesList" :key="vessel.id">
-        <li>
-        <router-link :to="{ name: 'Detail', params: { id: vessel.id }}"><h4>{{ vessel.name}}</h4>
-          <div class="shipBox">
-            <img class="img-fluid img-thumbnail" :src="vessel.image" :alt="'Shows an image of vessel '+ vessel.name"   width="200">
-            <div class="shipBoxData">
-                <span>{{vessel.date}}</span>
-            </div>
-          </div>
-          </router-link>
-        </li>    
-      </ul>  
+    <div class="container" v-if=" this.$store.state.a.passagesList[0].type != 'default'">
+      
+      
+      <table loading>
+        <thead>
+          <tr>
+            <th class="expendable">Index</th>  
+            <th class="nav-link" :class="{expendable: pageView=='passenger'}"><a href="#" @click="toggleListAll">Type</a></th>
+            <th class="nav-link" :class="{expendable: pageView=='default'}"><a href="#" @click="changePageView('default')">Name</a></th>
+            <th class="nav-link" :class="{expendable: pageView!='mmsi'}">
+              <a v-if="mmsiAsc" href="javascript:void(0)" @click="toggleMmsiDir">MMSI&nbsp;<font-awesome-icon icon="caret-up" class="fa-solid fa-caret-up" :class="{active: mmsiAsc}" /></a>
+              <a v-else href="javascript:void(0)" @click="toggleMmsiDir">MMSI&nbsp;<font-awesome-icon icon="caret-down" class="fa-solid fa-caret-down" :class="{active: mmsiAsc===false}"/></a>
+            </th>
+            <th class="nav-link wider" >
+              <a v-if="dateAsc" href="javascript:void(0)" @click="toggleDateDir">Last Passage&nbsp;<font-awesome-icon icon="caret-up" class="fa-solid fa-caret-up" :class="{active: dateAsc}" /></a>
+              <a v-else href="javascript:void(0)" @click="toggleDateDir">Last Passage&nbsp;<font-awesome-icon icon="caret-down" class="fa-solid fa-caret-down" :class="{active: dateAsc===false}" /></a>
+            </th>
+          </tr>
+        </thead>
+        <tbody >
+          <!-- Default Sort -->
+          <template v-if="pageView=='default'">
+            <tr v-for="(vessel, idx) in this.$store.state.a.passagesList" :key="vessel.id">
+              <td class="col_r expendable" ><a :name="'mmsi'+vessel.id">{{ idx }}</a></td>
+              <td class="col_r">{{ vessel.type}}</td>
+              <td><router-link :to="{ name: 'Detail', params: { id: vessel.id }}" exact-active-class="exact-active"><h4 class="inTable">{{ vessel.name}}</h4></router-link></td>
+              <td class="expendable">{{vessel.id}}</td>
+              <td class="wider">{{ vessel.date }}</td>        
+            </tr>
+          </template>
+
+          <!-- MMSI Sort Ascending -->
+          <template v-if="pageView=='mmsia'">
+            <tr v-for='(vessel, idx) in this.$store.getters.getPassagesListSortMMSIAsc' :key='vessel.id'>
+              <td class="col_r expendable"><a :name="'mmsi'+vessel.id">{{ idx }}</a></td>
+              <td class="col_r">{{ vessel.type}}</td>
+              <td><router-link :to="{ name: 'Detail', params: { id: vessel.id }}" exact-active-class="exact-active"><h4 class="inTable">{{ vessel.name}}</h4></router-link></td>
+              <td>{{vessel.id}}</td>
+              <td class="expendable">{{ vessel.date }}</td>     
+              <td :class="{ watchOn: vessel.vesselWatchOn}" class="col_c square">
+                  
+              </td>
+              
+            </tr>
+          </template>
+
+          <!-- MMSI Sort Descending -->
+          <template v-if="pageView=='mmsid'">
+            <tr v-for='(vessel, idx) in this.$store.getters.getPassagesListSortMMSIDsc' :key='vessel.id'>
+              <td class="col_r expendable"><a :name="'mmsi'+vessel.id">{{ idx }}</a></td>
+              <td class="col_r">{{ vessel.type}}</td>
+              <td><router-link :to="{ name: 'Detail', params: { id: vessel.id }}" exact-active-class="exact-active"><h4 class="inTable">{{ vessel.name}}</h4></router-link></td>
+              <td>{{vessel.id}}</td>
+              <td class="expendable">{{ vessel.date }}</td>                  
+            </tr>
+          </template>
+
+          <!-- Date Sort Ascending -->
+          <template v-if="pageView=='datea'">
+            <tr v-for='(vessel, idx) in this.$store.getters.getPassagesListSortDateAsc' :key='vessel.id'>
+              <td class="col_r expendable" ><a :name="'mmsi'+vessel.id">{{ idx }}</a></td>
+              <td class="col_r">{{ vessel.type}}</td>
+              <td><router-link :to="{ name: 'Detail', params: { id: vessel.id }}" exact-active-class="exact-active"><h4 class="inTable">{{ vessel.name}}</h4></router-link></td>
+              <td class="expendable">{{vessel.id}}</td>
+              <td class="wider">{{ vessel.date }}</td>     
+            </tr>
+          </template>
+
+          <!-- Date Sort Descending -->
+          <template v-if="pageView=='dated'">
+            <tr v-for='(vessel, idx) in this.$store.getters.getPassagesListSortDateDsc' :key='vessel.id'>
+              <td class="col_r expendable" ><a :name="'mmsi'+vessel.id">{{ idx }}</a></td>
+              <td class="col_r">{{ vessel.type}}</td>
+              <td><router-link :to="{ name: 'Detail', params: { id: vessel.id }}" exact-active-class="exact-active"><h4 class="inTable">{{ vessel.name}}</h4></router-link></td>
+              <td class="expendable">{{vessel.id}}</td>
+              <td class="wider">{{ vessel.date }}</td>     
+            </tr>
+          </template>
+
+          <!-- Passenger Only Sort-->
+          <template v-if="pageView=='passenger'">
+            <tr v-for='(vessel, idx) in this.$store.getters.getPassagesListPassengerOnly' :key='vessel.id'>
+              <td class="col_r expendable" ><a :name="'mmsi'+vessel.id">{{ idx }}</a></td>
+              <td class="col_r">{{ vessel.type}}</td>
+              <td><router-link :to="{ name: 'Detail', params: { id: vessel.id }}" exact-active-class="exact-active"><h4 class="inTable">{{ vessel.name}}</h4></router-link></td>
+              <td class="expendable">{{vessel.id}}</td>
+              <td class="wider">{{ vessel.date }}</td>     
+              
+            </tr>
+            </template>
+        </tbody>
+      </table>
+  
     </div>  
     <div v-else>
       <h1>LOADING VESSELS ...</h1>
@@ -28,27 +108,24 @@ import LogsSubMenu from '@/components/LogsSubMenu.vue'
 export default {
   created: function () {
     this.$store.dispatch("fetchPassagesList", process.env.VUE_APP_REGION)
-  },
-  mounted() {
     window.addEventListener('scroll', this.handleScroll)
+
     this.$store.commit('setSlate', 'LOGS')
     this.$store.commit('setLogsLinkActive', true)
     this.$store.commit('setPageSelected', 'Logs')
   },
-  unmounted() {
-    this.$store.commit('setLogsLinkActive', false)
-  },
+
   data: function() {
     return {
-      // logoImgUrl: process.env.VUE_APP_IMG_URL+'/images/logo-towboat2.png',
-      // logoImgAlt: 'The logo image shows a tow boat pushing 9 barges.',
-      // urlAbout: process.env.VUE_APP_BASE_URL+'/about',
-      // urlAlerts: process.env.VUE_APP_BASE_URL+'/alerts',
-      // urlLive: process.env.VUE_APP_BASE_URL+'/livescan/live',
-      // urlManage: process.env.VUE_APP_BASE_URL+'/manage',
-      // urlVideo: process.env.VUE_APP_IMG_URL+'/video',
       slate: 'LOGS',
-      scrolled: false
+      scrolled: false,
+      idx: 0,
+      isShowing: true,
+      listAll: true,
+      mmsiAsc: null,
+      dateAsc: null,
+      pageView: "default",
+      lastView: "default"
     }
   },
   methods: {
@@ -63,6 +140,46 @@ export default {
         this.scrolled = false
       }
       console.log("scrolled?", this.scrolled)
+    },
+    changePageView(show) {
+      console.log("lastView=",this.lastView)
+      if(show!="passenger" && this.pageView != "passenger") {
+        this.lastView = this.pageView
+      }
+      if(show!="mmsia" && show!="mmsid") {
+        this.mmsiAsc=null
+      }
+      if(show!="datea" && show!="dated") {
+        this.dateAsc=null
+      }  
+      this.pageView = show
+    },
+    toggleListAll() {
+      this.listAll=!this.listAll
+      if(!this.listAll) {
+        this.changePageView("passenger")
+      } else {
+        this.changePageView(this.lastView)
+      }
+    },
+    toggleMmsiDir() {
+      if(this.mmsiAsc===true) {
+        this.changePageView("mmsid")
+        this.mmsiAsc=false
+      } else {
+        this.changePageView("mmsia")
+        this.mmsiAsc=true
+      }
+    },
+    toggleDateDir() {
+      if(this.dateAsc===null || this.dateAsc===true) {
+        this.changePageView("dated")
+        this.dateAsc=false
+      } else {
+        console.log("changing to date asc")
+        this.changePageView("datea")
+        this.dateAsc=true
+      }
     }  
   },
   components: {
@@ -73,8 +190,13 @@ export default {
 <style scoped>
 
 div#main {
-  padding-top: 100px;
+  padding-top: 80px;
 }
+
+.expendable {
+  visibility: visible;
+}
+
 .logs {
   width: 80%;
   margin: 20px auto;
@@ -91,9 +213,96 @@ img.vessel {
 
 }
 
+
+
 p {
   transform: translateY(1 rem);
 }
+
+th {
+  padding: 5px;
+  background-color: rgb(228, 231, 231);
+}
+
+h4.inTable {
+  display: inline;
+}
+
+h4.link {
+  color: blue;
+  text-decoration-color: blue;
+  text-decoration-line: underline;
+  cursor: pointer;
+}
+
+.example_b {
+  color: #fff !important;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #7c7777;
+  padding: 20px;
+  border-radius: 5px;
+  display: inline-block;
+  border: none;
+  transition: all 0.4s ease 0s;
+}
+
+.example_b:hover {
+  background: #434343;
+  cursor:grab;
+  letter-spacing: 1px;
+  -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+  -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+  box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+  transition: all 0.4s ease 0s;
+}
+
+.wider {
+  width: 10em;
+}
+.col_r{
+  text-align: right;
+  padding-right: 3px;
+}
+
+.col_c{
+  text-align: center;
+  
+}
+
+.col_l {
+  text-align: left;
+}
+
+table {
+  margin: 1rem auto;
+  width: auto;
+}
+
+th, td {
+  width: auto;
+  padding: 5px;
+}
+
+tr:nth-child(even) {
+  background-color: rgb(207, 218, 218);
+}
+
+tr:nth-child(odd) {
+  background-color: rgb(166, 212, 212);
+}
+
+tr.isNew {
+  background-color:rgb(167, 109, 109);
+}
+
+.cent_cont {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 #main {
   transform: translateY(8rem);
@@ -159,6 +368,30 @@ ul.vessels-list li {
   transition: opacity 0.5s;
   cursor: pointer;
   z-index: 105;
+}
+
+.fa-caret-up {
+  visibility: hidden;
+  color: blue;
+  
+}
+
+.fa-caret-down.active {
+  visibility: visible;
+}
+
+.fa-caret-down {
+  visibility: hidden;
+  color: blue;
+  
+}
+
+.fa-caret-up.active {
+  visibility: visible;
+}
+
+div.container {
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 750px) {
