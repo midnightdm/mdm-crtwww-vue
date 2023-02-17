@@ -235,7 +235,7 @@ export default {
         //Delay to ensure userID is set. Couldn't figure how to get promise to work here.
         let auth = btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('auth'))));
         let p246dh = btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('p256dh'))));
-        this.user = {
+        let usr = {
           alertDest: "",
           alertMethod: "notification",
           alertNote: "v0 subscribeUser()",
@@ -250,6 +250,7 @@ export default {
             p256dh: p246dh 
           }
         }
+        this.user = usr;
         setDoc(this.deviceRef, this.user, {merge:true})
       })
       .catch( (err) => {
