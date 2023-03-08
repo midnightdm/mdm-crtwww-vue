@@ -268,23 +268,11 @@ export default {
             store.dispatch("fetchVoiceNotices");
           }
         }, 1500);
-        //store.commit('setSlate', 'LIVE')
+        store.commit('setSlate', 'LIVE')
       }  
     })
-        store.dispatch("fetchVoiceNotices")
-        //store.commit('focusMap', 0)
 
-      }
-      else {
-        setTimeout( () => {
-          if(store.state.a.liveScans != undefined && store.state.a.liveScans.length) {
-            store.commit('setSlate', store.state.a.liveScans.length+' LIVE');
-            store.dispatch("fetchVoiceNotices");
-          }
-        }, 1500);
-        //store.commit('setSlate', 'LIVE')
-      }  
-    })
+
 
     //watch()
 
@@ -582,9 +570,9 @@ h1.noslide {
   font-size: 20px;
   border-radius: 8px;
   padding: 0px 30px;
-  height: 40vh; /* You must set a specified height */
+  /* height: 40vh; /* You must set a specified height * /
   
-  min-height: 20rem;
+  min-height: 20rem; */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: auto 15rem; /* Resize the background image to cover the entire container */
