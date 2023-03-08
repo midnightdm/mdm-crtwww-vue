@@ -290,7 +290,8 @@ li {
 
 .navigation li {
   text-align: center; 
-  line-height: 1.3; 
+  line-height: 1.3;
+  white-space: nowrap; 
 }
 
 li a, li router-link {

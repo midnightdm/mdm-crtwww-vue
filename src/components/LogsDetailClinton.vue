@@ -165,7 +165,7 @@ export default {
 <style>
 
 section#History {
-  padding-top: 5rem;
+  padding-top: 9rem;
 }
 
 .detail {
