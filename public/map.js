@@ -787,7 +787,7 @@ function initLiveScan() {
         //   liveScanModel.outputAllVessels();
         // } else {
         //  liveScanModel.outputDetail(liveScanModel.selectedView.idx);
-        //}
+        //}f
 
       } 
     }
