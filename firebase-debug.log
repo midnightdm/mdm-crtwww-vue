@@ -1,0 +1,70 @@
+[debug] [2023-08-09T00:49:38.658Z] ----------------------------------------------------------------------
+[debug] [2023-08-09T00:49:38.666Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js login
+[debug] [2023-08-09T00:49:38.667Z] CLI Version:   12.4.5
+[debug] [2023-08-09T00:49:38.667Z] Platform:      win32
+[debug] [2023-08-09T00:49:38.668Z] Node Version:  v19.8.1
+[debug] [2023-08-09T00:49:38.668Z] Time:          Tue Aug 08 2023 19:49:38 GMT-0500 (Central Daylight Time)
+[debug] [2023-08-09T00:49:38.668Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-08-09T00:49:38.675Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] i  Firebase optionally collects CLI and Emulator Suite usage and error reporting information to help improve our products. Data is collected in accordance with Google's privacy policy (https://policies.google.com/privacy) and is not used to identify you.
+ 
+[info] i  To change your data collection preference at any time, run `firebase logout` and log in again. 
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://accounts.google.com/o/oauth2/auth?client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&scope=email%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloudplatformprojects.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ffirebase%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&state=138295595&redirect_uri=http%3A%2F%2Flocalhost%3A9005
+[info] 
+[info] Waiting for authentication...
+[debug] [2023-08-09T00:49:49.988Z] >>> [apiv2][query] POST https://accounts.google.com/o/oauth2/token [none]
+[debug] [2023-08-09T00:49:49.989Z] >>> [apiv2][body] POST https://accounts.google.com/o/oauth2/token [omitted]
+[debug] [2023-08-09T00:50:00.056Z] *** [apiv2] error from fetch(https://firebase-public.firebaseio.com/cli.json, {"headers":{},"method":"GET"}): FetchError: request to https://firebase-public.firebaseio.com/cli.json failed, reason: connect ETIMEDOUT 2600:1901:0:4d00:::443
+[warn] !  Unable to fetch the CLI MOTD and remote config. 
+[debug] [2023-08-09T00:50:00.058Z] Failed to fetch MOTD FirebaseError: Failed to make request to https://firebase-public.firebaseio.com/cli.json
+[debug] [2023-08-09T00:50:11.061Z] *** [apiv2] error from fetch(https://accounts.google.com/o/oauth2/token, {"headers":{},"method":"POST","body":{"_overheadLength":543,"_valueLength":208,"_valuesToMeasure":[],"writable":false,"readable":true,"dataSize":0,"maxDataSize":2097152,"pauseStreams":true,"_released":true,"_streams":[],"_currentStream":null,"_insideLoop":false,"_pendingNext":false,"_boundary":"--------------------------580450307854160509000270","_events":{},"_eventsCount":1}}): FetchError: request to https://accounts.google.com/o/oauth2/token failed, reason: connect ETIMEDOUT 2607:f8b0:4009:81b::200d:443
+[debug] [2023-08-09T00:50:11.065Z] Token Fetch Error: FirebaseError: Failed to make request to https://accounts.google.com/o/oauth2/token
+    at RetryOperation._fn (C:\ProgramData\nvm\v19.8.1\node_modules\firebase-tools\lib\apiv2.js:239:31)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[debug] [2023-08-09T00:50:11.090Z] >>> [apiv2][query] POST https://auth.firebase.tools/attest [none]
+[debug] [2023-08-09T00:50:11.091Z] >>> [apiv2][body] POST https://auth.firebase.tools/attest {"session_id":"fac8463f-407e-4ea3-9ab8-0f9848610ace"}
+[debug] [2023-08-09T00:50:32.142Z] *** [apiv2] error from fetch(https://auth.firebase.tools/attest, {"headers":{},"method":"POST","body":"{\"session_id\":\"fac8463f-407e-4ea3-9ab8-0f9848610ace\"}"}): FetchError: request to https://auth.firebase.tools/attest failed, reason: connect ETIMEDOUT 2001:4860:4802:36::15:443
+[debug] [2023-08-09T00:50:37.217Z] Error: Timed out.
+    at Timeout._onTimeout (C:\ProgramData\nvm\v19.8.1\node_modules\firebase-tools\lib\utils.js:254:49)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2023-08-09T00:52:24.014Z] ----------------------------------------------------------------------
+[debug] [2023-08-09T00:52:24.020Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js login
+[debug] [2023-08-09T00:52:24.021Z] CLI Version:   12.4.5
+[debug] [2023-08-09T00:52:24.022Z] Platform:      win32
+[debug] [2023-08-09T00:52:24.022Z] Node Version:  v19.8.1
+[debug] [2023-08-09T00:52:24.023Z] Time:          Tue Aug 08 2023 19:52:24 GMT-0500 (Central Daylight Time)
+[debug] [2023-08-09T00:52:24.023Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-08-09T00:52:24.030Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] i  Firebase optionally collects CLI and Emulator Suite usage and error reporting information to help improve our products. Data is collected in accordance with Google's privacy policy (https://policies.google.com/privacy) and is not used to identify you.
+ 
+[info] i  To change your data collection preference at any time, run `firebase logout` and log in again. 
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://accounts.google.com/o/oauth2/auth?client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&scope=email%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloudplatformprojects.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ffirebase%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&state=9090915&redirect_uri=http%3A%2F%2Flocalhost%3A9005
+[info] 
+[info] Waiting for authentication...
+[debug] [2023-08-09T00:52:38.529Z] >>> [apiv2][query] POST https://accounts.google.com/o/oauth2/token [none]
+[debug] [2023-08-09T00:52:38.529Z] >>> [apiv2][body] POST https://accounts.google.com/o/oauth2/token [omitted]
+[debug] [2023-08-09T00:52:45.351Z] *** [apiv2] error from fetch(https://firebase-public.firebaseio.com/cli.json, {"headers":{},"method":"GET"}): FetchError: request to https://firebase-public.firebaseio.com/cli.json failed, reason: connect ETIMEDOUT 2600:1901:0:4d00:::443
+[warn] !  Unable to fetch the CLI MOTD and remote config. 
+[debug] [2023-08-09T00:52:45.356Z] Failed to fetch MOTD FirebaseError: Failed to make request to https://firebase-public.firebaseio.com/cli.json
+[debug] [2023-08-09T00:52:59.576Z] *** [apiv2] error from fetch(https://accounts.google.com/o/oauth2/token, {"headers":{},"method":"POST","body":{"_overheadLength":543,"_valueLength":208,"_valuesToMeasure":[],"writable":false,"readable":true,"dataSize":0,"maxDataSize":2097152,"pauseStreams":true,"_released":true,"_streams":[],"_currentStream":null,"_insideLoop":false,"_pendingNext":false,"_boundary":"--------------------------090832060799155298682922","_events":{},"_eventsCount":1}}): FetchError: request to https://accounts.google.com/o/oauth2/token failed, reason: connect ETIMEDOUT 2607:f8b0:4009:81b::200d:443
+[debug] [2023-08-09T00:52:59.576Z] Token Fetch Error: FirebaseError: Failed to make request to https://accounts.google.com/o/oauth2/token
+    at RetryOperation._fn (C:\ProgramData\nvm\v19.8.1\node_modules\firebase-tools\lib\apiv2.js:239:31)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[debug] [2023-08-09T00:52:59.590Z] >>> [apiv2][query] POST https://auth.firebase.tools/attest [none]
+[debug] [2023-08-09T00:52:59.591Z] >>> [apiv2][body] POST https://auth.firebase.tools/attest {"session_id":"a406adba-9b26-4ccd-9ff7-d40ce520ac31"}
+[debug] [2023-08-09T00:53:20.653Z] *** [apiv2] error from fetch(https://auth.firebase.tools/attest, {"headers":{},"method":"POST","body":"{\"session_id\":\"a406adba-9b26-4ccd-9ff7-d40ce520ac31\"}"}): FetchError: request to https://auth.firebase.tools/attest failed, reason: connect ETIMEDOUT 2001:4860:4802:36::15:443
+[debug] [2023-08-09T00:53:25.680Z] Error: Timed out.
+    at Timeout._onTimeout (C:\ProgramData\nvm\v19.8.1\node_modules\firebase-tools\lib\utils.js:254:49)
+    at listOnTimeout (node:internal/timers:573:17)
+    at process.processTimers (node:internal/timers:514:7)
+[error] 
+[error] Error: An unexpected error has occurred.
