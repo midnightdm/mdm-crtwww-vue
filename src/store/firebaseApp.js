@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getAnalytics } from 'firebase/analytics'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 //import { useStore } from 'vuex'
 import store from '@/store/index.js';
@@ -13,11 +14,14 @@ const config = {
     projectId: "mdm-qcrt-demo-1",
     storageBucket: "mdm-qcrt-demo-1.appspot.com",
     messagingSenderId: "1055119004226",
-    appId: "1:1055119004226:web:1d17187e816f794b5713db"
+    appId: "1:1055119004226:web:1d17187e816f794b5713db",
+    measurementId: "G-FP7DQV1KR5"
+
   };
  
 const firebaseApp = initializeApp(config)
 export let firestore = getFirestore(firebaseApp)
+export const analytics = getAnalytics(firebaseApp)
 
 /*  VUEX STORE NOW USED FOR AUTH STATE
      firebase auth object still exported  */

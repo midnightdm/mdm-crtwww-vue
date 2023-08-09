@@ -852,7 +852,7 @@ const moduleA = {
       pageSelected: null,
       isHero: false,
       isTest: true,
-      lab: "_ABCDEFGHIJKLMNOPQRSTUVWXYZ*#@&~1234567890abcdefghijklmnopqrstuvwxyz",
+      lab: "AABCDEFGHIJKLMNOPQRSTUVWXYZ*#@&~1234567890abcdefghijklmnopqrstuvwxyz",
       red: "#ff0000",
       //isZoomed: false,
       map: {
@@ -1301,7 +1301,7 @@ const moduleA = {
             //Reset array if update is less
             state.liveScans.splice(0, state.liveScans.length)
             //and labelIndex to avoid escalating labels
-            state.liveScanModel.labelIndex = state.liveScans.length
+            state.liveScanModel.labelIndex = 0 //changed 5/18/23 from state.liveScans.length to match dashboard code which works
           }
           //On 1st load initiate previous placeholders
           if(state.liveScanModel.prevVpubID==0) {

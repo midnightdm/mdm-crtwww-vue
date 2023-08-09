@@ -11,7 +11,7 @@
           <li><a @click="leaveHero('/alerts')" :href="'/alerts'" class="nav-link">ALERTS</a></li>
           <li><a @click="leaveHero('/comments')" :href="'/comments'" class="nav-link">COMMENTS</a></li>
           <li><a @click="leaveHero('/gallery')" :href="'/gallery'" class="nav-link">GALLERY</a></li>
-          <li><a @click="leaveHero('/live/wide/tiles')" :href="'/live'" class="nav-link">LIVE-A</a></li>
+          <li><a @click="leaveHero('/live')" :href="'/live'" class="nav-link">LIVE-A</a></li>
           <li><a @click="leaveHero('/live/wide/list')" :href="'/live'" class="nav-link">LIVE-B</a></li>
           <li><a @click="leaveHero('/logs')" :href="'/logs'"  class="nav-link">LOGS</a></li>
           <li><a :href="urlWebcam" class="nav-link">WEBCAM</a></li>

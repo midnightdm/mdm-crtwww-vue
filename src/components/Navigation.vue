@@ -41,7 +41,7 @@
         <li><a  @click="goRoute('/alerts')" :href="'/alerts'" class="nav-link" :class="{ 'selected': this.$store.state.a.alertsLinkActive  }" exact>ALERTS</a></li>
         <li><a @click="goRoute('/comments')" :href="'/comments'" class="nav-link" :class="{'selected': this.$store.state.a.commentsLinkActive}" >COMMENTS</a></li>
         <li><a @click="goRoute('/gallery/video')" :href="'/gallery/video'" class="nav-link" :class="{'selected': this.$store.state.a.galleryLinkActive}" >GALLERY</a></li>
-        <li><a @click="goRoute('/live/wide/tiles')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='Live-A'}" :href="'/live/wide/tiles'" >LIVE-A</a></li>
+        <li><a @click="goRoute('/live')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='Live-A'}" :href="'/live'" >LIVE-A</a></li>
         <li><a @click="goRoute('/live/wide/list')" class="nav-link" :class="{selected: this.$store.state.a.pageSelected=='Live-B'}" :href="'/live/wide/list'" >LIVE-B</a></li>
         <li><a @click="goRoute('/logs')" :href="'/logs'" class="nav-link" :class="{ 'selected': this.$store.state.a.logsLinkActive }">LOGS</a></li>
         <li><a :href="urlWebcam" class="nav-link">WEBCAM</a></li>
@@ -83,6 +83,7 @@
                   <LogsSubMenu v-show="this.$store.state.a.logsLinkActive  && mobileNav" :class="{'navigation2': mobileNav}" @click="toggleMobileNav"></LogsSubMenu>
                 </transition>
             </li>
+            <li><a :href="urlWebcam" class="nav-link">WEBCAM</a></li>
           </ul> 
         </div>
       </transition>
