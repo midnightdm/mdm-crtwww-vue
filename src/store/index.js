@@ -239,6 +239,9 @@ function updateVesselHistory(dat, region) {
     //Create array from vesselPassage data  
     case "clinton": {
       waypoints = {
+        m545  : [  ],
+        m540  : [  ],
+        m535  : [  ],
         m530  : [  ],
         alpha : [  ],
         bravo : [  ],
@@ -255,6 +258,27 @@ function updateVesselHistory(dat, region) {
         events = dat.vesselPassages[objKey].passageEvents
         titleTS = null
         //Use first found TS for titleTS
+        evtKey = 'm545'+hd+ht
+        if(evtKey in events) {
+          dat.vesselPassages[objKey].passageMarkerM545TS=events[evtKey]
+          titleTS = events[evtKey]
+        } else {
+          dat.vesselPassages[objKey].passageMarkerM545TS="---"
+        }
+        evtKey = 'm540'+hd+ht
+        if(evtKey in events) {
+          dat.vesselPassages[objKey].passageMarkerM540TS=events[evtKey]
+          titleTS = events[evtKey]
+        } else {
+          dat.vesselPassages[objKey].passageMarkerM540TS="---"
+        }
+        evtKey = 'm535'+hd+ht
+        if(evtKey in events) {
+          dat.vesselPassages[objKey].passageMarkerM535TS=events[evtKey]
+          titleTS = events[evtKey]
+        } else {
+          dat.vesselPassages[objKey].passageMarkerM535TS="---"
+        }
         evtKey = 'm530'+hd+ht
         if(evtKey in events) {
           dat.vesselPassages[objKey].passageMarkerM530TS=events[evtKey]
@@ -353,6 +377,20 @@ function updateVesselHistory(dat, region) {
       dateArr.sort((a,b) => parseInt(a.passageTitleTS) > parseInt(b.passageTitleTS) ? -1 : 1);
       for(i=0; i<dateArr.length; i++) {
         dir = dateArr[i].passageDirection=="upriver" ? "up" : "down";
+        waypoints.m545[i] = {
+            titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
+            date: dateArr[i].passageMarkerM545TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM545TS)*1000),
+            dir: dir
+          };waypoints.m540[i] = {
+            titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
+            date: dateArr[i].passageMarkerM540TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM540TS)*1000),
+            dir: dir
+          };
+        waypoints.m535[i] = {
+            titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
+            date: dateArr[i].passageMarkerM535TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM535TS)*1000),
+            dir: dir
+          };
         waypoints.m530[i] = {
           titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
           date: dateArr[i].passageMarkerM530TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM530TS)*1000),
@@ -906,6 +944,9 @@ const moduleA = {
         vesselName: "Makameya",
         vesselOwner: "---",
         vesselPassages: { 
+          m545:    [{date: new Date()}],
+          m540:    [{date: new Date()}],
+          m535:    [{date: new Date()}],
           m530:    [{date: new Date()}],
           alpha:   [{date: new Date()}],
           bravo:   [{date: new Date()}], 
@@ -1856,6 +1897,9 @@ const moduleA = {
     getVesselName: state => state.historyCache.vesselName,
     getVesselUrl:  state => state.historyCache.vesselImageUrl,
     getVesselPassages: state => state.historyCache.vesselPassages,
+    getM545: state => state.historyCache.vesselPassages.m545,
+    getM540: state => state.historyCache.vesselPassages.m540,
+    getM535: state => state.historyCache.vesselPassages.m535,
     getM530: state => state.historyCache.vesselPassages.m530,
     getAlpha: state => state.historyCache.vesselPassages.alpha,
     getBravo: state => state.historyCache.vesselPassages.bravo,

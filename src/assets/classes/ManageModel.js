@@ -24,6 +24,65 @@ export default class ManageModel {
         { key: 'deltadp',  title: 'Delta Waypoint 3 S RR Bridge Downriver Passenger', description: 'Notification is sent when a passenger vessel passes a line 3 miles south of the Clinton railroad bridge traveling downriver.', image: 'images/select/sldr-delta.png'},
         { key: 'deltaua',  title: 'Delta Waypoint 3 S RR Bridge Upriver Any', description: 'Notification is sent when any transponder-equipped vessel passes a line 3 miles south of the Clinton railroad bridge traveling upriver.', image: 'images/select/slur-delta.png'},
         { key: 'deltaup',  title: 'Delta Waypoint 3 S RR Bridge Upriver Passenger', description: 'Notification is sent when a passenger vessel passes a line 3 miles south of the Clinton railroad bridge traveling upriver.', image: 'images/select/slur-delta.png'},
+
+        // { key: 'm489da', title: 'Marker 489 Downriver Any', description: '', image: 'images/select/sldr489.png' }, 
+        // { key: 'm489dp', title: 'Marker 489 Downriver Passenger', description: '', image: 'images/select/sldr489.png' },
+        // { key: 'm489ua', title: 'Marker 489 Upriver Any', description: '', image: 'images/select/slur489.png' },
+        // { key: 'm489up', title: 'Marker 489 Upriver Passenger', description: '', image: 'images/select/slur489.png' }
+        // { key: 'm490da', title: 'Marker 490 Downriver Any', description: '', image: 'images/select/sldr490.png' }, 
+        // { key: 'm490dp', title: 'Marker 490 Downriver Passenger', description: '', image: 'images/select/sldr490.png' },
+        // { key: 'm490ua', title: 'Marker 490 Upriver Any', description: '', image: 'images/select/slur490.png' },
+        // { key: 'm490up', title: 'Marker 490 Upriver Passenger', description: '', image: 'images/select/slur490.png' }
+        // { key: 'm491da', title: 'Marker 491 Downriver Any', description: '', image: 'images/select/sldr491.png' }, 
+        // { key: 'm491dp', title: 'Marker 491 Downriver Passenger', description: '', image: 'images/select/sldr491.png' },
+        // { key: 'm491ua', title: 'Marker 491 Upriver Any', description: '', image: 'images/select/slur491.png' },
+        // { key: 'm491up', title: 'Marker 491 Upriver Passenger', description: '', image: 'images/select/slur491.png' }
+        // { key: 'm492da', title: 'Marker 492 Downriver Any', description: '', image: 'images/select/sldr492.png' }, 
+        // { key: 'm492dp', title: 'Marker 492 Downriver Passenger', description: '', image: 'images/select/sldr492.png' },
+        // { key: 'm492ua', title: 'Marker 492 Upriver Any', description: '', image: 'images/select/slur492.png' },
+        // { key: 'm492up', title: 'Marker 492 Upriver Passenger', description: '', image: 'images/select/slur492.png' }
+        // { key: 'm493da', title: 'Marker 493 Downriver Any', description: '', image: 'images/select/sldr493.png' }, 
+        // { key: 'm493dp', title: 'Marker 493 Downriver Passenger', description: '', image: 'images/select/sldr493.png' },
+        // { key: 'm493ua', title: 'Marker 493 Upriver Any', description: '', image: 'images/select/slur493.png' },
+        // { key: 'm493up', title: 'Marker 493 Upriver Passenger', description: '', image: 'images/select/slur493.png' }
+        // { key: 'm494da', title: 'Marker 494 Downriver Any', description: '', image: 'images/select/sldr494.png' }, 
+        // { key: 'm494dp', title: 'Marker 494 Downriver Passenger', description: '', image: 'images/select/sldr494.png' },
+        // { key: 'm494ua', title: 'Marker 494 Upriver Any', description: '', image: 'images/select/slur494.png' },
+        // { key: 'm494up', title: 'Marker 494 Upriver Passenger', description: '', image: 'images/select/slur494.png' }
+        // { key: 'm495da', title: 'Marker 495 Downriver Any', description: '', image: 'images/select/sldr495.png' }, 
+        // { key: 'm495dp', title: 'Marker 495 Downriver Passenger', description: '', image: 'images/select/sldr495.png' },
+        // { key: 'm495ua', title: 'Marker 495 Upriver Any', description: '', image: 'images/select/slur495.png' },
+        // { key: 'm495up', title: 'Marker 495 Upriver Passenger', description: '', image: 'images/select/slur495.png' }        
+        // { key: 'm496da', title: 'Marker 496 Downriver Any', description: '', image: 'images/select/sldr496.png' }, 
+        // { key: 'm496dp', title: 'Marker 496 Downriver Passenger', description: '', image: 'images/select/sldr496.png' },
+        // { key: 'm496ua', title: 'Marker 496 Upriver Any', description: '', image: 'images/select/slur496.png' },
+        // { key: 'm496up', title: 'Marker 496 Upriver Passenger', description: '', image: 'images/select/slur496.png' }
+        // { key: 'm497da', title: 'Marker 497 Downriver Any', description: '', image: 'images/select/sldr497.png' }, 
+        // { key: 'm497dp', title: 'Marker 497 Downriver Passenger', description: '', image: 'images/select/sldr497.png' },
+        // { key: 'm497ua', title: 'Marker 497 Upriver Any', description: '', image: 'images/select/slur497.png' },
+        // { key: 'm497up', title: 'Marker 497 Upriver Passenger', description: '', image: 'images/select/slur497.png' }
+        // { key: 'm498da', title: 'Marker 498 Downriver Any', description: '', image: 'images/select/sldr498.png' }, 
+        // { key: 'm498dp', title: 'Marker 498 Downriver Passenger', description: '', image: 'images/select/sldr498.png' },
+        // { key: 'm498ua', title: 'Marker 498 Upriver Any', description: '', image: 'images/select/slur498.png' },
+        // { key: 'm498up', title: 'Marker 498 Upriver Passenger', description: '', image: 'images/select/slur498.png' }
+        // { key: 'm499da', title: 'Marker 499 Downriver Any', description: '', image: 'images/select/sldr499.png' }, 
+        // { key: 'm499dp', title: 'Marker 499 Downriver Passenger', description: '', image: 'images/select/sldr499.png' },
+        // { key: 'm499ua', title: 'Marker 499 Upriver Any', description: '', image: 'images/select/slur499.png' },
+        // { key: 'm499up', title: 'Marker 499 Upriver Passenger', description: '', image: 'images/select/slur499.png' }
+        // { key: 'm500da', title: 'Marker 500 Downriver Any', description: '', image: 'images/select/sldr500.png' }
+        // { key: 'm500dp', title: 'Marker 500 Downriver Passenger', description: '', image: 'images/select/sldr500.png' },
+        // { key: 'm500ua', title: 'Marker 500 Upriver Any', description: '', image: 'images/select/slur500.png' },
+        // { key: 'm500up', title: 'Marker 500 Upriver Passenger', description: '', image: 'images/select/slur500.png' }
+        // { key: 'm501da', title: 'Marker 501 Downriver Any', description: '', image: 'images/select/sldr501.png' }, 
+        // { key: 'm501dp', title: 'Marker 501 Downriver Passenger', description: '', image: 'images/select/sldr501.png' },
+        // { key: 'm501ua', title: 'Marker 501 Upriver Any', description: '', image: 'images/select/slur501.png' },
+        // { key: 'm501up', title: 'Marker 501 Upriver Passenger', description: '', image: 'images/select/slur501.png' }        
+        // { key: 'm502da', title: 'Marker 502 Downriver Any', description: '', image: 'images/select/sldr502.png' }, 
+        // { key: 'm502dp', title: 'Marker 502 Downriver Passenger', description: '', image: 'images/select/sldr502.png' },
+        // { key: 'm502ua', title: 'Marker 502 Upriver Any', description: '', image: 'images/select/slur502.png' },
+        // { key: 'm502up', title: 'Marker 502 Upriver Passenger', description: '', image: 'images/select/slur502.png' }        
+
+        
         { key: 'm503da', title: 'Marker 503 Downriver Any', description: '', image: 'images/select/sldr503.png' },
         { key: 'm503dp', title: 'Marker 503 Downriver Passenger', description: '', image: 'images/select/sldr503.png' },
         { key: 'm503ua', title: 'Marker 503 Upriver Any', description: '', image: 'images/select/slur503.png' },
@@ -176,6 +235,59 @@ export default class ManageModel {
         { key: 'm539dp', title: 'Marker 539 Downriver Passenger', description: '', image: 'images/select/sldr539.png' },
         { key: 'm539ua', title: 'Marker 539 Upriver Any', description: '', image: 'images/select/slur539.png' },
         { key: 'm539up', title: 'Marker 539 Upriver Passenger', description: '', image: 'images/select/slur539.png' }
+
+        // { key: 'm540dp', title: 'Marker 540 Downriver Passenger', description: '', image: 'images/select/sldr540.png' },
+        // { key: 'm540ua', title: 'Marker 540 Upriver Any', description: '', image: 'images/select/slur540.png' },
+        // { key: 'm540up', title: 'Marker 540 Upriver Passenger', description: '', image: 'images/select/slur540.png' }
+        // { key: 'm541da', title: 'Marker 541 Downriver Any', description: '', image: 'images/select/sldr541.png' }, 
+        // { key: 'm541dp', title: 'Marker 541 Downriver Passenger', description: '', image: 'images/select/sldr541.png' },
+        // { key: 'm541ua', title: 'Marker 541 Upriver Any', description: '', image: 'images/select/slur541.png' },
+        // { key: 'm541up', title: 'Marker 541 Upriver Passenger', description: '', image: 'images/select/slur541.png' }
+        // { key: 'm542da', title: 'Marker 542 Downriver Any', description: '', image: 'images/select/sldr542.png' }, 
+        // { key: 'm542dp', title: 'Marker 542 Downriver Passenger', description: '', image: 'images/select/sldr542.png' },
+        // { key: 'm542ua', title: 'Marker 542 Upriver Any', description: '', image: 'images/select/slur542.png' },
+        // { key: 'm542up', title: 'Marker 542 Upriver Passenger', description: '', image: 'images/select/slur542.png' }
+        // { key: 'm543da', title: 'Marker 543 Downriver Any', description: '', image: 'images/select/sldr543.png' }, 
+        // { key: 'm543dp', title: 'Marker 543 Downriver Passenger', description: '', image: 'images/select/sldr543.png' },
+        // { key: 'm543ua', title: 'Marker 543 Upriver Any', description: '', image: 'images/select/slur543.png' },
+        // { key: 'm543up', title: 'Marker 543 Upriver Passenger', description: '', image: 'images/select/slur543.png' }
+        // { key: 'm544da', title: 'Marker 544 Downriver Any', description: '', image: 'images/select/sldr544.png' }, 
+        // { key: 'm544dp', title: 'Marker 544 Downriver Passenger', description: '', image: 'images/select/sldr544.png' },
+        // { key: 'm544ua', title: 'Marker 544 Upriver Any', description: '', image: 'images/select/slur544.png' },
+        // { key: 'm544up', title: 'Marker 544 Upriver Passenger', description: '', image: 'images/select/slur544.png' }
+        // { key: 'm545da', title: 'Marker 545 Downriver Any', description: '', image: 'images/select/sldr545.png' }, 
+        // { key: 'm545dp', title: 'Marker 545 Downriver Passenger', description: '', image: 'images/select/sldr545.png' },
+        // { key: 'm545ua', title: 'Marker 545 Upriver Any', description: '', image: 'images/select/slur545.png' },
+        // { key: 'm545up', title: 'Marker 545 Upriver Passenger', description: '', image: 'images/select/slur545.png' }
+        // { key: 'm546da', title: 'Marker 546 Downriver Any', description: '', image: 'images/select/sldr546.png' }, 
+        // { key: 'm546dp', title: 'Marker 546 Downriver Passenger', description: '', image: 'images/select/sldr546.png' },
+        // { key: 'm546ua', title: 'Marker 546 Upriver Any', description: '', image: 'images/select/slur546.png' },
+        // { key: 'm546up', title: 'Marker 546 Upriver Passenger', description: '', image: 'images/select/slur546.png' }
+        // { key: 'm547da', title: 'Marker 547 Downriver Any', description: '', image: 'images/select/sldr547.png' }, 
+        // { key: 'm547dp', title: 'Marker 547 Downriver Passenger', description: '', image: 'images/select/sldr547.png' },
+        // { key: 'm547ua', title: 'Marker 547 Upriver Any', description: '', image: 'images/select/slur547.png' },
+        // { key: 'm547up', title: 'Marker 547 Upriver Passenger', description: '', image: 'images/select/slur547.png' }
+        // { key: 'm548da', title: 'Marker 548 Downriver Any', description: '', image: 'images/select/sldr548.png' }, 
+        // { key: 'm548dp', title: 'Marker 548 Downriver Passenger', description: '', image: 'images/select/sldr548.png' },
+        // { key: 'm548ua', title: 'Marker 548 Upriver Any', description: '', image: 'images/select/slur548.png' },
+        // { key: 'm548up', title: 'Marker 548 Upriver Passenger', description: '', image: 'images/select/slur548.png' }
+        // { key: 'm549da', title: 'Marker 549 Downriver Any', description: '', image: 'images/select/sldr549.png' }, 
+        // { key: 'm549dp', title: 'Marker 549 Downriver Passenger', description: '', image: 'images/select/sldr549.png' },
+        // { key: 'm549ua', title: 'Marker 549 Upriver Any', description: '', image: 'images/select/slur549.png' },
+        // { key: 'm549up', title: 'Marker 549 Upriver Passenger', description: '', image: 'images/select/slur549.png' }
+        // { key: 'm550da', title: 'Marker 550 Downriver Any', description: '', image: 'images/select/sldr550.png' }, 
+        // { key: 'm550dp', title: 'Marker 550 Downriver Passenger', description: '', image: 'images/select/sldr550.png' },
+        // { key: 'm550ua', title: 'Marker 550 Upriver Any', description: '', image: 'images/select/slur550.png' },
+        // { key: 'm550up', title: 'Marker 550 Upriver Passenger', description: '', image: 'images/select/slur550.png' }
+        // { key: 'm551da', title: 'Marker 551 Downriver Any', description: '', image: 'images/select/sldr551.png' }, 
+        // { key: 'm551dp', title: 'Marker 551 Downriver Passenger', description: '', image: 'images/select/sldr551.png' },
+        // { key: 'm551ua', title: 'Marker 551 Upriver Any', description: '', image: 'images/select/slur551.png' },
+        // { key: 'm551up', title: 'Marker 551 Upriver Passenger', description: '', image: 'images/select/slur551.png' }
+        // { key: 'm552da', title: 'Marker 552 Downriver Any', description: '', image: 'images/select/sldr552.png' }, 
+        // { key: 'm552dp', title: 'Marker 552 Downriver Passenger', description: '', image: 'images/select/sldr552.png' },
+        // { key: 'm552ua', title: 'Marker 552 Upriver Any', description: '', image: 'images/select/slur552.png' },
+        // { key: 'm552up', title: 'Marker 552 Upriver Passenger', description: '', image: 'images/select/slur552.png' }
+
       ];
       self.getSelection  = async function (){
         let qs = document.querySelector('#sub-list-avail');

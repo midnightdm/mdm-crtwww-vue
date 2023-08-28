@@ -10,7 +10,7 @@
     <table>
       <tr>
         <th id="waypoint" class="labelColumn first">Waypoint</th>
-        <td class="dataHolder" rowspan="9">
+        <td class="dataHolder" rowspan="12">
           <div class="table-container">
             <table class="dataColumn">
               <tr>
@@ -18,6 +18,42 @@
                   <span>{{ alpha.titleTS.toLocaleDateString() }}</span>
                 </th>
               </tr>
+
+              <tr>
+                <template v-for='m545 in this.$store.getters.getM545' :key='m545.date'>    
+                <td>
+                  <img v-if='m545.dir == "up"' class="dir-img" :src="this.base+'/images/uparr.png'" alt="Up river indicator is present." height="25" />
+                  <img v-if='m545.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
+                </td>
+                <td class="time" v-if="m545.date=='---'"> --- </td>
+                <td class="time" v-else> {{ m545.date.toLocaleTimeString() }} </td>
+                </template> 
+              </tr>
+              <tr>
+                <template v-for='m540 in this.$store.getters.getM540' :key='m540.date'>    
+                <td>
+                  <img v-if='m540.dir == "up"' class="dir-img" :src="this.base+'/images/uparr.png'" alt="Up river indicator is present." height="25" />
+                  <img v-if='m540.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
+                </td>
+                <td class="time" v-if="m540.date=='---'"> --- </td>
+                <td class="time" v-else> {{ m540.date.toLocaleTimeString() }} </td>
+                </template> 
+              </tr>
+              <tr>
+                <template v-for='m535 in this.$store.getters.getM535' :key='m535.date'>    
+                <td>
+                  <img v-if='m535.dir == "up"' class="dir-img" :src="this.base+'/images/uparr.png'" alt="Up river indicator is present." height="25" />
+                  <img v-if='m535.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
+                </td>
+                <td class="time" v-if="m535.date=='---'"> --- </td>
+                <td class="time" v-else> {{ m535.date.toLocaleTimeString() }} </td>
+                </template> 
+              </tr>
+
+
+
+
+
               <tr>
                 <template v-for='m530 in this.$store.getters.getM530' :key='m530.date'>    
                 <td>
@@ -94,6 +130,16 @@
           </div>
         </td>
       </tr>
+
+      <tr>
+        <th class="labelColumn">m545 Ka-Ching Global Sourcing</th>
+      </tr> 
+      <tr>
+        <th class="labelColumn">m540 5 Mi Abv Sabula DB</th>
+      </tr> 
+      <tr>
+        <th class="labelColumn">m535 Sabula Drawbridge</th>
+      </tr> 
       <tr>
         <th class="labelColumn">m530 7.5 Mi Abv Lock 13</th>
       </tr> 

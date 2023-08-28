@@ -13,7 +13,7 @@
             <li  class="listMode" v-for="(live, idxa) in store.state.a.liveScans" :key="live.id">
               <div class="slideData">
               <div class="list-wrap">
-                <h4 class="map-label">{{live.mapLabel}}</h4>
+                <h4 class="map-label" :class="{'type-watched': live.vesselWatchOn}">{{live.mapLabel}}</h4>
                 <h4 class="tile-title">{{live.name}}</h4> 
                 <div class="dir-container">
                   <img class="dir-img" :src="live.dirImg"/>
@@ -533,6 +533,9 @@ h1.noslide {
     border: 2px solid black;  
 }
 
+h4.map-label.type-watched {
+  background: rgba(255, 255, 0, 0.82);
+}
 
 /* Inside the slide  */
 .slideData {

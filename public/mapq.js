@@ -739,9 +739,7 @@ function initLiveScan() {
       });
       
       let response = await fetch(liveScanModel.fetchUrl,  {
-        method: 'GET',
         headers: myHeaders,
-        mode: 'no-cors'
       });
       if(response.status===200) {
         let data = await response.json();
@@ -779,14 +777,8 @@ function initLiveScan() {
               //Store new vessels quantity
               liveScanModel.numVessels = liveScanModel.liveScans.length;              
             }
+          } 
         });
-        
-        //Write to page if viewList is active
-        // if(liveScanModel.selectedView.view=="list") {
-        //   liveScanModel.outputAllVessels();
-        // } else {
-        //  liveScanModel.outputDetail(liveScanModel.selectedView.idx);
-        //}
 
       } 
     }

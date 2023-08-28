@@ -81,11 +81,12 @@ function LiveScanModel() {
     o.segment = dat.liveSegment;
     o.imageUrl = dat.imageUrl;
     o.type   = dat.type;
+    o.vesselWatchOn = dat.vesselWatchOn;
     //o.otherDataLabel = "od"+dat.liveVesselID;
         
     //FOR SHIP ICON MOVEMENT
     let coords = self.getShipSpriteCoords(o.course), icon;
-    if(dat.type=="Passenger") {
+    if(dat.vesselWatchOn) {
       icon = {
         url: self.passSpriteUrl,
         origin: { x: coords[0], y: coords[1] }, 
@@ -739,12 +740,11 @@ function initLiveScan() {
       });
       
       let response = await fetch(liveScanModel.fetchUrl,  {
-        method: 'GET',
         headers: myHeaders,
-        mode: 'no-cors'
       });
       if(response.status===200) {
         let data = await response.json();
+
         let key, obj, len;
         
        
@@ -767,6 +767,7 @@ function initLiveScan() {
           }
           //Find & Update
           else {
+            
             //Remove object if no longer in region
             if(dat.liveRegion != liveScanModel.region) {
                 liveScanModel.liveScans.splice(key, 1);
