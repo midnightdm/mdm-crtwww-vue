@@ -517,6 +517,10 @@ function LiveScanModel() {
     //Contingency for null lat/lng
     let lat = obj?.lat.toFixed(7) || ""
     let lng = obj?.lng.toFixed(7) || ""
+    let watched = ""
+    if(obj.vesselWatchOn) {
+        watched = " type-watched" 
+    }
     
     //let lat = obj.lat ==="" ? "" : obj.lat.toFixed(7);
     //let lng = obj.lng ==="" ? "" : obj.lng.toFixed(7);
@@ -524,7 +528,7 @@ function LiveScanModel() {
     `<ul>
         <li>
         <div class="list-wrap">
-          <h4 class="map-label">${obj.mapLabel}</h4>
+          <h4 class="map-label ${watched}">${obj.mapLabel}</h4>
           <button onClick="liveScanModel.goToPage('list')">LIST</button>
           <h4 class="tile-title">${obj.name}</h4> 
           <div class="dir-container">
@@ -557,11 +561,14 @@ function LiveScanModel() {
   self.outputAllVessels = async function() {
     self.mapDiv.classList.remove("active");
     self.vessList.classList.add("active");
-    let allVesselsOutput = "", i, j;
+    let allVesselsOutput = "", i, j, watched = "";
     //Order vessels by river segment
     let segments = [ [], [], [], [], [] ];
     for(let vessel in self.liveScans) {
       let obj = self.liveScans[vessel];
+      if(obj.vesselWatchOn) {
+        watched = " type-watched" 
+      }
       obj.spd = "";
       if(obj.dir !=="undetermined") {
         obj.spd = Math.round(obj.speed);
@@ -590,7 +597,7 @@ function LiveScanModel() {
           allVesselsOutput+= 
           `<li>
             <div class="list-wrap">
-              <h4 class="map-label">${obj.mapLabel}</h4>
+              <h4 class="map-label ${watched}">${obj.mapLabel}</h4>
               <button onClick="liveScanModel.goToPage('detail',${obj.key})">MAP</button> 
               <h4 class="tile-title">${obj.name}</h4> 
               <div class="dir-container">
