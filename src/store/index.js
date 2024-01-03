@@ -1230,18 +1230,8 @@ const moduleA = {
         if(state.region==null) {
           commit('setRegion', process.env.VUE_APP_REGION)
         }
-        let collection
-        switch(state.region) {
-          case "clinton": {
-            collection = 'Alertpublish';
-            break;
-          }
-          case "qc": {
-            collection = 'AlertpublishQC';
-            break;
-          }
-        }
-        const apubSnapshot = onSnapshot(doc(db, collection, "all"), (querySnapshot) => {
+
+        const apubSnapshot = onSnapshot(doc(db, "Alertpublish", "all"), (querySnapshot) => {
           let tempAlertsAll = []
           let dataSet = querySnapshot.data()
           let i = 0
