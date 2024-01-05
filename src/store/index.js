@@ -1261,17 +1261,17 @@ const moduleA = {
         if(state.region==null) {
           commit('setRegion', process.env.VUE_APP_REGION)
         }
-        let collection
-        switch(state.region) {
-          case "clinton": {
-            collection = 'Alertpublish';
-            break;
-          }
-          case "qc": {
-            collection = 'AlertpublishQC';
-            break;
-          }
-        }
+        let collection = 'Alertpublish'
+        // switch(state.region) {
+        //   case "clinton": {
+        //     collection = 'Alertpublish';
+        //     break;
+        //   }
+        //   case "qc": {
+        //     collection = 'AlertpublishQC';
+        //     break;
+        //   }
+        // }
         const apubSnapshot = onSnapshot(doc(db, collection, "passenger"), (querySnapshot) => {
           let tempAlertsPassenger = []
           let dataSet = querySnapshot.data()
@@ -1307,20 +1307,17 @@ const moduleA = {
           //Func run on each data change
           let dataSet = snap.data()
           let apubID, vpubID, acollection, vcollection, lsLenField
+          apubID = parseInt(dataSet.lastApubID)
+          vpubID = parseInt(dataSet.lastVpubID)
+          acollection = 'Alertpublish'
+          vcollection = 'Voicepublish'
+          
           switch(state.region) {
             case "clinton": {
-              apubID = parseInt(dataSet.lastApubID)
-              vpubID = parseInt(dataSet.lastVpubID)
-              acollection = 'Alertpublish'
-              vcollection = 'Voicepublish'
               lsLenField  = 'liveScanLength'
               break
             }
             case "qc": {
-              apubID = parseInt(dataSet.lastQcApubID)
-              vpubID = parseInt(dataSet.lastQcVputID)
-              acollection = 'AlertpublishQC'
-              vcollection = 'VoicepublishQC'
               lsLenField  = 'liveScanLengthQC'
               break
             }
@@ -1348,7 +1345,7 @@ const moduleA = {
               let dt = new Date()
               let ts = Math.round(dt.getTime()/1000)
               let diff = ts - state.liveScanModel.waypoint.apubTS
-              if(apubID > state.liveScanModel.prevApubID && diff < 300) {
+              if(apubID > state.liveScanModel.prevApubID && diff < 300 && state.liveScanModel.waypoint.apubRegion==state.region) {
                 state.playApub = true
               }
             }
@@ -1361,7 +1358,7 @@ const moduleA = {
               let dt = new Date()
               let ts = Math.round(dt.getTime()/1000)
               let diff = ts - state.liveScanModel.announcement.vpubTS
-              if(vpubID > state.liveScanModel.prevVpubID && diff < 300) {
+              if(vpubID > state.liveScanModel.prevVpubID && diff < 300 && state.liveScanModel.waypoint.vpubRegion==state.region) {
                 state.playVpub = true
               }
             }
@@ -2052,17 +2049,8 @@ const moduleB = {
 
     async fetchAdminAnnc({ commit, state }) {
       console.log("fetchAdminAnnc()")
-    
-      if(state.adminAnncQC != false) {
-        return
-      }
       const anncSnapshot = onSnapshot(doc(db, 'Announcements', 'dashboard'), (item) => {
         state.adminAnnc = item.data()
-      })
-      
-      
-      const anncSnapshotQC = onSnapshot(doc(db, 'AnnouncementsQC', 'dashboard'), (item) => {
-        state.adminAnncQC = item.data()
       })
     },
 
