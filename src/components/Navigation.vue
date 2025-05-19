@@ -95,7 +95,16 @@
 
 import { useRouter } from 'vue-router'
 //import {userAuthState} from '@/store/firebaseApp.js'
+let keysPressed = {};
 
+// function playWaypoint(wasBtn=false) {
+//       let audio = new Audio(store.state.a.liveScanModel.waypoint.apubVoiceUrl);
+//       audio.loop = false;
+//       audio.play();
+//       if(!wasBtn) { 
+//         store.dispatch('togglePlayApub', false)
+//       } 
+//     }
 
 export default {
   name: 'Navigation',
@@ -145,7 +154,23 @@ export default {
           }
           this.mobile = false
           this.mobileNav = false          
-      },   
+      }, 
+      playWaypoint(wasBtn=false) {
+        let audio = new Audio(this.$store.state.a.liveScanModel.waypoint.apubVoiceUrl);
+        audio.loop = false;
+        audio.play();
+        if(!wasBtn) { 
+            this.$store.dispatch('togglePlayApub', false)
+        } 
+      },
+      playAnnouncement(wasBtn=false) {
+        let audio = new Audio(this.$store.state.a.liveScanModel.announcement.vpubVoiceUrl);
+        audio.loop = false;
+        audio.play(); 
+        if(!wasBtn) { 
+            this.$store.dispatch('togglePlayVpub', false)
+        }
+      },  
       goRoute(path) {
           this.router.push(path)
       },
@@ -210,7 +235,22 @@ export default {
         })
         this.checkScreen()
         
+        //Keypress event listeners
+        document.addEventListener('keydown', (event) => {
+            keysPressed[event.key] = true;
+            if (keysPressed['Control'] && keysPressed['Shift'] && event.code == "Digit1") {
+                console.log("keypress playWaypoint", event.code)
+                this.playWaypoint(true);
+            }
+            if (keysPressed['Control'] && keysPressed['Shift'] && event.code == 'Digit2') {
+                console.log("keypress playAnnouncement", event.code)
+                this.playAnnouncement(true);
+            }
+        });
 
+        document.addEventListener('keyup', (event) => {
+            keysPressed[event.key] = false;
+        });
     }
 }
 </script>

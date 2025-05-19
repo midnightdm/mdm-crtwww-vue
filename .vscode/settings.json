@@ -1,4 +1,13 @@
 {
   "editor.bracketPairColorization.enabled": true,
-  "editor.guides.bracketPairs": "active"
+"editor.guides.bracketPairs": "active",
+"cSpell.words": [
+   "apub",
+   "callsign",
+   "firestore",
+   "fontawesome",
+   "lastmonth",
+   "qmark",
+   "timeago"
+]
 }

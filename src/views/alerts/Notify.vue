@@ -1,11 +1,12 @@
 <template>
-  <main id="Manage" class="text-center">
+  <main id="Notify" class="text-center">
     <section>
-      <h1>MANAGE NOTIFICATIONS</h1>
-      <p>On this browser push notifications are <w-tag class="mr4" bg-color="yellow" color="primary" round>
-  {{statusTxt}}</w-tag></p>
-      <p class="btnWrapper"><button v-if="isSubscribed" @click="unsubscribeUser()" class="pushtoglbtn" v-bind:disabled='pbIsDisabled'>{{pbLabel}}</button>
-      <button  v-else @click="subscribeUser()"  class="pushtoglbtn" v-bind:disabled='pbIsDisabled'>{{pbLabel}}</button>&nbsp; 
+      <h1>APPROACH NOTICE POINTS</h1>
+      <p></p>
+      <p class="btnWrapper">
+        On this browser push notifications are <w-tag class="mr4" bg-color="yellow" color="primary" round>{{statusTxt}}</w-tag>
+        <button v-if="isSubscribed" @click="unsubscribeUser()" class="pushtoglbtn" v-bind:disabled='pbIsDisabled'>{{pbLabel}}</button>
+        <button  v-else @click="subscribeUser()"  class="pushtoglbtn" v-bind:disabled='pbIsDisabled'>{{pbLabel}}</button>&nbsp; 
       </p>
   
     <div class="boxa">

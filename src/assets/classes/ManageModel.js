@@ -311,7 +311,7 @@ export default class ManageModel {
           sel.description = "Notification is sent when " + tStr + "vessel reaches the " + dirLine + "line of the river zone designated by mile marker " + mile + " while traveling " + dirEnd;
         }
         self.subListSelection = sel;
-        console.log("subListSelection= ",sel.key);
+        console.log("subListSelection =",sel.key);
       };
     }
   }

@@ -601,6 +601,7 @@ export default {
       window.addEventListener('resize', checkScreen)
 
       //Keypress event listeners
+      /* DISABLED 1/4/24 to stop duplicate with LiveMobile listener
       document.addEventListener('keydown', (event) => {
         keysPressed[event.key] = true;
         if (keysPressed['Control'] && keysPressed['Shift'] && event.code == "Digit1") {
@@ -612,10 +613,14 @@ export default {
           playAnnouncement(true);
         }
       });
+      
+
 
       document.addEventListener('keyup', (event) => {
         keysPressed[event.key] = false;
       });
+
+      */
 
       checkScreen()
       store.dispatch("initLiveScan", store)

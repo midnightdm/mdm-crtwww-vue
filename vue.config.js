@@ -1,4 +1,6 @@
 //vue.config.js
+const webpack = require('webpack');
+
 module.exports = {
     configureWebpack: {
       mode: "production",
@@ -8,7 +10,15 @@ module.exports = {
             minSize: 10000,
             maxSize: 250000,
         }
-      }      
+      },
+      plugins: [
+        // Add the DefinePlugin with Vue feature flags
+        new webpack.DefinePlugin({
+          __VUE_OPTIONS_API__: 'true',
+          __VUE_PROD_DEVTOOLS__: 'false',
+          __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false'
+        })
+      ]      
     },
     chainWebpack: config => {
         config

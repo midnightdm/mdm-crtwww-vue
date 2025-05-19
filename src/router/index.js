@@ -37,18 +37,20 @@ const AdminWebcam = () => import('@/views/admin/AdminWebcam.vue')
 
 const Subscriptions = () => import('@/views/admin/Subscriptions.vue')
 
+const AlertsDual = () => import('@/views/alerts/AlertsDual.vue')
 //import AlertsAll from '../views/alerts/AlertsAll.vue'
-const AlertsAll = () => import('@/views/alerts/AlertsAll.vue')
+//const AlertsAll = () => import('@/views/alerts/AlertsAll.vue')
 //import AlertsDemo from '../views/alerts/AlertsDemo.vue'
-const AlertsDemo = () => import('@/views/alerts/AlertsDemo.vue')
+//const AlertsDemo = () => import('@/views/alerts/AlertsDemo.vue')
 //import AlertsPass from '../views/alerts/AlertsPass.vue'
-const AlertsPass = () => import('@/views/alerts/AlertsPass.vue')
+//const AlertsPass = () => import('@/views/alerts/AlertsPass.vue')
 //Import AlertsRss from '../views/alerts/AlertsRss.vue'
 const AlertsRss = () => import('@/views/alerts/AlertsRss.vue')
 //import AlertsWatch from '../views/alerts/AlertsWatch'
 const AlertsWatch = () => import('@/views/alerts/AlertsWatch.vue')
 //import Manage from '../views/alerts/Manage.vue'
 const Manage = () => import('@/views/alerts/Manage.vue')
+const Notify = () => import('@/views/alerts/Notify.vue')
 //import Waypoint from '../views/alerts/Waypoint.vue'
 const Waypoint = () => import('@/views/alerts/Waypoint.vue')
 
@@ -198,25 +200,31 @@ const routes = [
     
   },
 
+  
   {
-    path: '/alerts/all',
-    name: 'AlertsAll',
-    component: AlertsAll
+    path: '/alerts/dual',
+    name: 'AlertsDual',
+    component: AlertsDual
   },
+//   {
+//     path: '/alerts/all',
+//     name: 'AlertsAll',
+//     component: AlertsAll
+//   },
   {
     path: '/alerts',
-    redirect: '/alerts/all'
+    redirect: '/alerts/dual'
   },
-  {
-    path: '/alerts/demo',
-    name: 'AlertsDemo',
-    component: AlertsDemo
-  },
-  {
-    path: '/alerts/passenger',
-    name: 'AlertsPass',
-    component: AlertsPass
-  },
+//   {
+//     path: '/alerts/demo',
+//     name: 'AlertsDemo',
+//     component: AlertsDemo
+//   },
+//   {
+//     path: '/alerts/passenger',
+//     name: 'AlertsPass',
+//     component: AlertsPass
+//   },
   {
     path: '/alerts/watchlist',
     name: 'AlertsWatch',
@@ -226,6 +234,11 @@ const routes = [
     path: '/alerts/manage',
     name: 'Manage',
     component: Manage,
+  },
+  {
+    path: '/alerts/notify',
+    name: 'Notify',
+    component: Notify,
   },
   {
     path: '/alerts/waypoint/:apubID',

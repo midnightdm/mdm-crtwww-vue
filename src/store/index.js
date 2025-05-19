@@ -214,359 +214,141 @@ class LiveScan {
  */
 
 function updateVesselHistory(dat, region) {
-  let o, reg=region       
-  o = new Vessel();
-  //o.localIndex = logsPageModel.vesselList().length;      
-  o.vesselRecordAddedTS = dat.vesselRecordAddedTS
-  o.vesselID = dat.vesselID
-  o.vesselName = dat.vesselName
-  o.vesselCallSign = dat.vesselCallSign
-  o.vesselType = dat.vesselType
-  o.vesselLength = dat.vesselLength
-  o.vesselWidth = dat.vesselWidth
-  o.vesselDraft = dat.vesselDraft
-  o.vesselHasImage = dat.vesselHasImage
-  o.vesselImageUrl = dat.vesselImageUrl
-  o.vesselOwner = dat.vesselOwner
-  o.vesselBuilt = dat.vesselBuilt
-  o.vesselWatchOn = dat.vesselWatchOn
-
-  let i, k, ht, hd, score, events, evtKey, objKey, dir, dateArr = [], waypoints, titleTS; 
+  console.log("updateVesselHistory - Raw data:", dat);
   
-  //First key string helper formed from any/passenger
-  ht = o.vesselType=="Passenger" ? "p" : "a"
-  switch(reg) {
-    //Create array from vesselPassage data  
-    case "clinton": {
-      waypoints = {
-        m545  : [  ],
-        m540  : [  ],
-        m535  : [  ],
-        m530  : [  ],
-        alpha : [  ],
-        bravo : [  ],
-        m520  : [  ],
-        charlie: [  ],
-        delta : [  ],
-        m510  : [  ]
-      };
-      for(objKey in dat.vesselPassages) {
-        score=0
-        //Second key string helper formed from upriver/downriver,
-        hd     = dat.vesselPassages[objKey].passageDirection=="upriver" ? "u" : "d";
-        //Sort passages by dated keys before putting into waypoints
-        events = dat.vesselPassages[objKey].passageEvents
-        titleTS = null
-        //Use first found TS for titleTS
-        evtKey = 'm545'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerM545TS=events[evtKey]
-          titleTS = events[evtKey]
-        } else {
-          dat.vesselPassages[objKey].passageMarkerM545TS="---"
-        }
-        evtKey = 'm540'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerM540TS=events[evtKey]
-          titleTS = events[evtKey]
-        } else {
-          dat.vesselPassages[objKey].passageMarkerM540TS="---"
-        }
-        evtKey = 'm535'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerM535TS=events[evtKey]
-          titleTS = events[evtKey]
-        } else {
-          dat.vesselPassages[objKey].passageMarkerM535TS="---"
-        }
-        evtKey = 'm530'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerM530TS=events[evtKey]
-          titleTS = events[evtKey]
-        } else {
-          dat.vesselPassages[objKey].passageMarkerM530TS="---"
-        }
-        if(dat.vesselPassages[objKey].passageMarkerAlphaTS===null) {
-          evtKey = 'alpha'+hd+ht
-          if(evtKey in events) {
-            dat.vesselPassages[objKey].passageMarkerAlphaTS=events[evtKey]
-            if(titleTS===null) {
-              titleTS=events[evtKey]
-            }
-          } else {
-            dat.vesselPassages[objKey].passageMarkerAlphaTS="---";
-            score++
-          }          
-        } else {
-          if(titleTS===null) {
-            titleTS=dat.vesselPassages[objKey].passageMarkerAlphaTS
-          }
-        }
-        if(dat.vesselPassages[objKey].passageMarkerBravoTS===null) {
-          evtKey = 'bravo'+hd+ht
-          if(evtKey in events) {
-            dat.vesselPassages[objKey].passageMarkerBravoTS=events[evtKey]
-            if(titleTS===null) {
-              titleTS=events[evtKey]
-            }
-          } else {
-            dat.vesselPassages[objKey].passageMarkerBravoTS="---";
-            score++
-          }         
-        } else {
-          if(titleTS===null) {
-            titleTS=dat.vesselPassages[objKey].passageMarkerBravoTS
-          }
-        }
-        evtKey = 'm520'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerM520TS=events[evtKey]
-          if(titleTS===null) {
-            titleTS=events[evtKey]
-          }
-        } else {
-          dat.vesselPassages[objKey].passageMarkerM520TS="---"
-        } 
-        if(dat.vesselPassages[objKey].passageMarkerCharlieTS===null) {
-          evtKey = 'charlie'+hd+ht
-          if(evtKey in events) {
-            dat.vesselPassages[objKey].passageMarkerCharlieTS=events[evtKey]
-            if(titleTS===null) {
-              titleTS=events[evtKey]
-            }
-          } else {
-            dat.vesselPassages[objKey].passageMarkerCharlieTS="---";
-          }
-        } else {
-          if(titleTS===null) {
-            titleTS=dat.vesselPassages[objKey].passageMarkerCharlieTS
-          }
-        }
-        if(dat.vesselPassages[objKey].passageMarkerDeltaTS===null) {
-          evtKey = 'delta'+hd+ht
-          if(evtKey in events) {
-            dat.vesselPassages[objKey].passageMarkerDeltaTS=events[evtKey]
-            if(titleTS===null) {
-              titleTS=events[evtKey]
-            }
-          } else {
-            dat.vesselPassages[objKey].passageMarkerDeltaTS="---";
-          }
-        } else {
-          if(titleTS===null) {
-            titleTS=dat.vesselPassages[objKey].passageMarkerDeltaTS
-          }
-        }
-        evtKey = 'm510'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerM510TS=events[evtKey]
-          if(titleTS===null) {
-            titleTS=events[evtKey]
-          }
-        } else {
-          dat.vesselPassages[objKey].passageMarkerM510TS="---"
-        }
-        if(titleTS===null) {
-          //No data so skip
-          continue;
-        }
-        dat.vesselPassages[objKey].passageTitleTS=titleTS 
-        dateArr.push(dat.vesselPassages[objKey])              
-      }
-      //console.log("dateArr", dateArr)
-      dateArr.sort((a,b) => parseInt(a.passageTitleTS) > parseInt(b.passageTitleTS) ? -1 : 1);
-      for(i=0; i<dateArr.length; i++) {
-        dir = dateArr[i].passageDirection=="upriver" ? "up" : "down";
-        waypoints.m545[i] = {
-            titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-            date: dateArr[i].passageMarkerM545TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM545TS)*1000),
-            dir: dir
-          };waypoints.m540[i] = {
-            titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-            date: dateArr[i].passageMarkerM540TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM540TS)*1000),
-            dir: dir
-          };
-        waypoints.m535[i] = {
-            titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-            date: dateArr[i].passageMarkerM535TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM535TS)*1000),
-            dir: dir
-          };
-        waypoints.m530[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerM530TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM530TS)*1000),
-          dir: dir
-        };
-        waypoints.alpha[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerAlphaTS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerAlphaTS)*1000),
-          dir: dir
-        };
-        waypoints.bravo[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerBravoTS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerBravoTS)*1000),
-          dir: dir
-        };
-        waypoints.m520[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerM520TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM520TS)*1000),
-          dir: dir
-        };
-        waypoints.charlie[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerCharlieTS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerCharlieTS)*1000),
-          dir: dir
-        };
-        waypoints.delta[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerDeltaTS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerDeltaTS)*1000),
-          dir: dir
-        }
-        waypoints.m510[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerM510TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM510TS)*1000),
-          dir: dir
-        };
-      }
-      break;
-    }
-
-    case "qc": {
-      waypoints = {
-        echo : [  ],
-        foxtrot : [  ],
-        m486: [  ],
-        golf: [  ],
-        m482: [  ],
-        hotel: [  ],
-        m475: [ ]
-      };
-      for(objKey in dat.vesselPassages) {
-        score=0
-        //Second key string helper formed from upriver/downriver,
-        hd     = dat.vesselPassages[objKey].passageDirection=="upriver" ? "u" : "d";
-        //Sort passages by dated keys before putting into waypoints
-        events = dat.vesselPassages[objKey].passageEvents
-        titleTS = null
-        //Use first found TS for titleTS
-        evtKey = 'echo'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerEchoTS=events[evtKey]
-          titleTS = events[evtKey]
-        } else {
-          dat.vesselPassages[objKey].passageMarkerEcho0TS="---"
-        }
-        evtKey = 'foxtrot'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerFoxtrotTS=events[evtKey]
-          if(titleTS===null) {
-            titleTS=events[evtKey]
-          }
-        } else {
-          dat.vesselPassages[objKey].passageMarkerFoxtrotTS="---";
-          score++
-        }
-        evtKey = 'm486'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerM486TS=events[evtKey]
-          if(titleTS===null) {
-            titleTS=events[evtKey]
-          }
-        } else {
-          dat.vesselPassages[objKey].passageMarkerM486TS="---";
-          score++
-        }         
-        evtKey = 'golf'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerGolfTS=events[evtKey]
-          if(titleTS===null) {
-            titleTS=events[evtKey]
-          }
-        } else {
-          dat.vesselPassages[objKey].passageMarkerGolfTS="---"
-        } 
-        evtKey = 'm482'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerM482TS=events[evtKey]
-          if(titleTS===null) {
-            titleTS=events[evtKey]
-          }
-        } else {
-          dat.vesselPassages[objKey].passageMarkerM482TS="---"
-        }
-        evtKey = 'hotel'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerHotelTS=events[evtKey]
-          if(titleTS===null) {
-            titleTS=events[evtKey]
-          }
-        } else {
-          dat.vesselPassages[objKey].passageMarkerHotelTS="---"
-        }
-        evtKey = 'm475'+hd+ht
-        if(evtKey in events) {
-          dat.vesselPassages[objKey].passageMarkerM475TS=events[evtKey]
-          if(titleTS===null) {
-            titleTS=events[evtKey]
-          }
-        } else {
-          dat.vesselPassages[objKey].passageMarkerM475TS="---"
-        }
-        if(titleTS===null) {
-          //No data so skip
-          continue;
-        } 
-        dat.vesselPassages[objKey].passageTitleTS=titleTS
-        dateArr.push(dat.vesselPassages[objKey])
-      }
-      dateArr.sort((a,b) => parseInt(a.passageTitleTS) > parseInt(b.passageTitleTS) ? -1 : 1);
-      for(i=0; i<dateArr.length; i++) {
-        dir = dateArr[i].passageDirection=="upriver" ? "up" : "down";
-        waypoints.echo[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerEchoTS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerEchoTS)*1000),
-          dir: dir
-        };
-        waypoints.foxtrot[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerFoxtrotTS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerFoxtrotTS)*1000),
-          dir: dir
-        };
-        waypoints.m486[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerM486TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM486TS)*1000),
-          dir: dir
-        }
-        waypoints.golf[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerGolfTS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerGolfTS)*1000),
-          dir: dir
-        };
-        waypoints.m482[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerM482TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM482TS)*1000),
-          dir: dir
-        };
-    
-        waypoints.hotel[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerHotelTS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerHotelTS)*1000),
-          dir: dir
-        }
-        waypoints.m475[i] = {
-          titleTS: new Date(parseInt(dateArr[i].passageTitleTS)*1000),
-          date: dateArr[i].passageMarkerM475TS=="---" ? "---" : new Date(parseInt(dateArr[i].passageMarkerM475TS)*1000),
-          dir: dir
-        };
-      }
-      break;  
-    }
+  let o = new Vessel();
+  let reg = region;
+  
+  // Check if the data is valid before processing
+  if (!dat || typeof dat !== 'object') {
+    console.error("Invalid vessel data received:", dat);
+    return o; // Return empty vessel object
   }
   
-  o.vesselPassages = waypoints;
-  console.log("Reassembled Vessel Object: ", o)
-  return o;            
-}
+  // MongoDB returns data nested under 'mmsiXXXXXXXXX' key
+  // Need to extract the actual vessel data
+  let vesselData = dat;
+  
+  // Look for a key that starts with 'mmsi'
+  const mmsiKey = Object.keys(dat).find(key => key.startsWith('mmsi'));
+  if (mmsiKey) {
+    vesselData = dat[mmsiKey];
+    console.log("Found vessel data under key:", mmsiKey);
+  }
+  
+  // Map data from nested structure to vessel object
+  o.vesselRecordAddedTS = vesselData.vesselRecordAddedTS || "";
+  o.vesselID = vesselData.vesselID || "";
+  o.vesselName = vesselData.vesselName || "Unknown Vessel";
+  o.vesselCallSign = vesselData.vesselCallSign || "---";
+  o.vesselType = vesselData.vesselType || "";
+  o.vesselLength = vesselData.vesselLength || "";
+  o.vesselWidth = vesselData.vesselWidth || "";
+  o.vesselDraft = vesselData.vesselDraft || "---";
+  o.vesselHasImage = vesselData.vesselHasImage || 0;
+  o.vesselImageUrl = vesselData.vesselImageUrl || "";
+  o.vesselOwner = vesselData.vesselOwner || "---";
+  o.vesselBuilt = vesselData.vesselBuilt || "";
+  o.vesselWatchOn = vesselData.vesselWatchOn || false;
 
+  // Check if vesselPassages exists and is valid
+  if (!vesselData.vesselPassages || typeof vesselData.vesselPassages !== 'object') {
+    console.error("Missing or invalid vesselPassages data");
+    
+    // Initialize empty passage data structure for all waypoints
+    o.vesselPassages = {
+      m545: [], m540: [], m535: [], m530: [],
+      alpha: [], bravo: [], m520: [], charlie: [], delta: [], m510: [],
+      echo: [], foxtrot: [], m486: [], golf: [], m482: [], hotel: [], m475: []
+    };
+    return o;
+  }
+  
+  // Define all possible waypoints in both regions
+  const allWaypoints = [
+    'm545', 'm540', 'm535', 'm530', 'alpha', 'bravo', 'm520', 'charlie', 'delta', 'm510',
+    'echo', 'foxtrot', 'm486', 'golf', 'm482', 'hotel', 'm475'
+  ];
+  
+  // Initialize empty waypoints object with all possible waypoints
+  let waypoints = {};
+  allWaypoints.forEach(wp => {
+    waypoints[wp] = [];
+  });
+  
+  let dateArr = [];
+  const ht = o.vesselType === "Passenger" ? "p" : "a"; // Vessel type helper
+  
+  // Process each passage date entry
+  for (const objKey in vesselData.vesselPassages) {
+    const passageData = vesselData.vesselPassages[objKey];
+    const hd = passageData.passageDirection === "upriver" ? "u" : "d"; // Direction helper
+    const events = passageData.passageEvents || {};
+    
+    // Object to store all timestamps for this passage
+    let timestamps = {};
+    let smallestTimestamp = null;
+    
+    // Process each possible waypoint
+    allWaypoints.forEach(waypoint => {
+      const evtKey = waypoint + hd + ht;
+      const tsFieldName = `passageMarker${waypoint.charAt(0).toUpperCase() + waypoint.slice(1)}TS`;
+      
+      // Check if this waypoint's timestamp exists in the events
+      if (evtKey in events) {
+        const timestamp = events[evtKey];
+        timestamps[waypoint] = timestamp;
+        
+        // Update smallest timestamp
+        if (smallestTimestamp === null || timestamp < smallestTimestamp) {
+          smallestTimestamp = timestamp;
+        }
+        
+        // Store the timestamp in the passage data
+        passageData[tsFieldName] = timestamp;
+      } else {
+        // If not found, set as "---"
+        passageData[tsFieldName] = "---";
+      }
+    });
+    
+    // Skip if no valid timestamps found
+    if (smallestTimestamp === null) {
+      continue;
+    }
+    
+    // Set title timestamp to smallest timestamp
+    passageData.passageTitleTS = smallestTimestamp;
+    dateArr.push(passageData);
+  }
+  
+  // Sort passages by title timestamp (most recent first)
+  dateArr.sort((a, b) => parseInt(a.passageTitleTS) > parseInt(b.passageTitleTS) ? -1 : 1);
+  
+  // Create waypoint objects for all possible waypoints
+  for (let i = 0; i < dateArr.length; i++) {
+    const passage = dateArr[i];
+    const dir = passage.passageDirection === "upriver" ? "up" : "down";
+    const titleTS = new Date(parseInt(passage.passageTitleTS) * 1000);
+    
+    // Create waypoint entry for each waypoint
+    allWaypoints.forEach(waypoint => {
+      const tsFieldName = `passageMarker${waypoint.charAt(0).toUpperCase() + waypoint.slice(1)}TS`;
+      const timestamp = passage[tsFieldName];
+      
+      waypoints[waypoint][i] = {
+        titleTS: titleTS,
+        date: timestamp === "---" ? "---" : new Date(parseInt(timestamp) * 1000),
+        dir: dir
+      };
+    });
+  }
+  
+  // Assign processed waypoints to vessel object
+  o.vesselPassages = waypoints;
+  console.log("Reassembled Vessel Object:", o);
+  return o;
+}
 
 /* * * * * * * * * * * * * * *
 *  Function definitions used by manage page
@@ -587,7 +369,7 @@ function urlB64ToUint8Array(base64String) {
 }
 
 function subscribeUser() {
-  const applicationServerKey = urlB64ToUint8Array(process.env.MDM_VKEY_PUB);
+  const applicationServerKey = urlB64ToUint8Array(process.env.MDM_vesselKey_PUB);
   swRegistration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: applicationServerKey
@@ -792,6 +574,20 @@ function objectQueue(arr, add, size=20) {
   return arr
 }
 
+
+// Helper Function to Process Passage Data
+function processPassageData(data, vessels, marker1, marker2) {
+   for (const dateKey in data) {
+     for (const vesselKey in data[dateKey]) {
+       const vessel = data[dateKey][vesselKey];
+       vessel.marker1DO = new Date(vessel[marker1] * 1000);
+       vessel.marker2DO = new Date(vessel[marker2] * 1000);
+       vessels.push(vessel);
+     }
+   }
+ }
+
+
 /* * * * * * * * *
 * Functions used by Live page & Map component
 */
@@ -973,7 +769,7 @@ const moduleA = {
         {
           data: "2021-06-30",
           passageDirection: "default",
-          passengeEvents: [],
+          passageEvents: [],
           passageMarkerAlphaTS: 16251229514,
           passageMarkerBravoTS: 16251229514,
           passageMarkerCharlieTS: 16251229514,
@@ -1039,15 +835,50 @@ const moduleA = {
     }),   
   actions: {
 
-    async fetchPassagesList({ commit, state }, region) { //Action
+   async fetchPassagesList({ commit, state }, region) { //Action
+      console.log("fetchPassagesList via REST API");
+      if(state.passagesList[0].type==="default") {
+         try {
+            const apiUrl = `${process.env.VUE_APP_API_URL}/passagelogs/last`;
+            console.log("API URL: ", apiUrl);
+            const response = await fetch(apiUrl);
+            if(!response.ok) throw new Error(`Error fetching passagelogs/last: ${response.statusText}`);
+ 
+            const plObj = await response.json()
+            let key, listArr = [], tmpArr = {},  nameArr = [], idx = 0, nKey, nObj;
+         
+            // Construct and sort document;
+            for(key in plObj) {
+               nKey = plObj[key].name;    
+               nObj = plObj[key];
+               if(nKey=="---") { continue; }
+               nameArr.push(nKey);
+               tmpArr[nKey] = nObj;
+            }
+
+            nameArr.sort();
+            nameArr.forEach((nKey, index) => {
+               nObj = tmpArr[nKey];
+               nObj.localIndex = index;
+               //Convert ID num to str
+               nObj.id = String(nObj.id)
+               nObj.ts = new Date(nObj.date)
+               //Filter empty & undefined
+               if (nObj.name && nObj.name !== "" && nObj.id !== "undefined") {
+                  listArr.push(nObj); // Filter valid entries
+                }
+            });
+            commit("setPassagesList", listArr);
+         } catch (error) {
+            console.log("Failed to fetch passages list:", error)
+         }
+      }     
+    },
+
+    async fetchPassagesListOld({ commit, state }, region) { //Action
       console.log("fetchPassagesList for ",region)
       if(state.passagesList[0].type==="default") {
-        let collection
-        switch(region) {
-          case "clinton": collection="Passages"; break;
-          case "qc":      collection="PassagesQC"; break;
-        }
-        const passagesAllRef = doc(db, collection, 'All');
+        const passagesAllRef = doc(db, 'Passages', 'All');
         var plObj, key, listArr = [], tmpArr = {},  nameArr = [], idx = 0, nKey, nObj, i;
         //const document;
         await getDoc(passagesAllRef).then(
@@ -1081,7 +912,7 @@ const moduleA = {
       }
     },
 
-    async fetchPassageHistory({ commit }, params) { //Action
+    async fetchPassageHistoryOld({ commit }, params) { //Action
       let docKey = 'mmsi'+params.vesselID
       let reg = params.region 
       console.log(docKey, reg);
@@ -1099,7 +930,45 @@ const moduleA = {
       }
     },
 
-    async fetchCurrentMonth({ commit, state }, region) { //Action
+    async fetchPassageHistory({ commit }, params) { //Action
+      const { vesselID, region: reg } = params;
+      console.log('fetchPassageHistory() called with:', vesselID, reg);
+      //VesselID looks like 367668810, API converts it to string
+      try {
+         // Log the URL being requested
+         const apiUrl = `${process.env.VUE_APP_API_URL}/vessels/${vesselID}`;
+         console.log('Fetching vessel data from URL:', apiUrl);
+         
+         const response = await fetch(apiUrl);
+         console.log('API response status:', response.status);
+         
+         if(!response.ok) {
+           throw new Error(`Error fetching vessel /${vesselID}: ${response.statusText}`);
+         }
+         
+         // Log the raw API response data
+         const data = await response.json();
+         console.log('API Response Structure:', {
+            hasVesselID: 'vesselID' in data,
+            hasVesselName: 'vesselName' in data,
+            hasPassages: 'vesselPassages' in data,
+            passagesType: data.vesselPassages ? typeof data.vesselPassages : 'undefined',
+            topLevelKeys: Object.keys(data)
+          });
+         
+         // Process the data using updateVesselHistory function
+         const vObj = updateVesselHistory(data, reg);
+         console.log('Processed vessel history object:', vObj);
+         
+         commit('setHistoryCache', vObj);
+       } catch (error) {
+         console.error(`Failed to fetch vessel ${vesselID} passage history:`, error);
+       }           
+    },
+
+
+
+    async fetchCurrentMonthOld({ commit, state }, region) { //Action
       //Check whether cache is already set to prevent reloading
       if(state.monthCache[0].passageDirection !=="default") {
         return;
@@ -1116,7 +985,7 @@ const moduleA = {
           break;
         } 
         case "qc": {
-          collection="PassagesQC"; 
+          collection="Passages"; 
           sortMarker1="passageMarkerFoxtrotTS"
           sortMarker2='passageMarkerGolfTS'; 
           break;
@@ -1134,27 +1003,27 @@ const moduleA = {
       const vesselRef2 = doc(db, collection, thisMonthKey)
       const document1 = await getDoc(vesselRef1)
       const document2 = await getDoc(vesselRef2)
-      var vessels = [], lmData, tmData, vkey, dkey, found = false;
+      var vessels = [], lmData, tmData, vesselKey, dateKey, found = false;
       //Put lastMonth & thisMonth passage in 1 vessels array
       if(document1.exists()) {
         lmData = document1.data()  
-        for(dkey in lmData) {
-          for(vkey in lmData[dkey]) {
-            lmData[dkey][vkey]['marker1DO']   = new Date( lmData[dkey][vkey][sortMarker1] * 1000)
-            lmData[dkey][vkey]['marker2DO']   = new Date( lmData[dkey][vkey][sortMarker2] * 1000)            
-            vessels.push(lmData[dkey][vkey])
+        for(dateKey in lmData) {
+          for(vesselKey in lmData[dateKey]) {
+            lmData[dateKey][vesselKey]['marker1DO']   = new Date( lmData[dateKey][vesselKey][sortMarker1] * 1000)
+            lmData[dateKey][vesselKey]['marker2DO']   = new Date( lmData[dateKey][vesselKey][sortMarker2] * 1000)            
+            vessels.push(lmData[dateKey][vesselKey])
           }
         }
         found = true;
       }
       if(document2.exists()) {
         tmData = document2.data()
-        for(dkey in tmData) {
-          for(vkey in tmData[dkey]) {
+        for(dateKey in tmData) {
+          for(vesselKey in tmData[dateKey]) {
             
-            tmData[dkey][vkey]['marker1DO']   = new Date( tmData[dkey][vkey][sortMarker1] * 1000)
-            tmData[dkey][vkey]['marker2DO']   = new Date( tmData[dkey][vkey][sortMarker2] * 1000)            
-            vessels.push(tmData[dkey][vkey])
+            tmData[dateKey][vesselKey]['marker1DO']   = new Date( tmData[dateKey][vesselKey][sortMarker1] * 1000)
+            tmData[dateKey][vesselKey]['marker2DO']   = new Date( tmData[dateKey][vesselKey][sortMarker2] * 1000)            
+            vessels.push(tmData[dateKey][vesselKey])
           }
         }
         found = true;
@@ -1169,6 +1038,66 @@ const moduleA = {
       }
     },
 
+    async fetchCurrentMonth({ commit, state }, region) {
+      if (state.monthCache[0].passageDirection !== "default") {
+        return; // Use cached data
+      }
+    
+      if (!state.region) {
+        commit('setRegion', region); // Set region if null
+      }
+    
+      const sortMarkers = {
+        clinton: { marker1: 'passageMarkerBravoTS', marker2: 'passageMarkerCharlieTS' },
+        qc: { marker1: 'passageMarkerFoxtrotTS', marker2: 'passageMarkerGolfTS' },
+      };
+    
+      const regionMarkers = sortMarkers[state.region];
+      if (!regionMarkers) {
+        console.error(`Invalid region: ${state.region}`);
+        return;
+      }
+    
+      // Calculate current and last month keys
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+      const lastMonthYear = lastMonth === 11 ? currentYear - 1 : currentYear;
+    
+      const thisMonthKey = format(new Date(currentYear, currentMonth), 'yyyyMM');
+      const lastMonthKey = format(new Date(lastMonthYear, lastMonth), 'yyyyMM');
+    
+      try {
+        // Fetch data for current and last month
+        const [response1, response2] = await Promise.all([
+          fetch(`${process.env.VUE_APP_API_URL}/passagelogs/month/${lastMonthKey}`),
+          fetch(`${process.env.VUE_APP_API_URL}/passagelogs/month/${thisMonthKey}`),
+        ]);
+    
+        const vessels = [];
+        if (response1.ok) {
+          const lmData = await response1.json();
+          processPassageData(lmData, vessels, regionMarkers.marker1, regionMarkers.marker2);
+        }
+        if (response2.ok) {
+          const tmData = await response2.json();
+          processPassageData(tmData, vessels, regionMarkers.marker1, regionMarkers.marker2);
+        }
+    
+        if (vessels.length > 0) {
+          // Sort vessels based on marker2
+          vessels.sort((a, b) => parseInt(a[regionMarkers.marker2]) - parseInt(b[regionMarkers.marker2]));
+    
+          commit('setMonthCache', vessels);
+        } else {
+          console.log(`No passages found for ${lastMonthKey} or ${thisMonthKey}`);
+        }
+      } catch (error) {
+        console.error('Error fetching passage data:', error);
+      }
+    },
+
 
     async fetchOtherMonth({ commit, state }, params ) { //Action
       let yr = parseInt(params.monthKey.substring(0,4))
@@ -1180,31 +1109,28 @@ const moduleA = {
         commit('setRegion', params.region)
       }
       switch(state.region) {
-        case "clinton": {
-          collection="Passages";   
+        case "clinton": {   
           sortMarker1='passageMarkerBravoTS'; 
           sortMarker2='passageMarkerCharlieTS'
           break;
         } 
-        case "qc": {
-          collection="PassagesQC"; 
+        case "qc": { 
           sortMarker1="passageMarkerFoxtrotTS"
           sortMarker2='passageMarkerGolfTS'; 
           break;
         }      
         default: console.log("fetchOther couldn't read region", state.region); break;
       }
-      const vesselRef = doc(db, collection, params.monthKey)
-      const document = await getDoc(vesselRef)
-      var vessels = [], omData, vkey, dkey, payload, found = false;
-      //Put lastMonth & thisMonth passage in 1 vessels array
-      if(document.exists()) {
-        omData = document.data()  
-        for(dkey in omData) {
-          for(vkey in omData[dkey]) {
-            omData[dkey][vkey]['marker1DO']   = new Date( omData[dkey][vkey][sortMarker1] * 1000)
-            omData[dkey][vkey]['marker2DO']   = new Date( omData[dkey][vkey][sortMarker2] * 1000)
-            vessels.push(omData[dkey][vkey])
+      const response = await fetch(`${process.env.VUE_APP_API_URL}/passagelogs/month/${params.monthKey}`);
+      let vessels = [], vesselKey, dateKey, payload, found = false;
+      //Put target month passages in vessels array
+      if(response.ok) {
+        const omData = await response.json();  
+        for(dateKey in omData) {
+          for(vesselKey in omData[dateKey]) {
+            omData[dateKey][vesselKey]['marker1DO']   = new Date( omData[dateKey][vesselKey][sortMarker1] * 1000)
+            omData[dateKey][vesselKey]['marker2DO']   = new Date( omData[dateKey][vesselKey][sortMarker2] * 1000)
+            vessels.push(omData[dateKey][vesselKey])
           }
         }
         found = true

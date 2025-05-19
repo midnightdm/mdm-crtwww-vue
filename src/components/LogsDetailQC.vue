@@ -15,7 +15,7 @@
             <table class="dataColumn">
               <tr>
                 <th v-for='echo in this.$store.state.a.historyCache.vesselPassages.alpha' :key='echo.titleTS' colspan="2">
-                  <span>{{ echo.titleTS.toLocaleDateString() }}</span>
+                  <span>{{ echo.date && typeof echo.date.toLocaleTimeString == 'function' ? echo.date.toLocaleTimeString() : '---' }}</span>
                 </th>
               </tr>
               <tr>

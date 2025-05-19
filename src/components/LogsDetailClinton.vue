@@ -15,7 +15,7 @@
             <table class="dataColumn">
               <tr>
                 <th v-for='alpha in this.$store.state.a.historyCache.vesselPassages.alpha' :key='alpha.titleTS' colspan="2">
-                  <span>{{ alpha.titleTS.toLocaleDateString() }}</span>
+                  <span>{{ alpha.titleTS && typeof alpha.titleTS.toLocaleDateString === 'function' ? alpha.titleTS.toLocaleDateString() : '---' }}</span>
                 </th>
               </tr>
 
@@ -26,7 +26,9 @@
                   <img v-if='m545.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
                 </td>
                 <td class="time" v-if="m545.date=='---'"> --- </td>
-                <td class="time" v-else> {{ m545.date.toLocaleTimeString() }} </td>
+                <td class="time" v-else> {{ m545.date && typeof m545.date.toLocaleTimeString === 'function' ?  m545.date.toLocaleTimeString() :
+                  '---' }} </td>
+                
                 </template> 
               </tr>
               <tr>
@@ -36,7 +38,7 @@
                   <img v-if='m540.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
                 </td>
                 <td class="time" v-if="m540.date=='---'"> --- </td>
-                <td class="time" v-else> {{ m540.date.toLocaleTimeString() }} </td>
+                <td class="time" v-else> {{ m540.date && typeof m540.date.toLocaleTimeString == 'function' ? m540.date.toLocaleTimeString() : '---' }} </td>
                 </template> 
               </tr>
               <tr>
@@ -46,7 +48,7 @@
                   <img v-if='m535.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
                 </td>
                 <td class="time" v-if="m535.date=='---'"> --- </td>
-                <td class="time" v-else> {{ m535.date.toLocaleTimeString() }} </td>
+                <td class="time" v-else> {{ m535.date && typeof m535.date.toLocaleTimeString == 'function' ? m535.date.toLocaleTimeString() : '---' }} </td>
                 </template> 
               </tr>
 
@@ -61,7 +63,7 @@
                   <img v-if='m530.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
                 </td>
                 <td class="time" v-if="m530.date=='---'"> --- </td>
-                <td class="time" v-else> {{ m530.date.toLocaleTimeString() }} </td>
+                <td class="time" v-else> {{ m530.date && typeof m530.date.toLocaleTimeString == 'function' ? m530.date.toLocaleTimeString() : '---' }} </td>
                 </template> 
               </tr>
               
@@ -72,7 +74,7 @@
                   <img v-if='alpha.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
                 </td>
                 <td class="time" v-if="alpha.date=='---'"> --- </td>
-                <td class="time" v-else> {{ alpha.date.toLocaleTimeString() }} </td>
+                <td class="time" v-else> {{ alpha.date && typeof alpha.date.toLocaleTimeString == 'function' ? alpha.date.toLocaleTimeString() : '---' }} </td>
                 </template> 
               </tr>  
               
@@ -83,7 +85,7 @@
                   <img v-if='bravo.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
                 </td>
                 <td class="time" v-if="bravo.date=='---'"> --- </td>
-                <td class="time" v-else> {{ bravo.date.toLocaleTimeString() }} </td>
+                <td class="time" v-else> {{ bravo.date && typeof bravo.date.toLocaleTimeString == 'function' ? bravo.date.toLocaleTimeString() : '---' }} </td>
                 </template> 
               </tr>
               <tr>
@@ -93,7 +95,7 @@
                   <img v-if='m520.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
                 </td>
                 <td class="time" v-if="m520.date=='---'"> --- </td>
-                <td class="time" v-else> {{ m520.date.toLocaleTimeString() }} </td>
+                <td class="time" v-else> {{ m520.date && typeof m520.date.toLocaleTimeString == 'function' ? m520.date.toLocaleTimeString() : '---' }} </td>
                 </template> 
               </tr>
               <tr>
@@ -103,7 +105,7 @@
                   <img v-if='charlie.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25" />
                   </td>
                 <td class="time" v-if="charlie.date=='---'"> --- </td>
-                <td class="time" v-else> {{ charlie.date.toLocaleTimeString() }} </td>
+                <td class="time" v-else> {{ charlie.date && typeof charlie.date.toLocaleTimeString == 'function' ? charlie.date.toLocaleTimeString() : '---' }} </td>
                 </template>
               </tr>
               <tr>
@@ -113,7 +115,7 @@
                   <img v-if='delta.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25" />
                 </td>
                 <td class="time" v-if="delta.date=='---'"> --- </td>
-                <td class="time" v-else> {{ delta.date.toLocaleTimeString() }} </td>
+                <td class="time" v-else> {{ delta.date && typeof delta.date.toLocaleTimeString == 'function' ? delta.date.toLocaleTimeString() : '---' }} </td>
                 </template>
               </tr>
               <tr>
@@ -123,7 +125,7 @@
                   <img v-if='m510.dir == "down"' class="dir-img" :src="this.base+'/images/dwnarr.png'" alt="Down river indicator is present." height="25"/>
                 </td>
                 <td class="time" v-if="m510.date=='---'"> --- </td>
-                <td class="time" v-else> {{ m510.date.toLocaleTimeString() }} </td>
+                <td class="time" v-else> {{ m510.date && typeof m510.date.toLocaleTimeString == 'function' ? m510.date.toLocaleTimeString() : '---' }} </td>
                 </template> 
               </tr>  
             </table>
