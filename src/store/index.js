@@ -851,7 +851,7 @@ const moduleA = {
             for(key in plObj) {
                nKey = plObj[key].name;    
                nObj = plObj[key];
-               if(nKey=="---") { continue; }
+               if(nKey=="---" || nKey=="") { continue; }
                nameArr.push(nKey);
                tmpArr[nKey] = nObj;
             }
