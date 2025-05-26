@@ -777,12 +777,15 @@ function initLiveScan() {
           else {
             
             //Remove object if no longer in region
-            if(dat.liveRegion != liveScanModel.region) {
-                liveScanModel.liveScans.splice(key, 1);
-            //Otherwise update its data
-            } else {
-                liveScanModel.liveScans[key] = liveScanModel.mapper(liveScanModel.liveScans[key], dat, false)
-            }
+            // if(dat.liveRegion != liveScanModel.region) {
+            //     liveScanModel.liveScans.splice(key, 1);
+            // //Otherwise update its data
+            // } else {
+            //     liveScanModel.liveScans[key] = liveScanModel.mapper(liveScanModel.liveScans[key], dat, false)
+            // }
+            liveScanModel.liveScans[key] = liveScanModel.mapper(liveScanModel.liveScans[key], dat, false)
+            
+
             //Has num of vessels changed?
             if(liveScanModel.liveScans.length != liveScanModel.numVessels) {
               //Store new vessels quantity

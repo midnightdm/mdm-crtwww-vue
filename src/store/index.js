@@ -808,9 +808,11 @@ const moduleA = {
         {apubVesselName: "loading", apubID:"loading", date: new Date()},
         {apubVesselName: "loading", apubID:"loading", date: new Date()},
         {apubVesselName: "loading", apubID:"loading", date: new Date()},
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
         {apubVesselName: "loading", apubID:"loading", date: new Date()}
       ],
       alertsPassenger: [
+        {apubVesselName: "loading", apubID:"loading", date: new Date()},
         {apubVesselName: "loading", apubID:"loading", date: new Date()},
         {apubVesselName: "loading", apubID:"loading", date: new Date()},
         {apubVesselName: "loading", apubID:"loading", date: new Date()},
@@ -1310,32 +1312,64 @@ const moduleA = {
 
     initLiveScan({ dispatch, commit, state }, context) { //Action
       commit('initLiveScan', context)
-      const q = query(collection(db, 'LiveScan'), where('liveVesselID', '!=', false));
-      const liveScanSnapshot = onSnapshot(q, (querySnapshot)=> {
-        let key, o, marker, coords, course
-        querySnapshot.forEach( (doc) => {
-          let dat = doc.data()
-          key = getKeyOfId(state.liveScans, dat.liveVesselID)
-          //Create & Push
-          if(key==-1) {
-            //Skip out of region objects
-            console.log("from initLiveScan for "+dat.liveName+" dat.liveRegion/context.region:", dat.liveRegion, state.liveScanModel.region)
-            if(dat.liveRegion != state.liveScanModel.region) { return }
-            let len = state.liveScans.length
-            let obj = state.liveScanModel.mapper(new LiveScan(state), dat, true, state, len)
-            commit('pushLiveScan', {key: key, obj: obj })
-          }
-          //Find & Update
-          else {
-            //clearInterval(state.mapInterval)
-            let obj = state.liveScanModel.mapper(state.liveScans[key], dat, false, state, key)            
-            commit('updateLiveScan', {key: key, obj: obj})
-          }
-        })
-        //Divide liveScans by river segment
-        dispatch('refreshSegments')
-      })    
       
+      // Set up configuration for fetch
+      const fetchUrl = process.env.VUE_APP_LIVESCANS_FETCH_URL;
+      let intervalId = null;
+      
+      // Function to fetch and process livescan data
+      const fetchLiveScanData = async () => {
+        try {
+          const response = await fetch(fetchUrl);
+          if (response.ok) {
+            const data = await response.json();
+            
+            // Process each vessel data
+            data.forEach(dat => {
+              // Find if vessel already exists in our list
+              const key = getKeyOfId(state.liveScans, dat.liveVesselID);
+              
+              // Create & Push new vessel
+              if (key === -1) {
+                // Skip out of region objects
+                if (dat.liveRegion !== state.liveScanModel.region) return;
+                
+                let len = state.liveScans.length;
+                let obj = state.liveScanModel.mapper(new LiveScan(state), dat, true, state, len);
+                commit('pushLiveScan', { key: key, obj: obj });
+              } 
+              // Find & Update existing vessel
+              else {
+                let obj = state.liveScanModel.mapper(state.liveScans[key], dat, false, state, key);
+                commit('updateLiveScan', { key: key, obj: obj });
+              }
+            });
+            
+            // Divide liveScans by river segment
+            dispatch('refreshSegments');
+          } else {
+            console.error("Failed to fetch livescan data:", response.status);
+          }
+        } catch (error) {
+          console.error("Error fetching livescan data:", error);
+        }
+      };
+      
+      // Initial fetch
+      fetchLiveScanData();
+      
+      // Set up interval for periodic updates (every 20 seconds)
+      intervalId = setInterval(fetchLiveScanData, 20000);
+      
+      // Store the interval ID in state so we can clear it later if needed
+      state.mapInterval = intervalId;
+      
+      // Return a cleanup function that can be called when component unmounts
+      return () => {
+        if (intervalId) {
+          clearInterval(intervalId);
+        }
+      };
     },
 
 
